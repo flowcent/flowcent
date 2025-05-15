@@ -1,4 +1,4 @@
-package org.aiapp.flowcent
+package org.aiapp.flowcent.core
 
 import platform.UIKit.UIDevice
 

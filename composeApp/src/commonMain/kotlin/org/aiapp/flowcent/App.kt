@@ -1,37 +1,38 @@
 package org.aiapp.flowcent
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
+import org.aiapp.flowcent.core.navigation.presentation.model.NavItem
 
 @Composable
 @Preview
 fun App() {
+    val navItems = listOf(
+        NavItem("Budget", Res.drawable.compose_multiplatform),
+        NavItem("Accounts", Res.drawable.compose_multiplatform),
+        NavItem("Transaction", Res.drawable.compose_multiplatform),
+        NavItem("Reflect", Res.drawable.compose_multiplatform)
+    )
+
+    var selectedIndex by remember { mutableStateOf(0) }
+
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+        Scaffold(
+            bottomBar = {
+                BottomNavigationBar(
+                    items = navItems,
+                    selectedIndex = selectedIndex,
+                    onItemSelected = { selectedIndex = it })
+            }) {
         }
     }
 }
