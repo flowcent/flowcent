@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.aiapp.flowcent.core.navigation.AppNavGraph
+import com.aiapp.flowcent.core.navigation.AppNavRoutes
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -17,7 +19,6 @@ import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
 @Preview
 fun App() {
     val navItems = listOf(
-        NavItem("Budget", Res.drawable.compose_multiplatform),
         NavItem("Accounts", Res.drawable.compose_multiplatform),
         NavItem("Transaction", Res.drawable.compose_multiplatform),
         NavItem("Reflect", Res.drawable.compose_multiplatform)
@@ -33,6 +34,14 @@ fun App() {
                     selectedIndex = selectedIndex,
                     onItemSelected = { selectedIndex = it })
             }) {
+            AppNavGraph(
+                startDestination = when (selectedIndex) {
+                    0 -> AppNavRoutes.Accounts
+                    1 -> AppNavRoutes.Transaction
+                    2 -> AppNavRoutes.Reflect
+                    else -> AppNavRoutes.Transaction
+                }
+            )
         }
     }
 }
