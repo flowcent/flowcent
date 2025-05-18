@@ -1,4 +1,4 @@
-package org.aiapp.flowcent.core.navigation.presentation.model
+package com.aiapp.flowcent.core.navigation.presentation.model
 
 import org.jetbrains.compose.resources.DrawableResource
 

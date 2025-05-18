@@ -1,4 +1,4 @@
-package org.aiapp.flowcent
+package com.aiapp.flowcent
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

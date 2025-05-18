@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 13/5/25, 2:41 PM.
  */
 
-package org.aiapp.flowcent.core.navigation.presentation.components
+package com.aiapp.flowcent.core.navigation.presentation.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.aiapp.flowcent.core.navigation.presentation.model.NavItem
+import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

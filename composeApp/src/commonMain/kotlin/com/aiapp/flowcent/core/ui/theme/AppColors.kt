@@ -1,4 +1,4 @@
-package org.aiapp.flowcent.core.ui.theme
+package com.aiapp.flowcent.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

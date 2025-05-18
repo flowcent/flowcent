@@ -1,4 +1,4 @@
-package org.aiapp.flowcent
+package com.aiapp.flowcent
 
 import androidx.compose.ui.window.ComposeUIViewController
 
