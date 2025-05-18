@@ -1,3 +1,4 @@
 TEAM_ID=
-BUNDLE_ID=org.aiapp.flowcent.FlowCent
+BUNDLE_ID=com.aiapp.flowcent.FlowCent
 APP_NAME=FlowCent
+
