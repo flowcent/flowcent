@@ -1,9 +1,9 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.1"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "35"
-koinVersion = "4.0.3"
+koinCompose = "4.1.0-RC1"
 androidx-activityCompose = "1.10.1"
 androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.2.1"
@@ -26,9 +26,9 @@ androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-koin = {module = "io.insert-koin:koin-compose", version.ref = "koinVersion"}
-koin-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinVersion"}
-koin-viewmodel-navigation = {module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinVersion"}
+koin = {module = "io.insert-koin:koin-compose", version.ref = "koinCompose"}
+koin-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinCompose"}
+koin-viewmodel-navigation = {module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinCompose"}
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
