@@ -6,7 +6,7 @@ package com.aiapp.flowcent.transaction.presentation.navigation.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import com.aiapp.flowcent.core.utils.TimeUtils.getCurrentDate
+import com.aiapp.flowcent.core.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.transaction.presentation.navigation.components.CalendarStrip
 
 @Composable
