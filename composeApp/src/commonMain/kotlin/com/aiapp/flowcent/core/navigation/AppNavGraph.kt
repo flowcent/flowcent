@@ -11,12 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.aiapp.flowcent.accounts.navigation.AccountsNavGraph
-import com.aiapp.flowcent.accounts.navigation.AccountsNavRoutes
-import com.aiapp.flowcent.transaction.navigation.TransactionNavGraph
-import com.aiapp.flowcent.reflect.navigation.ReflectNavGraph
-import com.aiapp.flowcent.reflect.navigation.ReflectNavRoutes
-import com.aiapp.flowcent.transaction.navigation.TransactionNavRoutes
+import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavGraph
+import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
+import com.aiapp.flowcent.transaction.presentation.navigation.TransactionNavGraph
+import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavGraph
+import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavRoutes
+import com.aiapp.flowcent.transaction.presentation.navigation.TransactionNavRoutes
 
 @Composable
 fun AppNavGraph(startDestination: AppNavRoutes) {

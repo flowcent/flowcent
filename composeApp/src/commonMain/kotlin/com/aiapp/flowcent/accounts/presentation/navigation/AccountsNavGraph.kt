@@ -2,12 +2,12 @@
  * Created by Saeedus Salehin on 15/5/25, 2:48 PM.
  */
 
-package com.aiapp.flowcent.accounts.navigation
+package com.aiapp.flowcent.accounts.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.aiapp.flowcent.accounts.presentation.AccountsHomeScreen
+import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
 import com.aiapp.flowcent.core.navigation.addAnimatedComposable
 
 @Composable
