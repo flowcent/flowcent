@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -36,11 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.aiapp.flowcent.core.ui.theme.bold18Black
+import com.aiapp.flowcent.core.ui.theme.gray
 import com.aiapp.flowcent.core.ui.theme.green
 import com.aiapp.flowcent.core.ui.theme.medium14Black
 import com.aiapp.flowcent.core.utils.DateTimeUtils.daysInMonth
 import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.compose_multiplatform
+import flowcent.composeapp.generated.resources.ic_arrow_left
+import flowcent.composeapp.generated.resources.ic_arrow_right
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
@@ -74,8 +79,9 @@ fun CalendarStrip(
                     currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
                 }) {
                 Icon(
-                    painter = painterResource(Res.drawable.compose_multiplatform),
-                    contentDescription = "Previous Month"
+                    painter = painterResource(Res.drawable.ic_arrow_left),
+                    contentDescription = "Previous Month",
+                    modifier = Modifier.size(24.dp)
                 )
             }
 
@@ -96,8 +102,9 @@ fun CalendarStrip(
                     currentMonthStart = currentMonthStart.plus(1, DateTimeUnit.MONTH)
                 }) {
                 Icon(
-                    painter = painterResource(Res.drawable.compose_multiplatform),
-                    contentDescription = "Next Month"
+                    painter = painterResource(Res.drawable.ic_arrow_right),
+                    contentDescription = "Next Month",
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -133,11 +140,12 @@ fun CalendarStrip(
                     ) {
                         Text(
                             text = date.dayOfWeek.name.first().toString(),
-                            style = medium14Black()
+                            style = medium14Black().copy(color = gray, fontSize = 12.sp),
+                            modifier = Modifier.padding(bottom = 12.dp)
                         )
                         Text(
                             text = date.dayOfMonth.toString(),
-                            style = medium14Black()
+                            style = bold18Black()
                         )
                     }
                 }
