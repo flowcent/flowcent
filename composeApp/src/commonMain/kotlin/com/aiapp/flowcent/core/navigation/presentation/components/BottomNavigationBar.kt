@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
+import com.aiapp.flowcent.core.ui.theme.white
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -21,7 +22,9 @@ fun BottomNavigationBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit
 ) {
-    NavigationBar {
+    NavigationBar(
+        containerColor = white
+    ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {

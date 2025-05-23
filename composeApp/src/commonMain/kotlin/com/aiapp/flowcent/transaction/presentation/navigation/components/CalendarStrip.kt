@@ -127,7 +127,7 @@ fun CalendarStrip(
             val dates = (1..days).map {
                 LocalDate(targetDate.year, targetDate.month, it)
             }
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 items(dates) { date ->
                     val isSelected = date == selectedDate
                     Column(
