@@ -4,6 +4,12 @@
 
 package com.aiapp.flowcent.transaction.presentation.navigation.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.ui.theme.green
 import com.aiapp.flowcent.core.ui.theme.medium14Black
-import com.aiapp.flowcent.core.utils.DateTimeUtils
+import com.aiapp.flowcent.core.utils.DateTimeUtils.daysInMonth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import kotlinx.datetime.DateTimeUnit
@@ -47,38 +53,48 @@ fun CalendarStrip(
     onDateSelected: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var currentMonthStart by remember { mutableStateOf(LocalDate(selectedDate.year, selectedDate.month, 1)) }
-    val daysInMonth = DateTimeUtils.daysInMonth(currentMonthStart)
-    val dates = remember(currentMonthStart) {
-        (1..daysInMonth).map {
-            LocalDate(currentMonthStart.year, currentMonthStart.month, it)
-        }
+    var currentMonthStart by remember {
+        mutableStateOf(
+            LocalDate(
+                selectedDate.year,
+                selectedDate.month,
+                1
+            )
+        )
     }
 
     Column(modifier = modifier.padding(8.dp)) {
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = {
-                currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
-            }) {
+            IconButton(
+                onClick = {
+                    currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
+                }) {
                 Icon(
                     painter = painterResource(Res.drawable.compose_multiplatform),
                     contentDescription = "Previous Month"
                 )
             }
 
-            Text(
-                text = "${currentMonthStart.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentMonthStart.year}",
-                style = MaterialTheme.typography.titleMedium
-            )
+            AnimatedContent(
+                targetState = currentMonthStart,
+                transitionSpec = { fadeIn() togetherWith fadeOut() }
+            ) { targetDate ->
+                Text(
+                    text = "${
+                        targetDate.month.name.lowercase().replaceFirstChar { it.uppercase() }
+                    } ${targetDate.year}",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
 
-            IconButton(onClick = {
-                currentMonthStart = currentMonthStart.plus(1, DateTimeUnit.MONTH)
-            }) {
+            IconButton(
+                onClick = {
+                    currentMonthStart = currentMonthStart.plus(1, DateTimeUnit.MONTH)
+                }) {
                 Icon(
                     painter = painterResource(Res.drawable.compose_multiplatform),
                     contentDescription = "Next Month"
@@ -88,25 +104,42 @@ fun CalendarStrip(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(dates) { date ->
-                val isSelected = date == selectedDate
-                Column(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(if (isSelected) green else Color.Transparent)
-                        .clickable { onDateSelected(date) }
-                        .padding(vertical = 8.dp, horizontal = 12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = date.dayOfWeek.name.first().toString(),
-                        style = medium14Black()
-                    )
-                    Text(
-                        text = date.dayOfMonth.toString(),
-                        style = medium14Black()
-                    )
+        AnimatedContent(
+            targetState = currentMonthStart,
+            transitionSpec = {
+                if (targetState > initialState) {
+                    slideInHorizontally { width -> width } + fadeIn() togetherWith
+                            slideOutHorizontally { width -> -width } + fadeOut()
+                } else {
+                    slideInHorizontally { width -> -width } + fadeIn() togetherWith
+                            slideOutHorizontally { width -> width } + fadeOut()
+                }
+            }
+        ) { targetDate ->
+            val days = daysInMonth(targetDate)
+            val dates = (1..days).map {
+                LocalDate(targetDate.year, targetDate.month, it)
+            }
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                items(dates) { date ->
+                    val isSelected = date == selectedDate
+                    Column(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(if (isSelected) green else Color.Transparent)
+                            .clickable { onDateSelected(date) }
+                            .padding(vertical = 8.dp, horizontal = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = date.dayOfWeek.name.first().toString(),
+                            style = medium14Black()
+                        )
+                        Text(
+                            text = date.dayOfMonth.toString(),
+                            style = medium14Black()
+                        )
+                    }
                 }
             }
         }
