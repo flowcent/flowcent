@@ -1,30 +1,36 @@
 package com.aiapp.flowcent
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.core.navigation.AppNavGraph
 import com.aiapp.flowcent.core.navigation.AppNavRoutes
+import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
+import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
-import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
 
 @Composable
 @Preview
 fun App() {
+    val navController = rememberNavController()
+
     val navItems = listOf(
-        NavItem("Accounts", Res.drawable.compose_multiplatform),
-        NavItem("Transaction", Res.drawable.compose_multiplatform),
-        NavItem("Reflect", Res.drawable.compose_multiplatform)
+        NavItem("Transaction", Res.drawable.compose_multiplatform, AppNavRoutes.Transaction.route),
+        NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route),
+        NavItem("Reflect", Res.drawable.compose_multiplatform, AppNavRoutes.Reflect.route)
     )
 
-    var selectedIndex by remember { mutableStateOf(0) }
+    val currentDestination by navController.currentBackStackEntryAsState()
+    val currentRoute = currentDestination?.destination?.route
+
+    val selectedIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
 
     MaterialTheme {
         Scaffold(
@@ -32,16 +38,22 @@ fun App() {
                 BottomNavigationBar(
                     items = navItems,
                     selectedIndex = selectedIndex,
-                    onItemSelected = { selectedIndex = it })
-            }) {
-            AppNavGraph(
-                startDestination = when (selectedIndex) {
-                    0 -> AppNavRoutes.Accounts
-                    1 -> AppNavRoutes.Transaction
-                    2 -> AppNavRoutes.Reflect
-                    else -> AppNavRoutes.Transaction
-                }
-            )
+                    onItemSelected = { index ->
+                        val route = navItems[index].route
+                        if (currentRoute != route) {
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            AppNavGraph(navController = navController, modifier = Modifier.padding(padding))
         }
     }
 }
