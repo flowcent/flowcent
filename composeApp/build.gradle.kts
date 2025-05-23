@@ -47,6 +47,7 @@ kotlin {
             implementation(libs.koin)
             implementation(libs.koin.viewmodel)
             implementation(libs.koin.viewmodel.navigation)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

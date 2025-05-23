@@ -4,15 +4,17 @@
 
 package com.aiapp.flowcent.transaction.presentation.navigation.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.aiapp.flowcent.core.utils.TimeUtils.getCurrentDate
+import com.aiapp.flowcent.transaction.presentation.navigation.components.CalendarStrip
 
 @Composable
 fun TransactionHomeScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Transaction home screen")
+    Column {
+        CalendarStrip(
+            selectedDate = getCurrentDate(),
+            onDateSelected = {}
+        )
     }
 }
