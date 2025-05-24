@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 23/5/25, 10:40 PM.
  */
 
-package com.aiapp.flowcent.transaction.presentation.navigation.components
+package com.aiapp.flowcent.home.presentation.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn

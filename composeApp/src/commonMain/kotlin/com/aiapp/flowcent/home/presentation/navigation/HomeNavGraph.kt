@@ -2,24 +2,24 @@
  * Created by Saeedus Salehin on 15/5/25, 2:50 PM.
  */
 
-package com.aiapp.flowcent.transaction.presentation.navigation
+package com.aiapp.flowcent.home.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.core.navigation.addAnimatedComposable
-import com.aiapp.flowcent.transaction.presentation.navigation.screens.TransactionHomeScreen
+import com.aiapp.flowcent.home.presentation.screens.HomeScreen
 
 @Composable
-fun TransactionNavGraph(startDestination: TransactionNavRoutes) {
+fun HomeNavGraph(startDestination: HomeNavRoutes) {
     val localNavController = rememberNavController()
 
     NavHost(
         navController = localNavController,
         startDestination = startDestination.route
     ) {
-        addAnimatedComposable(route = TransactionNavRoutes.TransactionHome.route) {
-            TransactionHomeScreen()
+        addAnimatedComposable(route = HomeNavRoutes.HomeScreen.route) {
+            HomeScreen()
         }
     }
 }

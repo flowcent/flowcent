@@ -13,10 +13,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavGraph
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
-import com.aiapp.flowcent.transaction.presentation.navigation.TransactionNavGraph
+import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavRoutes
-import com.aiapp.flowcent.transaction.presentation.navigation.TransactionNavRoutes
+import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 
 @Composable
 fun AppNavGraph(
@@ -37,8 +37,8 @@ fun AppNavGraph(
             }
 
             composable(route = AppNavRoutes.Transaction.route) {
-                TransactionNavGraph(
-                    startDestination = TransactionNavRoutes.TransactionHome
+                HomeNavGraph(
+                    startDestination = HomeNavRoutes.HomeScreen
                 )
             }
 
