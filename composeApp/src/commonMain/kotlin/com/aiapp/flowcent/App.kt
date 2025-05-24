@@ -22,7 +22,7 @@ fun App() {
     val navController = rememberNavController()
 
     val navItems = listOf(
-        NavItem("Transaction", Res.drawable.compose_multiplatform, AppNavRoutes.Transaction.route),
+        NavItem("Home", Res.drawable.compose_multiplatform, AppNavRoutes.Home.route),
         NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route),
         NavItem("Reflect", Res.drawable.compose_multiplatform, AppNavRoutes.Reflect.route)
     )

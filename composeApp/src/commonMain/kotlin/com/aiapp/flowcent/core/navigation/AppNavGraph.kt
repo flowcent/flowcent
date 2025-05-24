@@ -22,7 +22,7 @@ import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 fun AppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: AppNavRoutes = AppNavRoutes.Transaction
+    startDestination: AppNavRoutes = AppNavRoutes.Home
 ) {
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -36,7 +36,7 @@ fun AppNavGraph(
                 )
             }
 
-            composable(route = AppNavRoutes.Transaction.route) {
+            composable(route = AppNavRoutes.Home.route) {
                 HomeNavGraph(
                     startDestination = HomeNavRoutes.HomeScreen
                 )

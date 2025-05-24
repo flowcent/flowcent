@@ -6,6 +6,6 @@ package com.aiapp.flowcent.core.navigation
 
 sealed class AppNavRoutes(val route: String) {
     data object Accounts : AppNavRoutes("accounts")
-    data object Transaction : AppNavRoutes("transaction")
+    data object Home : AppNavRoutes("home")
     data object Reflect : AppNavRoutes("reflect")
 }
