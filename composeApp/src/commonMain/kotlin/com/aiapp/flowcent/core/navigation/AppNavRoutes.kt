@@ -8,4 +8,5 @@ sealed class AppNavRoutes(val route: String) {
     data object Accounts : AppNavRoutes("accounts")
     data object Home : AppNavRoutes("home")
     data object Reflect : AppNavRoutes("reflect")
+    data object Chat : AppNavRoutes("chat")
 }

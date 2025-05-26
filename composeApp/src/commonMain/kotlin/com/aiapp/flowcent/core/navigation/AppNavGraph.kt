@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavGraph
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
+import com.aiapp.flowcent.chat.presentation.navigation.ChatNavGraph
+import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavRoutes
@@ -45,6 +47,12 @@ fun AppNavGraph(
             composable(route = AppNavRoutes.Reflect.route) {
                 ReflectNavGraph(
                     startDestination = ReflectNavRoutes.ReflectHome
+                )
+            }
+
+            composable(route = AppNavRoutes.Chat.route) {
+                ChatNavGraph(
+                    startDestination = ChatNavRoutes.ChatScreen
                 )
             }
         }
