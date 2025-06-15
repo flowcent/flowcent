@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.SpendingCard
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.permissions.PermissionsViewModel
+import com.aiapp.flowcent.theming.AppTheme
 import com.aiapp.flowcent.voice.SpeechRecognizer
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
@@ -107,55 +109,56 @@ fun ChatScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF000000))
-            .padding(16.dp)
-    ) {
-
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            reverseLayout = true
+    AppTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            items(chatState.messages.reversed()) {
-                if (it.isUser) {
-                    UserMessage(text = it.text)
-                } else {
-                    if (chatState.isCircularLoading && chatState.messages[chatState.messages.lastIndex].isUser.not()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            color = Color(0xFFFFFFFF)
-                        )
+
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                reverseLayout = true
+            ) {
+                items(chatState.messages.reversed()) {
+                    if (it.isUser) {
+                        UserMessage(text = it.text)
                     } else {
-                        Column {
-                            BotMessage(text = it.text)
-                            if (it.expenseItems.isNotEmpty()) {
-                                it.expenseItems.forEach { expenseItem ->
-                                    SpendingCard(expenseItem)
+                        if (chatState.isCircularLoading && chatState.messages[chatState.messages.lastIndex].isUser.not()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                color = Color(0xFFFFFFFF)
+                            )
+                        } else {
+                            Column {
+                                BotMessage(text = it.text)
+                                if (it.expenseItems.isNotEmpty()) {
+                                    it.expenseItems.forEach { expenseItem ->
+                                        SpendingCard(expenseItem)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
 
-        ChatInput(
-            state = chatState,
-            isListening = isListening,
-            onUpdateText = {
-                viewModel.onAction(UserAction.UpdateText(it))
-            },
-            onClickMic = {
-                if (isListening) {
-                    viewModel.onAction(UserAction.StopAudioPlayer)
-                } else {
-                    viewModel.onAction(UserAction.StartAudioPlayer)
+            ChatInput(
+                state = chatState,
+                isListening = isListening,
+                onUpdateText = {
+                    viewModel.onAction(UserAction.UpdateText(it))
+                },
+                onClickMic = {
+                    if (isListening) {
+                        viewModel.onAction(UserAction.StopAudioPlayer)
+                    } else {
+                        viewModel.onAction(UserAction.StartAudioPlayer)
+                    }
                 }
+            ) {
+                viewModel.onAction(UserAction.SendMessage(chatState.userText))
             }
-        ) {
-            viewModel.onAction(UserAction.SendMessage(chatState.userText))
         }
     }
 }

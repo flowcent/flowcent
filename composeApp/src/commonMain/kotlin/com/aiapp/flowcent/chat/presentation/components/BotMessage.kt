@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.theming.Colors
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.outline_charger
 import org.jetbrains.compose.resources.painterResource
@@ -24,7 +25,7 @@ fun BotMessage(text: String, isRich: Boolean = false) {
         Icon(
             painter = painterResource(Res.drawable.outline_charger),
             contentDescription = null,
-            tint = Color(0xFFFFFFFF),
+            tint = Colors.Black,
             modifier = Modifier.size(32.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -33,7 +34,7 @@ fun BotMessage(text: String, isRich: Boolean = false) {
         ) {
             Text(
                 text = text,
-                color = Color(0xFFFFFFFF),
+                color = Colors.White,
                 modifier = Modifier.padding(12.dp),
                 style = if (isRich) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall
             )
