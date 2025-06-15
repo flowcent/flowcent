@@ -17,12 +17,13 @@ import com.aiapp.flowcent.core.navigation.addAnimatedComposable
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.screens.HomeScreen
 import com.aiapp.flowcent.permissions.PermissionsViewModel
+import com.aiapp.flowcent.voice.SpeechRecognizer
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeNavGraph(startDestination: HomeNavRoutes) {
+fun HomeNavGraph(startDestination: HomeNavRoutes, speechRecognizer: SpeechRecognizer) {
     val localNavController = rememberNavController()
     val viewModel = koinViewModel<HomeViewModel>()
     val state by viewModel.state.collectAsState()
@@ -52,7 +53,8 @@ fun HomeNavGraph(startDestination: HomeNavRoutes) {
             ChatScreen(
                 chatState = chatState,
                 viewModel = chatViewModel,
-                permissionsVM = permissionVM
+                permissionsVM = permissionVM,
+                speechRecognizer = speechRecognizer
             )
         }
     }

@@ -1,33 +1,20 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,75 +23,86 @@ import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
-import com.aiapp.flowcent.data.common.ExpenseItem
+import com.aiapp.flowcent.chat.presentation.components.BotMessage
+import com.aiapp.flowcent.chat.presentation.components.ChatInput
+import com.aiapp.flowcent.chat.presentation.components.SpendingCard
+import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.permissions.PermissionsViewModel
+import com.aiapp.flowcent.voice.SpeechRecognizer
 import dev.icerock.moko.permissions.PermissionState
-import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.outline_charger
-import org.jetbrains.compose.resources.painterResource
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun ChatScreen(
     chatState: ChatState,
     viewModel: ChatViewModel,
+    speechRecognizer: SpeechRecognizer,
     permissionsVM: PermissionsViewModel? = null
 ) {
 
-    LaunchedEffect(key1 = permissionsVM?.state) { // Or a similar lifecycle-aware scope
-        when (permissionsVM?.state) {
-            PermissionState.NotDetermined -> {
-                // Initial state, perhaps do nothing or show an introductory message
-                println("Sohan Audio permission NotDetermined for this session.")
-            }
+    var hasPermission: Boolean by remember { mutableStateOf(false) }
+    var isListening by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
-            PermissionState.NotGranted -> {
-                // This state might occur before requesting, or after a denial
-                // If you just called request, this might be a transient state or
-                // indicate the user denied it this time.
-                // You might show a rationale here.
-                println("Sohan Audio permission NotGranted for this session.")
-            }
+    LaunchedEffect(key1 = permissionsVM?.state) {
+        hasPermission = when (permissionsVM?.state) {
+            PermissionState.NotDetermined -> false
 
-            PermissionState.Granted -> {
-                // Permission granted! Proceed with audio recording
-                println("Sohan Audio permission GRANTED! Starting recorder...")
-                // Call a function to start recording or enable UI elements
-            }
+            PermissionState.NotGranted -> false
 
-            PermissionState.Denied -> {
-                // Permission denied for this session. User can try again.
-                // Show a message explaining why it's needed.
-                println("Sohan Audio permission DENIED for this session.")
-            }
+            PermissionState.Granted -> true
 
-            PermissionState.DeniedAlways -> {
-                // Permission permanently denied (e.g., user checked "Don't ask again" on Android,
-                // or denied twice on iOS then denied again).
-                // Guide the user to app settings.
-                println("Sohan Audio permission DENIED ALWAYS. Please enable in settings.")
-            }
+            PermissionState.Denied -> false
 
-            null -> {
-                // Handle cases where permissionsVM is null (unlikely if properly initialized)
-                println("Sohan permissionsVM is null")
-            }
+            PermissionState.DeniedAlways -> false
+
+            null -> false
         }
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.onAction(UserAction.CheckAudioPermission)
+    }
+
+    LaunchedEffect(Unit) {
+        if (!speechRecognizer.isRecognitionAvailable()) {
+            println("Sohan Speech recognition not available on this device")
+        } else {
+            println("Sohan Speech recognition is available on this device")
+        }
+    }
+
 
 
     LaunchedEffect(key1 = rememberScaffoldState()) {
         viewModel.uiEvent.collect {
             when (it) {
                 is UiEvent.ShowSnackBar -> {}
-                UiEvent.StartAudioPlayer -> {}
-                UiEvent.StopAudioPlayer -> {}
+                UiEvent.StartAudioPlayer -> {
+                    if (hasPermission) {
+                        coroutineScope.launch {
+                            speechRecognizer.startListening().collect { text ->
+                                viewModel.onAction(UserAction.UpdateText(text))
+                            }
+                            isListening = false
+                        }
+                        isListening = true
+                    } else {
+                        println("Sohan Microphone permission denied. Please enable it in app settings.")
+                    }
+                }
+
+                UiEvent.StopAudioPlayer -> {
+                    if (isListening) {
+                        speechRecognizer.stopListening()
+                        isListening = false
+                    }
+                }
+
                 UiEvent.CheckAudioPermission -> {
                     permissionsVM?.provideOrRequestRecordAudioPermission()
                 }
-
-                UiEvent.StartRecording -> {}
-                UiEvent.StopRecording -> {}
             }
         }
     }
@@ -145,132 +143,24 @@ fun ChatScreen(
 
         ChatInput(
             state = chatState,
-            onClickSend = {
-                viewModel.onAction(UserAction.SendMessage(chatState.userText))
+            isListening = isListening,
+            onUpdateText = {
+                viewModel.onAction(UserAction.UpdateText(it))
             },
             onClickMic = {
-                viewModel.onAction(UserAction.StartRecording)
+                if (isListening) {
+                    viewModel.onAction(UserAction.StopAudioPlayer)
+                } else {
+                    viewModel.onAction(UserAction.StartAudioPlayer)
+                }
             }
         ) {
-            viewModel.onAction(UserAction.UpdateText(it))
+            viewModel.onAction(UserAction.SendMessage(chatState.userText))
         }
     }
 }
 
 
-@Composable
-fun BotMessage(text: String, isRich: Boolean = false) {
-    Row(modifier = Modifier.padding(vertical = 4.dp)) {
-        Icon(
-            painter = painterResource(Res.drawable.outline_charger),
-            contentDescription = null,
-            tint = Color(0xFFFFFFFF),
-            modifier = Modifier.size(32.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Surface(
-            shape = RoundedCornerShape(12.dp), color = Color(0xFF1E1E1E)
-        ) {
-            Text(
-                text = text,
-                color = Color(0xFFFFFFFF),
-                modifier = Modifier.padding(12.dp),
-                style = if (isRich) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall
-            )
-        }
-    }
-}
 
-@Composable
-fun UserMessage(text: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
-    ) {
-        Surface(
-            shape = RoundedCornerShape(12.dp), color = Color(0xFF6C4DFF) // Purple-ish
-        ) {
-            Text(
-                text = text,
-                color = Color(0xFFFFFFFF),
-                modifier = Modifier.padding(12.dp),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
 
-@Composable
-fun SpendingCard(expenseItem: ExpenseItem) {
-    Card(
-        backgroundColor = Color(0xFF1E1E1E),
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    expenseItem.title,
-                    color = Color(0xFFFFFFFF),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    expenseItem.category,
-                    color = Color(0xFF808080),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            Text(
-                expenseItem.amount.toString(),
-                color = Color(0xFFFFFFFF),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-    }
-}
 
-@Composable
-fun ChatInput(
-    state: ChatState,
-    onClickSend: () -> Unit = {},
-    onClickMic: () -> Unit = {},
-    onUpdateText: (text: String) -> Unit = {}
-) {
-
-    Row(
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .background(Color(0xFF000000))
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = { onClickMic() }) {
-            Icon(Icons.Default.Mic, contentDescription = "Mic", tint = Color(0xFFFFFFFF))
-        }
-        TextField(
-            value = state.userText,
-            onValueChange = { newValue ->
-                onUpdateText(newValue)
-            },
-            placeholder = { Text("Type your messenger here", color = Color(0xFF808080)) },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFF1E1E1E),
-                focusedTextColor = Color(0xFFFFFFFF),
-                cursorColor = Color(0xFFFFFFFF)
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 8.dp)
-        )
-        IconButton(onClick = {
-            onClickSend()
-        }) {
-            Icon(Icons.Default.Send, contentDescription = "Send", tint = Color(0xFFFFFFFF))
-        }
-    }
-}

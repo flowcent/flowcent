@@ -12,13 +12,16 @@ import com.aiapp.flowcent.core.navigation.AppNavGraph
 import com.aiapp.flowcent.core.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
 import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
+import com.aiapp.flowcent.voice.SpeechRecognizer
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    speechRecognizer: SpeechRecognizer,
+) {
     val navController = rememberNavController()
 
     val navItems = listOf(
@@ -53,7 +56,11 @@ fun App() {
                 )
             }
         ) { padding ->
-            AppNavGraph(navController = navController, modifier = Modifier.padding(padding))
+            AppNavGraph(
+                navController = navController,
+                modifier = Modifier.padding(padding),
+                speechRecognizer = speechRecognizer
+            )
         }
     }
 }

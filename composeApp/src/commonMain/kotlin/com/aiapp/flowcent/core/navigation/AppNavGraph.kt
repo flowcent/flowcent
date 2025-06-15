@@ -19,12 +19,14 @@ import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavRoutes
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
+import com.aiapp.flowcent.voice.SpeechRecognizer
 
 @Composable
 fun AppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: AppNavRoutes = AppNavRoutes.Home
+    startDestination: AppNavRoutes = AppNavRoutes.Home,
+    speechRecognizer: SpeechRecognizer
 ) {
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -40,7 +42,8 @@ fun AppNavGraph(
 
             composable(route = AppNavRoutes.Home.route) {
                 HomeNavGraph(
-                    startDestination = HomeNavRoutes.HomeScreen
+                    startDestination = HomeNavRoutes.HomeScreen,
+                    speechRecognizer = speechRecognizer
                 )
             }
 
@@ -52,7 +55,8 @@ fun AppNavGraph(
 
             composable(route = AppNavRoutes.Chat.route) {
                 ChatNavGraph(
-                    startDestination = ChatNavRoutes.ChatScreen
+                    startDestination = ChatNavRoutes.ChatScreen,
+                    speechRecognizer = speechRecognizer
                 )
             }
         }

@@ -5,6 +5,4 @@ sealed interface UiEvent {
     object StartAudioPlayer : UiEvent
     object StopAudioPlayer : UiEvent
     object CheckAudioPermission : UiEvent
-    object StartRecording : UiEvent
-    object StopRecording : UiEvent
 }
