@@ -31,6 +31,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.ui.v120)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -50,6 +52,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.generativeai.google.vversion)
             implementation(libs.material.icons.extended)
+            implementation(libs.moko.permissions)
+            implementation(libs.moko.permissions.compose)
+            implementation(libs.moko.permissions.microphone)
         }
     }
 }

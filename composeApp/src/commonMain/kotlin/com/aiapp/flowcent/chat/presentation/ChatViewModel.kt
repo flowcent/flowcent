@@ -2,6 +2,7 @@ package com.aiapp.flowcent.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aiapp.flowcent.chat.presentation.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.presentation.ChatUtil.checkInvalidExpense
 import com.aiapp.flowcent.chat.presentation.ChatUtil.cleanJsonFromMarkdown
@@ -37,14 +38,16 @@ class ChatViewModel : ViewModel() {
 
             UserAction.CancelRecording -> {}
             UserAction.StartRecording -> {
-                _chatState.update {
-                    it.copy(
-                        isListening = !it.isListening
-                    )
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.CheckAudioPermission)
                 }
             }
 
-            UserAction.StopRecording -> {}
+            UserAction.StopRecording -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.StopAudioPlayer)
+                }
+            }
             is UserAction.UpdateText -> {
                 viewModelScope.launch {
                     _chatState.update {

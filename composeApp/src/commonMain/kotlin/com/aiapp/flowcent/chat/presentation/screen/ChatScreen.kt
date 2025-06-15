@@ -16,7 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,25 +27,87 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
+import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
 import com.aiapp.flowcent.data.common.ExpenseItem
+import com.aiapp.flowcent.permissions.PermissionsViewModel
+import dev.icerock.moko.permissions.PermissionState
 import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.compose_multiplatform
-import flowcent.composeapp.generated.resources.mike
+import flowcent.composeapp.generated.resources.outline_charger
 import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
 fun ChatScreen(
     chatState: ChatState,
-    viewModel: ChatViewModel
+    viewModel: ChatViewModel,
+    permissionsVM: PermissionsViewModel? = null
 ) {
+
+    LaunchedEffect(key1 = permissionsVM?.state) { // Or a similar lifecycle-aware scope
+        when (permissionsVM?.state) {
+            PermissionState.NotDetermined -> {
+                // Initial state, perhaps do nothing or show an introductory message
+                println("Sohan Audio permission NotDetermined for this session.")
+            }
+
+            PermissionState.NotGranted -> {
+                // This state might occur before requesting, or after a denial
+                // If you just called request, this might be a transient state or
+                // indicate the user denied it this time.
+                // You might show a rationale here.
+                println("Sohan Audio permission NotGranted for this session.")
+            }
+
+            PermissionState.Granted -> {
+                // Permission granted! Proceed with audio recording
+                println("Sohan Audio permission GRANTED! Starting recorder...")
+                // Call a function to start recording or enable UI elements
+            }
+
+            PermissionState.Denied -> {
+                // Permission denied for this session. User can try again.
+                // Show a message explaining why it's needed.
+                println("Sohan Audio permission DENIED for this session.")
+            }
+
+            PermissionState.DeniedAlways -> {
+                // Permission permanently denied (e.g., user checked "Don't ask again" on Android,
+                // or denied twice on iOS then denied again).
+                // Guide the user to app settings.
+                println("Sohan Audio permission DENIED ALWAYS. Please enable in settings.")
+            }
+
+            null -> {
+                // Handle cases where permissionsVM is null (unlikely if properly initialized)
+                println("Sohan permissionsVM is null")
+            }
+        }
+    }
+
+
+    LaunchedEffect(key1 = rememberScaffoldState()) {
+        viewModel.uiEvent.collect {
+            when (it) {
+                is UiEvent.ShowSnackBar -> {}
+                UiEvent.StartAudioPlayer -> {}
+                UiEvent.StopAudioPlayer -> {}
+                UiEvent.CheckAudioPermission -> {
+                    permissionsVM?.provideOrRequestRecordAudioPermission()
+                }
+
+                UiEvent.StartRecording -> {}
+                UiEvent.StopRecording -> {}
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -98,7 +162,7 @@ fun ChatScreen(
 fun BotMessage(text: String, isRich: Boolean = false) {
     Row(modifier = Modifier.padding(vertical = 4.dp)) {
         Icon(
-            painter = painterResource(Res.drawable.compose_multiplatform),
+            painter = painterResource(Res.drawable.outline_charger),
             contentDescription = null,
             tint = Color(0xFFFFFFFF),
             modifier = Modifier.size(32.dp)
@@ -186,7 +250,7 @@ fun ChatInput(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = { onClickMic() }) {
-            Icon(painterResource(Res.drawable.compose_multiplatform), contentDescription = "Mic", tint = Color(0xFFFFFFFF))
+            Icon(Icons.Default.Mic, contentDescription = "Mic", tint = Color(0xFFFFFFFF))
         }
         TextField(
             value = state.userText,
