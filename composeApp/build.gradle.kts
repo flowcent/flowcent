@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.google.services)
     kotlin("plugin.serialization") version "2.1.21"
 }
 
@@ -31,8 +32,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.media3.exoplayer)
-            implementation(libs.androidx.media3.ui.v120)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.google.firebase.analytics)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

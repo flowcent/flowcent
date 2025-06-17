@@ -3,6 +3,7 @@ agp = "8.6.1"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "35"
+firebaseBom = "33.15.0"
 generativeai = "0.9.0-1.1.0 "
 generativeaiGoogle = "0.9.0-1.1.0"
 koinCompose = "4.1.0-RC1"
@@ -26,10 +27,14 @@ media3Exoplayer = "1.7.1"
 media3UiVersion = "1.7.1"
 media3Ui = "1.7.1"
 moko = "0.19.1"
+google-service = "4.4.2"
 
 [libraries]
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 generativeai-google = { module = "dev.shreyaspatil.generativeai:generativeai-google", version.ref = "generativeai" }
 generativeai-google-vversion = { module = "dev.shreyaspatil.generativeai:generativeai-google", version.ref = "generativeaiGoogle" }
+google-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -40,9 +45,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-koin = {module = "io.insert-koin:koin-compose", version.ref = "koinCompose"}
-koin-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinCompose"}
-koin-viewmodel-navigation = {module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinCompose"}
+koin = { module = "io.insert-koin:koin-compose", version.ref = "koinCompose" }
+koin-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinCompose" }
+koin-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinCompose" }
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -62,3 +67,4 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+google-services = {id = "com.google.gms.google-services", version.ref = "google-service"}
