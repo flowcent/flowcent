@@ -1,30 +1,31 @@
 package com.aiapp.flowcent.voice
 
-import platform.AVFoundation.AVAudioSession
-import platform.AVFoundation.AVAudioSessionCategoryRecord
-import platform.AVFoundation.AVAudioSessionModeMeasurement
-import platform.AVFoundation.AVAudioSessionPortOverrideNone
-import platform.AVFoundation.setCategory
-import platform.AVFoundation.setActive
-import platform.Speech.*
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
-import platform.Foundation.NSError
-import platform.Foundation.locale
-import platform.darwin.dispatch_get_main_queue
+import platform.AVFAudio.AVAudioSession
+import platform.AVFAudio.AVAudioSessionCategoryRecord
+import platform.AVFAudio.AVAudioSessionModeMeasurement
+import platform.AVFAudio.setActive
+import platform.Foundation.currentLocale
+import platform.Speech.SFSpeechAudioBufferRecognitionRequest
+import platform.Speech.SFSpeechRecognitionTask
+import platform.Speech.SFSpeechRecognizer
+import platform.Speech.SFSpeechRecognizerAuthorizationStatus
 
 actual class SpeechRecognizer {
 
     private var speechRecognizer: SFSpeechRecognizer? = null
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest? = null
     private var recognitionTask: SFSpeechRecognitionTask? = null
-    private val audioEngine = platform.AVFoundation.AVAudioEngine()
+    private val audioEngine = platform.AVFAudio.AVAudioEngine()
 
     actual fun isRecognitionAvailable(): Boolean {
-        return SFSpeechRecognizer.isSupported()
+        return speechRecognizer?.isAvailable() ?: false
     }
 
     actual fun startListening(): Flow<String> = callbackFlow {
@@ -36,8 +37,8 @@ actual class SpeechRecognizer {
 
         // Request authorization
         SFSpeechRecognizer.requestAuthorization { status ->
-            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-                launch(dispatch_get_main_queue().asCoroutineDispatcher()) { // Ensure UI updates on main thread
+            if (status == SFSpeechRecognizerAuthorizationStatus.SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                launch(Dispatchers.Main) { // Ensure UI updates on main thread
                     startAudioEngineAndRecognize(this@callbackFlow)
                 }
             } else {
@@ -51,15 +52,17 @@ actual class SpeechRecognizer {
         }
     }
 
-    private fun startAudioEngineAndRecognize(emitter: FlowCollector<String>) {
+    @OptIn(ExperimentalForeignApi::class)
+    private fun startAudioEngineAndRecognize(emitter: ProducerScope<String>) {
         try {
             // Configure audio session
             val audioSession = AVAudioSession.sharedInstance()
             audioSession.setCategory(AVAudioSessionCategoryRecord, error = null)
             audioSession.setMode(AVAudioSessionModeMeasurement, error = null)
-            audioSession.setActive(true, options = 0U, error = null)
+            audioSession.setActive(true, error = null)
 
-            speechRecognizer = SFSpeechRecognizer(locale = platform.Foundation.NSLocale.currentLocale())
+            speechRecognizer =
+                SFSpeechRecognizer(locale = platform.Foundation.NSLocale.currentLocale)
             recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
             recognitionRequest?.setShouldReportPartialResults(true)
 
@@ -70,25 +73,28 @@ actual class SpeechRecognizer {
                 bufferSize = 1024U,
                 format = recordingFormat
             ) { buffer, _ ->
-                recognitionRequest?.appendAudioPCMBuffer(buffer)
+                if (buffer != null) {
+                    recognitionRequest?.appendAudioPCMBuffer(buffer)
+                }
             }
 
             audioEngine.prepare()
             audioEngine.startAndReturnError(null)
 
-            recognitionTask = speechRecognizer?.recognitionTaskWithRequest(recognitionRequest!!) { result, error ->
-                if (error != null) {
-                    emitter.trySend("Error: ${error.localizedDescription}")
-                    emitter.close(Exception(error.localizedDescription))
-                    return@recognitionTaskWithRequest
-                }
-                if (result != null) {
-                    emitter.trySend(result.bestTranscription.formattedString)
-                    if (result.isFinal) {
-                        emitter.close() // Close flow after final result
+            recognitionTask =
+                speechRecognizer?.recognitionTaskWithRequest(recognitionRequest!!) { result, error ->
+                    if (error != null) {
+                        emitter.trySend("Error: ${error.localizedDescription}")
+                        emitter.close()
+                        return@recognitionTaskWithRequest
+                    }
+                    if (result != null) {
+                        emitter.trySend(result.bestTranscription.formattedString)
+                        if (result.isFinal()) {
+                            emitter.close() // Close flow after final result
+                        }
                     }
                 }
-            }
 
         } catch (e: Exception) {
             emitter.trySend("Error starting audio engine: ${e.message}")
