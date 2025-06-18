@@ -9,6 +9,23 @@ plugins {
     kotlin("plugin.serialization") version "2.1.21"
 }
 
+//@Sohan
+//Special Note: Current Firebase sdk does not support Ktor 3.x.x versions yet,
+//On the other hand Compose multiplatform default support for Ktor is >= 3.x.x versions,
+//Hence I had to write this resolutionStrategy to overcome dependency mismatch crash
+//In future, we need to update this when Firebase sdk will support Ktor >= 3.x.x versions
+//So keep that in mind.
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "io.ktor") {
+                useVersion("2.3.2")
+                because("This version is tested and verified for our app")
+            }
+        }
+    }
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -34,6 +51,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.google.firebase.analytics)
+            implementation(libs.firebase.ai)
+            implementation(libs.androidx.multidex)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -51,11 +70,16 @@ kotlin {
             implementation(libs.koin.viewmodel.navigation)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.generativeai.google.vversion)
             implementation(libs.material.icons.extended)
             implementation(libs.moko.permissions)
             implementation(libs.moko.permissions.compose)
             implementation(libs.moko.permissions.microphone)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+        }
+
+        iosMain.dependencies{
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

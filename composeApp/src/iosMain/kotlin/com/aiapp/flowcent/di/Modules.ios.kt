@@ -4,9 +4,10 @@
 
 package com.aiapp.flowcent.di
 
+import com.aiapp.flowcent.ai.FlowCentAi
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val platformModule: Module = module {
-
+    single { FlowCentAi() }
 }

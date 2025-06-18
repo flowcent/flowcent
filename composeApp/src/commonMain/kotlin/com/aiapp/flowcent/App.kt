@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aiapp.flowcent.ai.FlowCentAi
 import com.aiapp.flowcent.core.navigation.AppNavGraph
 import com.aiapp.flowcent.core.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
@@ -21,7 +22,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App(
-    speechRecognizer: SpeechRecognizer,
+    speechRecognizer: SpeechRecognizer
 ) {
     val navController = rememberNavController()
 

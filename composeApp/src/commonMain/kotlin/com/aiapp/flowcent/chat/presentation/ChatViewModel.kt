@@ -2,13 +2,11 @@ package com.aiapp.flowcent.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aiapp.flowcent.ai.FlowCentAi
 import com.aiapp.flowcent.chat.presentation.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.presentation.ChatUtil.checkInvalidExpense
-import com.aiapp.flowcent.chat.presentation.ChatUtil.cleanJsonFromMarkdown
 import com.aiapp.flowcent.data.common.ChatMessage
 import com.aiapp.flowcent.data.common.ChatResult
-import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
-import dev.shreyaspatil.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -20,8 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-
-class ChatViewModel : ViewModel() {
+class ChatViewModel(
+    private val flowCentAi: FlowCentAi
+) : ViewModel() {
 
     private val _chatState = MutableStateFlow(ChatState())
     val chatState: StateFlow<ChatState> = _chatState.asStateFlow()
@@ -34,6 +33,7 @@ class ChatViewModel : ViewModel() {
             is UserAction.SendMessage -> {
                 sendMessage(action.text)
             }
+
             UserAction.StartAudioPlayer -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.StartAudioPlayer)
@@ -75,43 +75,63 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-
-    private val generativeModel = GenerativeModel(
-        modelName = "gemma-3-27b-it", apiKey = "AIzaSyDgyl1Ir3VxoXid_cdP57EF67-troYy7oI"
-    )
-
-
     private suspend fun sendPrompt(prompt: String) {
         _chatState.update { it.copy(isCircularLoading = true) }
-
         try {
-            val chatResult = if (checkInvalidExpense(prompt).isEmpty()) {
+            val hasInvalidPrompt = checkInvalidExpense(prompt)
+
+            if (hasInvalidPrompt.isEmpty()) {
                 val updatedPrompt = buildExpensePrompt(prompt)
-                val response = generativeModel.generateContent(content { text(updatedPrompt) })
-                val rawJson = response.text ?: throw IllegalStateException("No response text")
-                val cleanJson = cleanJsonFromMarkdown(rawJson)
-                Json.decodeFromString<ChatResult>(cleanJson)
+                val result = flowCentAi.generateContent(updatedPrompt)
+                result.onSuccess { chatResult ->
+                    _chatState.update {
+                        it.copy(
+                            isCircularLoading = false,
+                            messages = it.messages + ChatMessage(
+                                chatResult.answer,
+                                false,
+                                expenseItems = chatResult.data
+                            ),
+                        )
+                    }
+                }
+                    .onFailure { error ->
+                        _chatState.update { currentState ->
+                            currentState.copy(
+                                isCircularLoading = false,
+                                error = "Error: ${error.message ?: "Unknown AI error"}",
+                                messages = currentState.messages + ChatMessage(
+                                    error.message ?: "Something unexpected happened",
+                                    false,
+                                    expenseItems = emptyList()
+                                ),
+                            )
+                        }
+                    }
+
             } else {
-                val cleanJson = checkInvalidExpense(prompt)
-                Json.decodeFromString<ChatResult>(cleanJson)
+                val chatResult = Json.decodeFromString<ChatResult>(hasInvalidPrompt)
+                _chatState.update { currentState ->
+                    currentState.copy(
+                        isCircularLoading = false,
+                        messages = currentState.messages + ChatMessage(
+                            chatResult.answer,
+                            false,
+                            expenseItems = chatResult.data
+                        ),
+                    )
+                }
             }
-
-            _chatState.update {
-                it.copy(
-                    isCircularLoading = false,
-                    messages = it.messages + ChatMessage(
-                        chatResult.answer, false, expenseItems = chatResult.data
-                    ),
-                )
-            }
-
         } catch (e: Exception) {
-            println("Error in sendPrompt: ${e.message}")
-            _chatState.update {
-                it.copy(
+            _chatState.update { currentState ->
+                currentState.copy(
                     isCircularLoading = false,
-                    answer = "Sorry I could not understand your message",
-                    error = e.message
+                    error = "Error: ${e.message ?: "Unknown AI error"}",
+                    messages = currentState.messages + ChatMessage(
+                        e.message ?: "Something unexpected happened",
+                        false,
+                        expenseItems = emptyList()
+                    ),
                 )
             }
         }

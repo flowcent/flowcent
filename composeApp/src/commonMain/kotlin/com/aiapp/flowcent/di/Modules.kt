@@ -15,5 +15,5 @@ expect val platformModule: Module
 val sharedModule = module {
     //ViewModels
     viewModel { HomeViewModel() }
-    viewModel { ChatViewModel() }
+    viewModel { ChatViewModel(flowCentAi = get()) }
 }
