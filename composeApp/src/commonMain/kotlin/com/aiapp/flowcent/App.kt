@@ -1,14 +1,12 @@
 package com.aiapp.flowcent
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aiapp.flowcent.ai.FlowCentAi
 import com.aiapp.flowcent.core.navigation.AppNavGraph
 import com.aiapp.flowcent.core.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
