@@ -21,8 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.chat.presentation.ChatState
-import com.aiapp.flowcent.core.ui.theme.AppTheme
-import com.aiapp.flowcent.core.ui.theme.Colors
+import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
 @Composable
 fun ChatInput(

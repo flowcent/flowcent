@@ -7,11 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aiapp.flowcent.core.navigation.AppNavGraph
-import com.aiapp.flowcent.core.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
-import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
-import com.aiapp.flowcent.core.ui.theme.AppTheme
+import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
+import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
+import com.aiapp.flowcent.core.presentation.components.BottomNavigationBar
+import com.aiapp.flowcent.core.domain.model.NavItem
+import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform

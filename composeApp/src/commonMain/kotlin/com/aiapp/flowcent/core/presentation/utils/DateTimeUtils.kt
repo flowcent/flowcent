@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 23/5/25, 10:50 PM.
  */
 
-package com.aiapp.flowcent.core.utils
+package com.aiapp.flowcent.core.presentation.utils
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit

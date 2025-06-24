@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 15/5/25, 12:50 PM.
  */
 
-package com.aiapp.flowcent.core.navigation
+package com.aiapp.flowcent.core.presentation.navigation
 
 sealed class AppNavRoutes(val route: String) {
     data object Accounts : AppNavRoutes("accounts")

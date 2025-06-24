@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.ui.theme
+package com.aiapp.flowcent.core.presentation.ui.theme
 
 import androidx.compose.ui.unit.dp
 

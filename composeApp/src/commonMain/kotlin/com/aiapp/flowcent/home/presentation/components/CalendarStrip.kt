@@ -37,8 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.core.ui.theme.Colors
-import com.aiapp.flowcent.core.utils.DateTimeUtils.daysInMonth
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.daysInMonth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_arrow_left
 import flowcent.composeapp.generated.resources.ic_arrow_right

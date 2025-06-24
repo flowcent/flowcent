@@ -14,8 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
-import com.aiapp.flowcent.core.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.utils.DateTimeUtils.getCurrentDate
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 
 @Composable

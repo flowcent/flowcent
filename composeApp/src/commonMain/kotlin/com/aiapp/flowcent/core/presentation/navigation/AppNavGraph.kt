@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 26/11/24, 10:36 PM.
  */
 
-package com.aiapp.flowcent.core.navigation
+package com.aiapp.flowcent.core.presentation.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

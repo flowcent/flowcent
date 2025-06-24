@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 22/11/24, 6:26 PM.
  */
 
-package com.aiapp.flowcent.core.navigation
+package com.aiapp.flowcent.core.presentation.navigation
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
