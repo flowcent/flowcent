@@ -1,6 +1,6 @@
 package com.aiapp.flowcent.core.platform
 
-import com.aiapp.flowcent.data.common.ChatResult
+import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend

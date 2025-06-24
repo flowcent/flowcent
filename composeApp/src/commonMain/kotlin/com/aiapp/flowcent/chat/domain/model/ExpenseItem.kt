@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.data.common
+package com.aiapp.flowcent.chat.domain.model
 
 import kotlinx.serialization.Serializable
 

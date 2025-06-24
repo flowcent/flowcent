@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.data.common.ExpenseItem
+import com.aiapp.flowcent.chat.domain.model.ExpenseItem
 
 @Composable
 fun SpendingCard(expenseItem: ExpenseItem) {

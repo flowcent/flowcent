@@ -1,7 +1,7 @@
 package com.aiapp.flowcent.chat.presentation
 
-import com.aiapp.flowcent.data.common.ChatMessage
-import com.aiapp.flowcent.data.common.ExpenseItem
+import com.aiapp.flowcent.chat.domain.model.ChatMessage
+import com.aiapp.flowcent.chat.domain.model.ExpenseItem
 
 data class ChatState(
     val messages: List<ChatMessage> = emptyList(),

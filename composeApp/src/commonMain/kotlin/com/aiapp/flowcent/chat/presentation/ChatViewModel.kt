@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.core.platform.FlowCentAi
 import com.aiapp.flowcent.chat.presentation.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.presentation.ChatUtil.checkInvalidExpense
-import com.aiapp.flowcent.data.common.ChatMessage
-import com.aiapp.flowcent.data.common.ChatResult
+import com.aiapp.flowcent.chat.domain.model.ChatMessage
+import com.aiapp.flowcent.chat.domain.model.ChatResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel

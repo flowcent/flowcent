@@ -3,7 +3,7 @@ package com.aiapp.flowcent.core.platform
 import com.aiapp.flowcent.core.data.ContentBlock
 import com.aiapp.flowcent.core.data.ContentPart
 import com.aiapp.flowcent.core.data.GeminiContentRequest
-import com.aiapp.flowcent.data.common.ChatResult
+import com.aiapp.flowcent.chat.domain.model.ChatResult
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post

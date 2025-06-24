@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.data.common
+package com.aiapp.flowcent.chat.domain.model
 
 data class ChatMessage(
     val text: String,
