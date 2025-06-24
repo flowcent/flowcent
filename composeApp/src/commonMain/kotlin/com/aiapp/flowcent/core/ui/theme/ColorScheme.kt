@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.theming
+package com.aiapp.flowcent.core.ui.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme

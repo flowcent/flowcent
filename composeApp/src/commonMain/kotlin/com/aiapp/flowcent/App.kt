@@ -11,7 +11,7 @@ import com.aiapp.flowcent.core.navigation.AppNavGraph
 import com.aiapp.flowcent.core.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
 import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
-import com.aiapp.flowcent.theming.AppTheme
+import com.aiapp.flowcent.core.ui.theme.AppTheme
 import com.aiapp.flowcent.voice.SpeechRecognizer
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform

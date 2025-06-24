@@ -37,11 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.aiapp.flowcent.core.ui.theme.bold18Black
-import com.aiapp.flowcent.core.ui.theme.gray
-import com.aiapp.flowcent.core.ui.theme.green
-import com.aiapp.flowcent.core.ui.theme.medium14Black
+import com.aiapp.flowcent.core.ui.theme.Colors
 import com.aiapp.flowcent.core.utils.DateTimeUtils.daysInMonth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_arrow_left
@@ -133,19 +129,19 @@ fun CalendarStrip(
                     Column(
                         modifier = Modifier
                             .clip(CircleShape)
-                            .background(if (isSelected) green else Color.Transparent)
+                            .background(if (isSelected) Colors.LightPrimary else Color.Transparent)
                             .clickable { onDateSelected(date) }
                             .padding(vertical = 8.dp, horizontal = 12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             text = date.dayOfWeek.name.first().toString(),
-                            style = medium14Black().copy(color = gray, fontSize = 12.sp),
+                            style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         Text(
                             text = date.dayOfMonth.toString(),
-                            style = bold18Black()
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 }

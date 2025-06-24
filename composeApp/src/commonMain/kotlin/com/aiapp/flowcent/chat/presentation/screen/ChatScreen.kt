@@ -1,6 +1,5 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,7 +27,7 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.SpendingCard
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.permissions.PermissionsViewModel
-import com.aiapp.flowcent.theming.AppTheme
+import com.aiapp.flowcent.core.ui.theme.AppTheme
 import com.aiapp.flowcent.voice.SpeechRecognizer
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
