@@ -16,7 +16,7 @@ import com.aiapp.flowcent.home.presentation.screens.HomeScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeNavGraph(startDestination: HomeNavRoutes, speechRecognizer: SpeechRecognizer) {
+fun HomeNavGraph(startDestination: HomeNavRoutes) {
     val localNavController = rememberNavController()
     val viewModel = koinViewModel<HomeViewModel>()
     val state by viewModel.state.collectAsState()
@@ -26,7 +26,10 @@ fun HomeNavGraph(startDestination: HomeNavRoutes, speechRecognizer: SpeechRecogn
         startDestination = startDestination.route
     ) {
         addAnimatedComposable(route = HomeNavRoutes.HomeScreen.route) {
-            HomeScreen(navController = localNavController)
+            HomeScreen(
+                homeViewModel = viewModel,
+                homeState = state
+            )
         }
     }
 }

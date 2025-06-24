@@ -42,8 +42,7 @@ fun AppNavGraph(
 
             composable(route = AppNavRoutes.Home.route) {
                 HomeNavGraph(
-                    startDestination = HomeNavRoutes.HomeScreen,
-                    speechRecognizer = speechRecognizer
+                    startDestination = HomeNavRoutes.HomeScreen
                 )
             }
 
