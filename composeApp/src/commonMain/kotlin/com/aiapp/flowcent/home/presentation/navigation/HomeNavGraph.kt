@@ -17,7 +17,7 @@ import com.aiapp.flowcent.core.navigation.addAnimatedComposable
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.screens.HomeScreen
 import com.aiapp.flowcent.permissions.PermissionsViewModel
-import com.aiapp.flowcent.voice.SpeechRecognizer
+import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.compose.viewmodel.koinViewModel

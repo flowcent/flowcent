@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.screen.ChatScreen
 import com.aiapp.flowcent.core.navigation.addAnimatedComposable
-import com.aiapp.flowcent.voice.SpeechRecognizer
+import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

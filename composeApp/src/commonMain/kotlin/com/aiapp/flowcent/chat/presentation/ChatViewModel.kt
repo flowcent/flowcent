@@ -2,7 +2,7 @@ package com.aiapp.flowcent.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aiapp.flowcent.ai.FlowCentAi
+import com.aiapp.flowcent.core.platform.FlowCentAi
 import com.aiapp.flowcent.chat.presentation.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.presentation.ChatUtil.checkInvalidExpense
 import com.aiapp.flowcent.data.common.ChatMessage

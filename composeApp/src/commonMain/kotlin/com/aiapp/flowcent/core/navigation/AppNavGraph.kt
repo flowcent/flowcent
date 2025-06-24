@@ -19,7 +19,7 @@ import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavGraph
 import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavRoutes
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
-import com.aiapp.flowcent.voice.SpeechRecognizer
+import com.aiapp.flowcent.core.platform.SpeechRecognizer
 
 @Composable
 fun AppNavGraph(

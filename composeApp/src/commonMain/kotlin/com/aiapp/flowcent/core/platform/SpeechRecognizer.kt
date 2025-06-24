@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.voice
+package com.aiapp.flowcent.core.platform
 
 import kotlinx.coroutines.flow.Flow
 

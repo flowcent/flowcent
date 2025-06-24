@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core
+package com.aiapp.flowcent.core.platform
 
 interface Platform {
     val name: String

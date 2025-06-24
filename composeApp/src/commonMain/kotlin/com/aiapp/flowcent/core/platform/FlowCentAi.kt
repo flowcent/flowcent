@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.ai
+package com.aiapp.flowcent.core.platform
 
 import com.aiapp.flowcent.data.common.ChatResult
 

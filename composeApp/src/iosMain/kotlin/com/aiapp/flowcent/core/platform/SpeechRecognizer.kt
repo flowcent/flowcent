@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.voice
+package com.aiapp.flowcent.core.platform
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +11,7 @@ import platform.AVFAudio.AVAudioSession
 import platform.AVFAudio.AVAudioSessionCategoryRecord
 import platform.AVFAudio.AVAudioSessionModeMeasurement
 import platform.AVFAudio.setActive
+import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
 import platform.Speech.SFSpeechAudioBufferRecognitionRequest
 import platform.Speech.SFSpeechRecognitionTask
@@ -62,7 +63,7 @@ actual class SpeechRecognizer {
             audioSession.setActive(true, error = null)
 
             speechRecognizer =
-                SFSpeechRecognizer(locale = platform.Foundation.NSLocale.currentLocale)
+                SFSpeechRecognizer(locale = NSLocale.currentLocale)
             recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
             recognitionRequest?.setShouldReportPartialResults(true)
 

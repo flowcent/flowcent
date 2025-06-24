@@ -1,7 +1,8 @@
-package com.aiapp.flowcent.ai
+package com.aiapp.flowcent.core.platform
 
 import com.aiapp.flowcent.data.common.ChatResult
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -13,22 +14,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class GeminiContentRequest(
-    val contents: List<ContentBlock>
-)
-
-@Serializable
-data class ContentBlock(
-    val parts: List<ContentPart>
-)
-
-@Serializable
-data class ContentPart(
-    val text: String
-)
 
 actual class FlowCentAi {
     /**
@@ -53,7 +38,7 @@ actual class FlowCentAi {
 //When Firebase ai logic will be available, we have to replace it with it
 
     private val client = HttpClient {
-        install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+        install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
                 prettyPrint = true

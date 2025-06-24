@@ -12,7 +12,7 @@ import com.aiapp.flowcent.core.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.navigation.presentation.components.BottomNavigationBar
 import com.aiapp.flowcent.core.navigation.presentation.model.NavItem
 import com.aiapp.flowcent.core.ui.theme.AppTheme
-import com.aiapp.flowcent.voice.SpeechRecognizer
+import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.ui.tooling.preview.Preview
