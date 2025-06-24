@@ -26,8 +26,8 @@ fun App(
 
     val navItems = listOf(
         NavItem("Home", Res.drawable.compose_multiplatform, AppNavRoutes.Home.route),
-        NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route),
-        NavItem("Reflect", Res.drawable.compose_multiplatform, AppNavRoutes.Reflect.route)
+        NavItem("Chat", Res.drawable.compose_multiplatform, AppNavRoutes.Chat.route),
+        NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route)
     )
 
     val currentDestination by navController.currentBackStackEntryAsState()

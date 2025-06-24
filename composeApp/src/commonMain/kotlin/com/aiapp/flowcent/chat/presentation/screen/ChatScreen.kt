@@ -38,15 +38,15 @@ fun ChatScreen(
     chatState: ChatState,
     viewModel: ChatViewModel,
     speechRecognizer: SpeechRecognizer,
-    permissionsVM: PermissionsViewModel? = null
+    permissionsVM: PermissionsViewModel
 ) {
 
     var hasPermission: Boolean by remember { mutableStateOf(false) }
     var isListening by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = permissionsVM?.state) {
-        hasPermission = when (permissionsVM?.state) {
+    LaunchedEffect(key1 = permissionsVM.state) {
+        hasPermission = when (permissionsVM.state) {
             PermissionState.NotDetermined -> false
 
             PermissionState.NotGranted -> false
