@@ -26,7 +26,7 @@ import com.aiapp.flowcent.chat.presentation.components.BotMessage
 import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.SpendingCard
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
-import com.aiapp.flowcent.permissions.PermissionsViewModel
+import com.aiapp.flowcent.core.presentation.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import dev.icerock.moko.permissions.PermissionState

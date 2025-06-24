@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.permissions
+package com.aiapp.flowcent.core.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
