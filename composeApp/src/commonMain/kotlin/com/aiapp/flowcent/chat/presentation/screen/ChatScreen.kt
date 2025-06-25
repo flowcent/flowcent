@@ -29,6 +29,7 @@ import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.core.presentation.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
+import com.aiapp.flowcent.core.presentation.ui.theme.RadialGradientBackground
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
 
@@ -101,61 +102,63 @@ fun ChatScreen(
                 }
 
                 UiEvent.CheckAudioPermission -> {
-                    permissionsVM?.provideOrRequestRecordAudioPermission()
+                    permissionsVM.provideOrRequestRecordAudioPermission()
                 }
             }
         }
     }
 
     AppTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                reverseLayout = true
+        RadialGradientBackground {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                items(chatState.messages.reversed()) {
-                    if (it.isUser) {
-                        UserMessage(text = it.text)
-                    } else {
-                        if (chatState.isCircularLoading && chatState.messages[chatState.messages.lastIndex].isUser.not()) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                color = Color(0xFFFFFFFF)
-                            )
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    reverseLayout = true
+                ) {
+                    items(chatState.messages.reversed()) {
+                        if (it.isUser) {
+                            UserMessage(text = it.text)
                         } else {
-                            Column {
-                                BotMessage(text = it.text)
-                                if (it.expenseItems.isNotEmpty()) {
-                                    it.expenseItems.forEach { expenseItem ->
-                                        SpendingCard(expenseItem)
+                            if (chatState.isCircularLoading && chatState.messages[chatState.messages.lastIndex].isUser.not()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    color = Color(0xFFFFFFFF)
+                                )
+                            } else {
+                                Column {
+                                    BotMessage(text = it.text)
+                                    if (it.expenseItems.isNotEmpty()) {
+                                        it.expenseItems.forEach { expenseItem ->
+                                            SpendingCard(expenseItem)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            ChatInput(
-                state = chatState,
-                isListening = isListening,
-                onUpdateText = {
-                    viewModel.onAction(UserAction.UpdateText(it))
-                },
-                onClickMic = {
-                    if (isListening) {
-                        viewModel.onAction(UserAction.StopAudioPlayer)
-                    } else {
-                        viewModel.onAction(UserAction.StartAudioPlayer)
+                ChatInput(
+                    state = chatState,
+                    isListening = isListening,
+                    onUpdateText = {
+                        viewModel.onAction(UserAction.UpdateText(it))
+                    },
+                    onClickMic = {
+                        if (isListening) {
+                            viewModel.onAction(UserAction.StopAudioPlayer)
+                        } else {
+                            viewModel.onAction(UserAction.StartAudioPlayer)
+                        }
                     }
+                ) {
+                    viewModel.onAction(UserAction.SendMessage(chatState.userText))
                 }
-            ) {
-                viewModel.onAction(UserAction.SendMessage(chatState.userText))
             }
         }
     }
