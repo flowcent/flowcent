@@ -15,6 +15,6 @@ expect val platformModule: Module
 
 val sharedModule = module {
     //ViewModels
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(expenseRepository = ExpenseRepositoryImpl()) }
     viewModel { ChatViewModel(flowCentAi = get(), expenseRepository = ExpenseRepositoryImpl()) }
 }

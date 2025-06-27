@@ -3,16 +3,12 @@ package com.aiapp.flowcent.chat.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.core.platform.FlowCentAi
-import com.aiapp.flowcent.chat.presentation.ChatUtil.buildExpensePrompt
-import com.aiapp.flowcent.chat.presentation.ChatUtil.checkInvalidExpense
+import com.aiapp.flowcent.chat.util.ChatUtil.buildExpensePrompt
+import com.aiapp.flowcent.chat.util.ChatUtil.checkInvalidExpense
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
-import com.aiapp.flowcent.chat.presentation.ChatUtil.getCurrentFormattedDateTime
 import com.aiapp.flowcent.data.repository.ExpenseRepository
 import com.aiapp.flowcent.util.Resource
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.firestore.firestore
-import dev.gitlive.firebase.firestore.firestoreSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -86,29 +82,6 @@ class ChatViewModel(
 
             is UserAction.SaveExpenseItemsToDb -> {
                 viewModelScope.launch {
-//                    try {
-//                        val db = Firebase.firestore
-//
-//                        val transaction = hashMapOf(
-//                            "amount" to action.expenseItems[0].amount,
-//                            "category" to action.expenseItems[0].category,
-//                            "created_at" to getCurrentFormattedDateTime(),
-//                            "created_by" to "Sohan",
-//                            "title" to action.expenseItems[0].title,
-//                            "tn_d" to "tqcMiL3tg3jvWqqhHJ4I",
-//                            "type" to "Expense",
-//                            "updated_at" to getCurrentFormattedDateTime(),
-//                            "updated_by" to "Sohan",
-//                        )
-//
-//                        val addDocRef = db
-//                            .collection("transactions")
-//                            .add(transaction)
-//                        println("Sohan addDocRef id: ${addDocRef}")
-//                    } catch (error: Exception) {
-//                        println("Sohan error in adding doc: ${error.message}")
-//                    }
-
                     when (val result =
                         expenseRepository.saveExpenseItemsToDb(action.expenseItems)) {
                         is Resource.Success -> {

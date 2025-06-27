@@ -5,4 +5,5 @@ import com.aiapp.flowcent.util.Resource
 
 interface ExpenseRepository {
     suspend fun saveExpenseItemsToDb(expenseItems: List<ExpenseItem>): Resource<String>
+    suspend fun getAllExpenses(): Resource<List<ExpenseItem>>
 }

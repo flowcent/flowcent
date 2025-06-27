@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.chat.presentation
+package com.aiapp.flowcent.chat.util
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

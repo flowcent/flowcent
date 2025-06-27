@@ -1,16 +1,19 @@
 package com.aiapp.flowcent.domain.repository
 
-import com.aiapp.flowcent.chat.presentation.ChatUtil.getCurrentFormattedDateTime
+import com.aiapp.flowcent.chat.util.ChatUtil.getCurrentFormattedDateTime
 import com.aiapp.flowcent.data.repository.ExpenseRepository
 import com.aiapp.flowcent.data.request.ExpenseItem
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 
 class ExpenseRepositoryImpl(
     private val firestore: FirebaseFirestore = Firebase.firestore
 ) : ExpenseRepository {
+    private val transactionCollection = firestore.collection("transactions")
+
     override suspend fun saveExpenseItemsToDb(expenseItems: List<ExpenseItem>): Resource<String> {
         return try {
             if (expenseItems.isEmpty()) {
@@ -32,7 +35,7 @@ class ExpenseRepositoryImpl(
                 "updated_by" to "Sohan", // Consider making this dynamic
             )
 
-            val addDocRef = firestore.collection("transactions")
+            val addDocRef = transactionCollection
                 .add(transaction)
 
             Resource.Success(addDocRef.id)
@@ -40,6 +43,21 @@ class ExpenseRepositoryImpl(
             println("Sohan error in adding doc: ${e.message}")
             Resource.Error("Failed to save expense: ${e.message}")
         }
+    }
+
+    override suspend fun getAllExpenses(): Resource<List<ExpenseItem>> {
+        return try {
+            val querySnapshot = transactionCollection
+                .orderBy("created_at", Direction.DESCENDING)
+                .get()
+            val expenseList = querySnapshot.documents.map { document ->
+                document.data(ExpenseItem.serializer())
+            }
+            Resource.Success(expenseList)
+        } catch (e: Exception) {
+            Resource.Error("Error fetching expenses: ${e.message}")
+        }
+
     }
 
 }
