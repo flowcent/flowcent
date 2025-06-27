@@ -24,6 +24,7 @@ import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
 import com.aiapp.flowcent.chat.presentation.components.BotMessage
 import com.aiapp.flowcent.chat.presentation.components.ChatInput
+import com.aiapp.flowcent.chat.presentation.components.PromptSave
 import com.aiapp.flowcent.chat.presentation.components.SpendingCard
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.core.presentation.PermissionsViewModel
@@ -136,6 +137,18 @@ fun ChatScreen(
                                         it.expenseItems.forEach { expenseItem ->
                                             SpendingCard(expenseItem)
                                         }
+                                        PromptSave(
+                                            onClickSave = {
+                                                viewModel.onAction(
+                                                    UserAction.SaveExpenseItemsToDb(
+                                                        it.expenseItems
+                                                    )
+                                                )
+                                            },
+                                            onClickClose = {
+                                                viewModel.onAction(UserAction.DiscardExpenseItems)
+                                            }
+                                        )
                                     }
                                 }
                             }

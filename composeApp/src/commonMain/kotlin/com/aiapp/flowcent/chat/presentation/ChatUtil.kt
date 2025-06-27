@@ -1,5 +1,9 @@
 package com.aiapp.flowcent.chat.presentation
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
 object ChatUtil {
     fun buildExpensePrompt(userText: String): String {
         return """
@@ -139,6 +143,26 @@ object ChatUtil {
         } else {
             return ""
         }
+    }
+
+
+    /**
+     * Formats the current local time into a string with the format "dd-MM-yyyy HH:mm:ss".
+     *
+     * @return A string representing the current time in "dd-MM-yyyy HH:mm:ss" format.
+     */
+    fun getCurrentFormattedDateTime(): String {
+        val now = Clock.System.now()
+        val localDateTime = now.toLocalDateTime(TimeZone.currentSystemDefault())
+
+        val day = localDateTime.dayOfMonth.toString().padStart(2, '0')
+        val month = localDateTime.monthNumber.toString().padStart(2, '0')
+        val year = localDateTime.year.toString()
+        val hour = localDateTime.hour.toString().padStart(2, '0')
+        val minute = localDateTime.minute.toString().padStart(2, '0')
+        val second = localDateTime.second.toString().padStart(2, '0')
+
+        return "$day-$month-$year $hour:$minute:$second"
     }
 
 

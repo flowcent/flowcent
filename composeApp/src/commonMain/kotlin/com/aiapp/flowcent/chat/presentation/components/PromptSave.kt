@@ -1,12 +1,16 @@
 package com.aiapp.flowcent.chat.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,12 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.data.request.ExpenseItem
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@Preview
 @Composable
-fun SpendingCard(expenseItem: ExpenseItem) {
+fun PromptSave(
+    onClickSave: () -> Unit = {},
+    onClickClose: () -> Unit = {},
+) {
     Card(
-        backgroundColor = Color(0xFF1E1E1E),
+        backgroundColor = Color(0xFFFFFFFF),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
@@ -27,26 +35,22 @@ fun SpendingCard(expenseItem: ExpenseItem) {
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    expenseItem.title,
-                    color = Color(0xFFFFFFFF),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    expenseItem.category,
-                    color = Color(0xFF808080),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
             Text(
-                expenseItem.amount.toString(),
-                color = Color(0xFFFFFFFF),
+                text = "Do you want to save it?",
+                color = Color(0xFF1E1E1E),
                 style = MaterialTheme.typography.bodyLarge
             )
+
+            IconButton(onClick = { onClickSave() }) {
+                Icon(Icons.Default.Done, contentDescription = "Save", tint = Color(0xFF4CBB17))
+            }
+
+            IconButton(onClick = { onClickClose() }) {
+                Icon(Icons.Default.Close, contentDescription = "Close", tint = Color(0xFFFF2400))
+            }
         }
     }
 }

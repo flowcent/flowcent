@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.chat.domain.model
 
+import com.aiapp.flowcent.data.request.ExpenseItem
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -5,6 +5,7 @@
 package com.aiapp.flowcent.di
 
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
+import com.aiapp.flowcent.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
@@ -15,5 +16,5 @@ expect val platformModule: Module
 val sharedModule = module {
     //ViewModels
     viewModel { HomeViewModel() }
-    viewModel { ChatViewModel(flowCentAi = get()) }
+    viewModel { ChatViewModel(flowCentAi = get(), expenseRepository = ExpenseRepositoryImpl()) }
 }

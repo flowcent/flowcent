@@ -29,7 +29,7 @@ configurations.all {
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
     
@@ -76,6 +76,7 @@ kotlin {
             implementation(libs.moko.permissions.microphone)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.firebase.firestore)
         }
 
         iosMain.dependencies{
