@@ -137,11 +137,13 @@ fun CalendarStrip(
                         Text(
                             text = date.dayOfWeek.name.first().toString(),
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(bottom = 12.dp)
+                            modifier = Modifier.padding(bottom = 12.dp),
+                            color = if(isSelected) Colors.White else Colors.LightPrimary
                         )
                         Text(
                             text = date.dayOfMonth.toString(),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if(isSelected) Colors.White else Colors.LightPrimary
                         )
                     }
                 }

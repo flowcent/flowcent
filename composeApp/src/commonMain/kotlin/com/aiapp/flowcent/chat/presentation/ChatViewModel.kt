@@ -111,6 +111,7 @@ class ChatViewModel(
                 val updatedPrompt = buildExpensePrompt(prompt)
                 val result = flowCentAi.generateContent(updatedPrompt)
                 result.onSuccess { chatResult ->
+                    println("Sohan sendPrompt chatResult: ${chatResult.data}")
                     _chatState.update {
                         it.copy(
                             isCircularLoading = false,

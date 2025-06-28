@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 data class ExpenseItem(
     val amount: Int,
     val category: String,
-    val title: String
+    val title: String,
+    val type: String,
+    val involved_party: String = "",
 )
 
