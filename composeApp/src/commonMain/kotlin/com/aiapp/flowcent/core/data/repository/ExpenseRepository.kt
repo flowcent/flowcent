@@ -1,6 +1,6 @@
-package com.aiapp.flowcent.data.repository
+package com.aiapp.flowcent.core.data.repository
 
-import com.aiapp.flowcent.data.request.ExpenseItem
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.util.Resource
 
 interface ExpenseRepository {

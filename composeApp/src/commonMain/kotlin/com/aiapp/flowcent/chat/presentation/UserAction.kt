@@ -1,6 +1,6 @@
 package com.aiapp.flowcent.chat.presentation
 
-import com.aiapp.flowcent.data.request.ExpenseItem
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
 
 sealed interface UserAction {
     data class SendMessage(val text: String) : UserAction

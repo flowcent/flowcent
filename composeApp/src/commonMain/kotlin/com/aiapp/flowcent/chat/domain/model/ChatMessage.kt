@@ -1,6 +1,6 @@
 package com.aiapp.flowcent.chat.domain.model
 
-import com.aiapp.flowcent.data.request.ExpenseItem
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
 
 data class ChatMessage(
     val text: String,

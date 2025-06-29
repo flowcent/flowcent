@@ -7,7 +7,7 @@ import com.aiapp.flowcent.chat.util.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.util.ChatUtil.checkInvalidExpense
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
-import com.aiapp.flowcent.data.repository.ExpenseRepository
+import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

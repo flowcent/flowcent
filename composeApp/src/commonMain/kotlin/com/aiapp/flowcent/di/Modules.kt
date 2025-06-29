@@ -5,7 +5,7 @@
 package com.aiapp.flowcent.di
 
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
-import com.aiapp.flowcent.domain.repository.ExpenseRepositoryImpl
+import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel

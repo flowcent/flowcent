@@ -4,7 +4,7 @@
 
 package com.aiapp.flowcent.home.presentation
 
-import com.aiapp.flowcent.data.request.ExpenseItem
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
 
 data class HomeState(
     val isLoading: Boolean = false,

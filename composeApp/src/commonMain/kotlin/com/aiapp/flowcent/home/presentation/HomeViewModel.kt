@@ -6,8 +6,8 @@ package com.aiapp.flowcent.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aiapp.flowcent.data.repository.ExpenseRepository
-import com.aiapp.flowcent.data.request.ExpenseItem
+import com.aiapp.flowcent.core.data.repository.ExpenseRepository
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.util.Resource
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

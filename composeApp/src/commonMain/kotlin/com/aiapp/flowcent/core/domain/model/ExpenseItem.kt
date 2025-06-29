@@ -1,5 +1,6 @@
-package com.aiapp.flowcent.data.request
+package com.aiapp.flowcent.core.domain.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,6 +9,6 @@ data class ExpenseItem(
     val category: String,
     val title: String,
     val type: String,
-    val involved_party: String = "",
+    @SerialName("involved_party") val involvedParty: String = ""
 )
 

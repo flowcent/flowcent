@@ -1,8 +1,8 @@
-package com.aiapp.flowcent.domain.repository
+package com.aiapp.flowcent.core.domain.repository
 
 import com.aiapp.flowcent.chat.util.ChatUtil.getCurrentFormattedDateTime
-import com.aiapp.flowcent.data.repository.ExpenseRepository
-import com.aiapp.flowcent.data.request.ExpenseItem
+import com.aiapp.flowcent.core.data.repository.ExpenseRepository
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
