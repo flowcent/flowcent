@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun AccountsHomeScreen() {
+fun AccountsHomeScreen(
+    modifier: Modifier = Modifier
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(text = "Accounts home screen")
     }

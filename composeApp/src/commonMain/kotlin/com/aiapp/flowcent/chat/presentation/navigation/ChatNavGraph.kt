@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
@@ -16,7 +17,11 @@ import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ChatNavGraph(startDestination: ChatNavRoutes, speechRecognizer: SpeechRecognizer) {
+fun ChatNavGraph(
+    modifier: Modifier = Modifier,
+    startDestination: ChatNavRoutes,
+    speechRecognizer: SpeechRecognizer
+) {
     val localNavController = rememberNavController()
     val viewModel = koinViewModel<ChatViewModel>()
     val chatState by viewModel.chatState.collectAsState()
@@ -38,6 +43,7 @@ fun ChatNavGraph(startDestination: ChatNavRoutes, speechRecognizer: SpeechRecogn
     ) {
         addAnimatedComposable(route = ChatNavRoutes.ChatScreen.route) {
             ChatScreen(
+                modifier = modifier,
                 chatState = chatState,
                 viewModel = viewModel,
                 speechRecognizer = speechRecognizer,

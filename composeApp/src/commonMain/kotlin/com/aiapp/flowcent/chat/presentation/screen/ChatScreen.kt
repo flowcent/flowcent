@@ -27,16 +27,15 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
 import com.aiapp.flowcent.chat.presentation.components.SpendingCard
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
-import com.aiapp.flowcent.core.presentation.PermissionsViewModel
-import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.presentation.ui.theme.RadialGradientBackground
+import com.aiapp.flowcent.core.presentation.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun ChatScreen(
+    modifier: Modifier = Modifier,
     chatState: ChatState,
     viewModel: ChatViewModel,
     speechRecognizer: SpeechRecognizer,
@@ -109,72 +108,69 @@ fun ChatScreen(
         }
     }
 
-    AppTheme {
-        RadialGradientBackground {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    reverseLayout = true
-                ) {
-                    items(chatState.messages.reversed()) {
-                        if (it.isUser) {
-                            UserMessage(text = it.text)
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            reverseLayout = true
+        ) {
+            println("Sohan messages: ${chatState.messages}")
+            items(chatState.messages.reversed()) {
+                if (it.isUser) {
+                    UserMessage(text = it.text)
+                } else {
+                    Column {
+                        if (it.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                color = Color.Blue
+                            )
                         } else {
-                            if (chatState.isCircularLoading && chatState.messages[chatState.messages.lastIndex].isUser.not()) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                                    color = Color(0xFFFFFFFF)
-                                )
-                            } else {
-                                Column {
-                                    BotMessage(text = it.text)
-                                    if (it.expenseItems.isNotEmpty()) {
-                                        it.expenseItems.forEach { expenseItem ->
-                                            SpendingCard(expenseItem)
-                                        }
-                                        PromptSave(
-                                            onClickSave = {
-                                                viewModel.onAction(
-                                                    UserAction.SaveExpenseItemsToDb(
-                                                        it.expenseItems
-                                                    )
-                                                )
-                                            },
-                                            onClickClose = {
-                                                viewModel.onAction(UserAction.DiscardExpenseItems)
-                                            }
-                                        )
-                                    }
+                            BotMessage(text = it.text)
+                            if (it.expenseItems.isNotEmpty()) {
+                                it.expenseItems.forEach { expenseItem ->
+                                    SpendingCard(expenseItem)
                                 }
+                                PromptSave(
+                                    onClickSave = {
+                                        viewModel.onAction(
+                                            UserAction.SaveExpenseItemsToDb(
+                                                it.expenseItems
+                                            )
+                                        )
+                                    },
+                                    onClickClose = {
+                                        viewModel.onAction(UserAction.DiscardExpenseItems)
+                                    }
+                                )
                             }
                         }
                     }
                 }
-
-                ChatInput(
-                    state = chatState,
-                    isListening = isListening,
-                    onUpdateText = {
-                        viewModel.onAction(UserAction.UpdateText(it))
-                    },
-                    onClickMic = {
-                        if (isListening) {
-                            viewModel.onAction(UserAction.StopAudioPlayer)
-                        } else {
-                            viewModel.onAction(UserAction.StartAudioPlayer)
-                        }
-                    }
-                ) {
-                    viewModel.onAction(UserAction.SendMessage(chatState.userText))
-                }
             }
         }
+
+        ChatInput(
+            state = chatState,
+            isListening = isListening,
+            onUpdateText = {
+                viewModel.onAction(UserAction.UpdateText(it))
+            },
+            onClickMic = {
+                if (isListening) {
+                    viewModel.onAction(UserAction.StopAudioPlayer)
+                } else {
+                    viewModel.onAction(UserAction.StartAudioPlayer)
+                }
+            }
+        ) {
+            viewModel.onAction(UserAction.SendMessage(chatState.userText))
+        }
     }
+
 }
 
 

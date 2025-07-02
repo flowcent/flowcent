@@ -19,7 +19,7 @@ import com.aiapp.flowcent.core.domain.model.ExpenseItem
 @Composable
 fun SpendingCard(expenseItem: ExpenseItem) {
     Card(
-        backgroundColor = Color(0xFF1E1E1E),
+        backgroundColor = Color.White,
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
@@ -33,18 +33,18 @@ fun SpendingCard(expenseItem: ExpenseItem) {
             Column {
                 Text(
                     expenseItem.title,
-                    color = Color(0xFFFFFFFF),
+                    color = Color.Black,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
                     expenseItem.category,
-                    color = Color(0xFF808080),
+                    color = Color.Black,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
             Text(
                 expenseItem.amount.toString(),
-                color = Color(0xFFFFFFFF),
+                color = Color.Red,
                 style = MaterialTheme.typography.bodyLarge
             )
         }

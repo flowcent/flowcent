@@ -4,10 +4,12 @@
 
 package com.aiapp.flowcent.core.presentation.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,36 +30,36 @@ fun AppNavGraph(
     startDestination: AppNavRoutes = AppNavRoutes.Home,
     speechRecognizer: SpeechRecognizer
 ) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination.route
+    ) {
+        composable(route = AppNavRoutes.Accounts.route) {
+            AccountsNavGraph(
+                modifier = modifier,
+                startDestination = AccountsNavRoutes.AccountsHome
+            )
+        }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        NavHost(
-            navController = navController,
-            startDestination = startDestination.route
-        ) {
-            composable(route = AppNavRoutes.Accounts.route) {
-                AccountsNavGraph(
-                    startDestination = AccountsNavRoutes.AccountsHome
-                )
-            }
+        composable(route = AppNavRoutes.Home.route) {
+            HomeNavGraph(
+                modifier = modifier,
+                startDestination = HomeNavRoutes.HomeScreen
+            )
+        }
 
-            composable(route = AppNavRoutes.Home.route) {
-                HomeNavGraph(
-                    startDestination = HomeNavRoutes.HomeScreen
-                )
-            }
+        composable(route = AppNavRoutes.Reflect.route) {
+            ReflectNavGraph(
+                startDestination = ReflectNavRoutes.ReflectHome
+            )
+        }
 
-            composable(route = AppNavRoutes.Reflect.route) {
-                ReflectNavGraph(
-                    startDestination = ReflectNavRoutes.ReflectHome
-                )
-            }
-
-            composable(route = AppNavRoutes.Chat.route) {
-                ChatNavGraph(
-                    startDestination = ChatNavRoutes.ChatScreen,
-                    speechRecognizer = speechRecognizer
-                )
-            }
+        composable(route = AppNavRoutes.Chat.route) {
+            ChatNavGraph(
+                modifier = modifier,
+                startDestination = ChatNavRoutes.ChatScreen,
+                speechRecognizer = speechRecognizer
+            )
         }
     }
 }

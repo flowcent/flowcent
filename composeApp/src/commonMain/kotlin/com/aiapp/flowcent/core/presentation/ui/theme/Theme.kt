@@ -13,6 +13,9 @@ fun AppTheme(
         colorScheme = colors,
         typography = AppTypography(),
         shapes = Shapes,
-        content = content,
-    )
+    ){
+        RadialGradientBackground {
+            content()
+        }
+    }
 }

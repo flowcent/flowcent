@@ -33,44 +33,42 @@ fun ChatInput(
     onClickSend: () -> Unit = {},
 ) {
 
-    AppTheme {
-        Row(
-            modifier = Modifier
-                .height(70.dp)
-                .padding(vertical = 8.dp, horizontal = 8.dp)
-                .background(Colors.White)
-                .border(1.dp, Colors.Black, shape = MaterialTheme.shapes.medium)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { onClickMic() }) {
-                if(isListening){
-                    Icon(Icons.Default.Close, contentDescription = "Close", tint = Colors.Black)
-                }else{
-                    Icon(Icons.Default.Mic, contentDescription = "Mic", tint = Colors.Black)
-                }
+    Row(
+        modifier = Modifier
+            .height(70.dp)
+            .padding(vertical = 8.dp, horizontal = 8.dp)
+            .background(Colors.White)
+            .border(1.dp, Colors.Black, shape = MaterialTheme.shapes.medium)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = { onClickMic() }) {
+            if (isListening) {
+                Icon(Icons.Default.Close, contentDescription = "Close", tint = Colors.Black)
+            } else {
+                Icon(Icons.Default.Mic, contentDescription = "Mic", tint = Colors.Black)
             }
-            TextField(
-                value = state.userText,
-                onValueChange = { newValue ->
-                    onUpdateText(newValue)
-                },
-                placeholder = { Text("Type your messenger here") },
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = Colors.Black,
-                    cursorColor = Colors.Black,
-                    unfocusedContainerColor = Colors.White,
-                    focusedContainerColor = Colors.White,
-                ),
-                modifier = Modifier.weight(1f),
-                maxLines = 1,
-                singleLine = true,
-            )
-            IconButton(onClick = {
-                onClickSend()
-            }) {
-                Icon(Icons.Default.Send, contentDescription = "Send", tint = Colors.Black)
-            }
+        }
+        TextField(
+            value = state.userText,
+            onValueChange = { newValue ->
+                onUpdateText(newValue)
+            },
+            placeholder = { Text("Type your messenger here") },
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Colors.Black,
+                cursorColor = Colors.Black,
+                unfocusedContainerColor = Colors.White,
+                focusedContainerColor = Colors.White,
+            ),
+            modifier = Modifier.weight(1f),
+            maxLines = 1,
+            singleLine = true,
+        )
+        IconButton(onClick = {
+            onClickSend()
+        }) {
+            Icon(Icons.Default.Send, contentDescription = "Send", tint = Colors.Black)
         }
     }
 }

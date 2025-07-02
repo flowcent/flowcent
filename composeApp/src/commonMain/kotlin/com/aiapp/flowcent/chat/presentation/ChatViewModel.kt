@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ChatViewModel(
     private val flowCentAi: FlowCentAi,
@@ -102,8 +104,7 @@ class ChatViewModel(
         }
     }
 
-    private suspend fun sendPrompt(prompt: String) {
-        _chatState.update { it.copy(isCircularLoading = true) }
+    private suspend fun sendPrompt(prompt: String, botLoadingMessageId: String) {
         try {
             val hasInvalidPrompt = checkInvalidExpense(prompt)
 
@@ -112,27 +113,63 @@ class ChatViewModel(
                 val result = flowCentAi.generateContent(updatedPrompt)
                 result.onSuccess { chatResult ->
                     println("Sohan sendPrompt chatResult: ${chatResult.data}")
-                    _chatState.update {
-                        it.copy(
-                            isCircularLoading = false,
-                            messages = it.messages + ChatMessage(
-                                chatResult.answer,
-                                false,
-                                expenseItems = chatResult.data
-                            ),
+//                    _chatState.update {
+//                        it.copy(
+//                            messages = it.messages + ChatMessage(
+//                                chatResult.answer,
+//                                false,
+//                                expenseItems = chatResult.data,
+//                                isLoading = false
+//                            ),
+//                        )
+//                    }
+                    _chatState.update { currentState ->
+                        val updatedMessages = currentState.messages.map { msg ->
+                            if (msg.id == botLoadingMessageId) {
+                                msg.copy(
+                                    text = chatResult.answer,
+                                    isLoading = false, // Set loading to false
+                                    expenseItems = chatResult.data
+                                )
+                            } else {
+                                msg
+                            }
+                        }
+                        currentState.copy(
+                            messages = updatedMessages,
+                            isSendingMessage = false // Release the input field lock
                         )
                     }
+
                 }
                     .onFailure { error ->
+//                        _chatState.update { currentState ->
+//                            currentState.copy(
+//                                error = "Error: ${error.message ?: "Unknown AI error"}",
+//                                messages = currentState.messages + ChatMessage(
+//                                    error.message ?: "Something unexpected happened",
+//                                    false,
+//                                    expenseItems = emptyList(),
+//                                    isLoading = false
+//                                ),
+//                            )
+//                        }
+
                         _chatState.update { currentState ->
+                            val updatedMessages = currentState.messages.map { msg ->
+                                if (msg.id == botLoadingMessageId) {
+                                    msg.copy(
+                                        text = error.message ?: "Something unexpected happened",
+                                        isLoading = false,
+                                        expenseItems = emptyList() // Clear any partial data on error
+                                    )
+                                } else {
+                                    msg
+                                }
+                            }
                             currentState.copy(
-                                isCircularLoading = false,
-                                error = "Error: ${error.message ?: "Unknown AI error"}",
-                                messages = currentState.messages + ChatMessage(
-                                    error.message ?: "Something unexpected happened",
-                                    false,
-                                    expenseItems = emptyList()
-                                ),
+                                messages = updatedMessages,
+                                isSendingMessage = false // Release the input field lock even on error
                             )
                         }
                     }
@@ -140,26 +177,50 @@ class ChatViewModel(
             } else {
                 val chatResult = Json.decodeFromString<ChatResult>(hasInvalidPrompt)
                 _chatState.update { currentState ->
+                    val updatedMessages = currentState.messages.map { msg ->
+                        if (msg.id == botLoadingMessageId) {
+                            msg.copy(
+                                text = chatResult.answer,
+                                isLoading = false, // Set loading to false
+                                expenseItems = chatResult.data
+                            )
+                        } else {
+                            msg
+                        }
+                    }
                     currentState.copy(
-                        isCircularLoading = false,
-                        messages = currentState.messages + ChatMessage(
-                            chatResult.answer,
-                            false,
-                            expenseItems = chatResult.data
-                        ),
+                        messages = updatedMessages,
+                        isSendingMessage = false // Release the input field lock
                     )
                 }
             }
         } catch (e: Exception) {
+//            _chatState.update { currentState ->
+//                currentState.copy(
+//                    error = "Error: ${e.message ?: "Unknown AI error"}",
+//                    messages = currentState.messages + ChatMessage(
+//                        e.message ?: "Something unexpected happened",
+//                        false,
+//                        expenseItems = emptyList(),
+//                        isLoading = false
+//                    ),
+//                )
+//            }
             _chatState.update { currentState ->
+                val updatedMessages = currentState.messages.map { msg ->
+                    if (msg.id == botLoadingMessageId) {
+                        msg.copy(
+                            text = e.message ?: "Something unexpected happened",
+                            isLoading = false,
+                            expenseItems = emptyList()
+                        )
+                    } else {
+                        msg
+                    }
+                }
                 currentState.copy(
-                    isCircularLoading = false,
-                    error = "Error: ${e.message ?: "Unknown AI error"}",
-                    messages = currentState.messages + ChatMessage(
-                        e.message ?: "Something unexpected happened",
-                        false,
-                        expenseItems = emptyList()
-                    ),
+                    messages = updatedMessages,
+                    isSendingMessage = false
                 )
             }
         }
@@ -167,16 +228,39 @@ class ChatViewModel(
 
     private fun sendMessage(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _chatState.update {
-                it.copy(
-                    messages = it.messages + ChatMessage(
-                        text, true, expenseItems = emptyList()
-                    ),
-                    userText = ""
+            val userMessage = ChatMessage(text = text, isUser = true)
+            val botLoadingMessageId = getUuid()
+
+            val botLoadingMessage = ChatMessage(
+                id = botLoadingMessageId,
+                text = "Thinking...",
+                isUser = false,
+                isLoading = true
+            )
+
+            _chatState.update { currentState ->
+                currentState.copy(
+                    messages = currentState.messages + userMessage + botLoadingMessage,
+                    isSendingMessage = true
                 )
             }
-            sendPrompt(text)
+
+
+//            _chatState.update {
+//                it.copy(
+//                    messages = it.messages + ChatMessage(
+//                        text, true, expenseItems = emptyList()
+//                    ),
+//                    userText = ""
+//                )
+//            }
+            sendPrompt(text, botLoadingMessageId)
         }
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    private fun getUuid(): String {
+        return Uuid.random().toString()
     }
 
 }
