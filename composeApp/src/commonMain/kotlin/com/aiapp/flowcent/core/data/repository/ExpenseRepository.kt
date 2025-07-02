@@ -8,4 +8,6 @@ interface ExpenseRepository {
     suspend fun getAllExpenses(): Resource<List<ExpenseItem>>
     suspend fun getDailyExpenses(dateString: String): Resource<List<ExpenseItem>>
     suspend fun totalAmount(): Resource<Int>
+    suspend fun totalExpenses(): Resource<Int>
+    suspend fun totalIncome(): Resource<Int>
 }

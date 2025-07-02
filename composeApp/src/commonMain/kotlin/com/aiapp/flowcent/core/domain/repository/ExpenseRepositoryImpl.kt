@@ -7,6 +7,7 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getFormattedDate
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
+import dev.gitlive.firebase.firestore.Filter
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 
@@ -87,6 +88,36 @@ class ExpenseRepositoryImpl(
     override suspend fun totalAmount(): Resource<Int> {
         return try {
             val snapshot = transactionCollection.get()
+            val total = snapshot.documents.sumOf {
+                it.data(ExpenseItem.serializer()).amount
+            }
+            Resource.Success(total)
+        } catch (e: Exception) {
+            Resource.Error("Error fetching expenses: ${e.message}")
+        }
+    }
+
+    override suspend fun totalExpenses(): Resource<Int> {
+        return try {
+            val snapshot = transactionCollection
+                .where { "type" equalTo "Expense" }
+                .get()
+            val total = snapshot.documents.sumOf {
+                it.data(ExpenseItem.serializer()).amount
+            }
+            Resource.Success(total)
+        } catch (e: Exception) {
+            Resource.Error("Error fetching expenses: ${e.message}")
+        }
+    }
+
+    override suspend fun totalIncome(): Resource<Int> {
+        return try {
+            val snapshot = transactionCollection
+                .where {
+                    "type" equalTo "Income"
+                }
+                .get()
             val total = snapshot.documents.sumOf {
                 it.data(ExpenseItem.serializer()).amount
             }
