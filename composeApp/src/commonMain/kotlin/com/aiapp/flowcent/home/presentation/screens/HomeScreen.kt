@@ -30,6 +30,10 @@ fun HomeScreen(
         homeViewModel.onAction(UserAction.FetchLatestTransactions)
     }
 
+    LaunchedEffect(key1 = Unit) {
+        homeViewModel.onAction(UserAction.FetchTotalAmount)
+    }
+
 
     Column {
         CalendarStrip(

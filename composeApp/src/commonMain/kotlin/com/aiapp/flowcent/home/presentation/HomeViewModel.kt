@@ -41,6 +41,26 @@ class HomeViewModel(
                 }
             }
 
+            UserAction.FetchTotalAmount -> {
+                fetchTotalAmount()
+            }
+        }
+    }
+
+    private fun fetchTotalAmount() {
+        viewModelScope.launch {
+            when (val result = expenseRepository.totalAmount()) {
+                is Resource.Error -> {
+                    println("Sohan Error in fetching total amount: ${result.message}")
+                }
+
+                is Resource.Success -> {
+                    println("Sohan Success in fetching total amount: ${result.data}")
+                }
+
+                Resource.Loading -> {}
+
+            }
         }
     }
 

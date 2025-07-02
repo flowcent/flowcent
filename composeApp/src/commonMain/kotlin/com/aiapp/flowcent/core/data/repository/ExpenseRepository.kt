@@ -7,4 +7,5 @@ interface ExpenseRepository {
     suspend fun saveExpenseItemsToDb(expenseItems: List<ExpenseItem>): Resource<String>
     suspend fun getAllExpenses(): Resource<List<ExpenseItem>>
     suspend fun getDailyExpenses(dateString: String): Resource<List<ExpenseItem>>
+    suspend fun totalAmount(): Resource<Int>
 }

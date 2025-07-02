@@ -84,4 +84,16 @@ class ExpenseRepositoryImpl(
 
     }
 
+    override suspend fun totalAmount(): Resource<Int> {
+        return try {
+            val snapshot = transactionCollection.get()
+            val total = snapshot.documents.sumOf {
+                it.data(ExpenseItem.serializer()).amount
+            }
+            Resource.Success(total)
+        } catch (e: Exception) {
+            Resource.Error("Error fetching expenses: ${e.message}")
+        }
+    }
+
 }
