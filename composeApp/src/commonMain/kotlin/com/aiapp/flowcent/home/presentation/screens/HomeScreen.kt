@@ -26,7 +26,7 @@ fun HomeScreen(
     homeState: HomeState
 ) {
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchLatestTransactions)
     }
 
@@ -34,7 +34,10 @@ fun HomeScreen(
     Column {
         CalendarStrip(
             selectedDate = getCurrentDate(),
-            onDateSelected = {}
+            onDateSelected = {
+                println("Sohan selected date: $it")
+                homeViewModel.onAction(UserAction.SetSelectedDate(it))
+            }
         )
 
         Column {

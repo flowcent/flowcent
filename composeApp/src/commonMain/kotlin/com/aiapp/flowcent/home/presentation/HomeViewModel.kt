@@ -27,19 +27,29 @@ class HomeViewModel(
 
     fun onAction(action: UserAction) {
         when (action) {
-
             is UserAction.FetchLatestTransactions -> {
                 fetchLatestTransactions()
             }
 
-            else -> {}
+            is UserAction.SetSelectedDate -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            selectedDate = action.dateString.toString()
+                        )
+                    }
+                }
+            }
+
         }
     }
 
     private fun fetchLatestTransactions() {
         viewModelScope.launch {
             try {
-                when (val result = expenseRepository.getAllExpenses()) {
+                println("Sohan _state.value.selectedDate.toString() ${_state.value.selectedDate.toString()}")
+                when (val result =
+                    expenseRepository.getDailyExpenses(_state.value.selectedDate.toString())) {
                     is Resource.Error -> {
                         println("Sohan Error in fetching expenses: ${result.message}")
                     }

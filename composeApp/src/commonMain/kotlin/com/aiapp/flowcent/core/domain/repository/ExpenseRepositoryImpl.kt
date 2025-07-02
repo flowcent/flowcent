@@ -1,8 +1,9 @@
 package com.aiapp.flowcent.core.domain.repository
 
-import com.aiapp.flowcent.chat.util.ChatUtil.getCurrentFormattedDateTime
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentFormattedDateTime
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getFormattedDate
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
@@ -48,6 +49,29 @@ class ExpenseRepositoryImpl(
     override suspend fun getAllExpenses(): Resource<List<ExpenseItem>> {
         return try {
             val querySnapshot = transactionCollection
+                .orderBy("created_at", Direction.DESCENDING)
+                .get()
+            val expenseList = querySnapshot.documents.map { document ->
+                document.data(ExpenseItem.serializer())
+            }
+            Resource.Success(expenseList)
+        } catch (e: Exception) {
+            Resource.Error("Error fetching expenses: ${e.message}")
+        }
+
+    }
+
+    override suspend fun getDailyExpenses(dateString: String): Resource<List<ExpenseItem>> {
+        return try {
+            val formattedDate = getFormattedDate(dateString)
+            println("Sohan formattedDate $formattedDate")
+            val querySnapshot = transactionCollection
+                .where {
+                    "created_at" greaterThanOrEqualTo formattedDate.plus(" 00:00:00")
+                }
+                .where {
+                    "created_at" lessThanOrEqualTo formattedDate.plus(" 23:59:59")
+                }
                 .orderBy("created_at", Direction.DESCENDING)
                 .get()
             val expenseList = querySnapshot.documents.map { document ->
