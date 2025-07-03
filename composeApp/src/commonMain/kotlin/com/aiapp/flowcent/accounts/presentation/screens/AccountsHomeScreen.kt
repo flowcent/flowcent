@@ -15,6 +15,6 @@ fun AccountsHomeScreen(
     modifier: Modifier = Modifier
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Accounts home screen")
+
     }
 }

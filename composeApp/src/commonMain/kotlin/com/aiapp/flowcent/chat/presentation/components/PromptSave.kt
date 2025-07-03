@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.chat.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,31 +27,25 @@ fun PromptSave(
     onClickSave: () -> Unit = {},
     onClickClose: () -> Unit = {},
 ) {
-    Card(
-        backgroundColor = Color(0xFFFFFFFF),
-        shape = RoundedCornerShape(12.dp),
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Do you want to save it?",
-                color = Color(0xFF1E1E1E),
-                style = MaterialTheme.typography.bodyLarge
-            )
+        Text(
+            text = "Do you want to save it?",
+            color = Color(0xFF1E1E1E),
+            style = MaterialTheme.typography.bodyLarge
+        )
 
-            IconButton(onClick = { onClickSave() }) {
-                Icon(Icons.Default.Done, contentDescription = "Save", tint = Color(0xFF4CBB17))
-            }
+        IconButton(onClick = { onClickSave() }) {
+            Icon(Icons.Default.Done, contentDescription = "Save", tint = Color(0xFF4CBB17))
+        }
 
-            IconButton(onClick = { onClickClose() }) {
-                Icon(Icons.Default.Close, contentDescription = "Close", tint = Color(0xFFFF2400))
-            }
+        IconButton(onClick = { onClickClose() }) {
+            Icon(Icons.Default.Close, contentDescription = "Close", tint = Color(0xFFFF2400))
         }
     }
 }
