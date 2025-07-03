@@ -11,7 +11,7 @@ fun AppTheme(
     val colors = if (darkTheme) DarkColorScheme else LightColorScheme
     MaterialTheme(
         colorScheme = colors,
-        typography = AppTypography(),
+        typography = appTypography(),
         shapes = Shapes,
     ){
         RadialGradientBackground {
