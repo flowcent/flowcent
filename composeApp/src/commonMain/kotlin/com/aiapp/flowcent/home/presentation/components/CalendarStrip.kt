@@ -151,14 +151,8 @@ fun CalendarStrip(
                     val isSelected = date == selectedDateState
 
                     Surface(
-                        tonalElevation = if (isSelected) 2.dp else 0.dp,
-                        shadowElevation = if (isSelected) 4.dp else 0.dp,
                         shape = RoundedCornerShape(12.dp),
-                        color = if (isSelected)
-                            MaterialTheme.colorScheme.primaryContainer
-                        else
-                            Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = if (isSelected) MaterialTheme.colorScheme.surface.copy(alpha = 0.5f) else Color.Transparent,
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
@@ -174,7 +168,8 @@ fun CalendarStrip(
                             // day-of-week initial
                             Text(
                                 text = date.dayOfWeek.name.first().toString(),
-                                style = MaterialTheme.typography.labelSmall
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
@@ -182,7 +177,8 @@ fun CalendarStrip(
                             // day-of-month
                             Text(
                                 text = date.dayOfMonth.toString(),
-                                style = MaterialTheme.typography.titleMedium
+                                style = MaterialTheme.typography.titleMedium,
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
