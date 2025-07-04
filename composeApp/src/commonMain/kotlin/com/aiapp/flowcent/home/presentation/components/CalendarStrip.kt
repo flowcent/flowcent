@@ -57,11 +57,13 @@ fun CalendarStrip(
     onDateSelected: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var selectedDateState by remember { mutableStateOf(selectedDate) }
+
     var currentMonthStart by remember {
         mutableStateOf(
             LocalDate(
-                selectedDate.year,
-                selectedDate.month,
+                selectedDateState.year,
+                selectedDateState.month,
                 1
             )
         )
@@ -69,9 +71,6 @@ fun CalendarStrip(
 
     val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(selectedDate) {
-        currentMonthStart = LocalDate(selectedDate.year, selectedDate.month, 1)
-    }
 
     Column(modifier = modifier.padding(8.dp)) {
         Row(
@@ -134,9 +133,9 @@ fun CalendarStrip(
             }
             val density = LocalDensity.current
 
-            LaunchedEffect(targetDate, selectedDate) {
-                if (selectedDate.month == targetDate.month && selectedDate.year == targetDate.year) {
-                    val index = selectedDate.dayOfMonth - 1
+            LaunchedEffect(targetDate, selectedDateState) {
+                if (selectedDateState.month == selectedDateState.month && selectedDateState.year == selectedDateState.year) {
+                    val index = selectedDateState.dayOfMonth - 1
                     val offset = with(density) { 140.dp.toPx() }.toInt()
                     if (index >= 0 && index < dates.size) {
                         lazyListState.animateScrollToItem(index, -offset)
@@ -149,7 +148,7 @@ fun CalendarStrip(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(dates) { date ->
-                    val isSelected = date == selectedDate
+                    val isSelected = date == selectedDateState
 
                     Surface(
                         tonalElevation = if (isSelected) 2.dp else 0.dp,
@@ -162,7 +161,10 @@ fun CalendarStrip(
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .clickable { onDateSelected(date) }
+                            .clickable {
+                                onDateSelected(date)
+                                selectedDateState = date
+                            }
                     ) {
                         Column(
                             modifier = Modifier
