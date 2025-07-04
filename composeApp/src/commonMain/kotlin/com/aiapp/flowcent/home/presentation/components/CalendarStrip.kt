@@ -10,10 +10,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,10 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.daysInMonth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_arrow_left
@@ -125,31 +125,48 @@ fun CalendarStrip(
             val dates = (1..days).map {
                 LocalDate(targetDate.year, targetDate.month, it)
             }
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) {
                 items(dates) { date ->
                     val isSelected = date == selectedDateState
-                    Column(
+
+                    Surface(
+                        tonalElevation = if (isSelected) 2.dp else 0.dp,
+                        shadowElevation = if (isSelected) 4.dp else 0.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier
-                            .clip(CircleShape)
-                            .background(if (isSelected) Colors.LightPrimary else Color.Transparent)
+                            .clip(RoundedCornerShape(12.dp))
                             .clickable {
                                 onDateSelected(date)
                                 selectedDateState = date
                             }
-                            .padding(vertical = 8.dp, horizontal = 12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = date.dayOfWeek.name.first().toString(),
-                            style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(bottom = 12.dp),
-                            color = if (isSelected) Colors.White else Colors.LightPrimary
-                        )
-                        Text(
-                            text = date.dayOfMonth.toString(),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = if (isSelected) Colors.White else Colors.LightPrimary
-                        )
+                        Column(
+                            modifier = Modifier
+                                .padding(vertical = 12.dp, horizontal = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            // day-of-week initial
+                            Text(
+                                text = date.dayOfWeek.name.first().toString(),
+                                style = MaterialTheme.typography.labelSmall
+                            )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            // day-of-month
+                            Text(
+                                text = date.dayOfMonth.toString(),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
                     }
                 }
             }
