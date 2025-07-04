@@ -22,19 +22,12 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun BotMessage(text: String, isRich: Boolean = false) {
     Row(modifier = Modifier.padding(vertical = 4.dp)) {
-        Icon(
-            painter = painterResource(Res.drawable.outline_charger),
-            contentDescription = null,
-            tint = Colors.Black,
-            modifier = Modifier.size(32.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
         Surface(
-            shape = RoundedCornerShape(12.dp), color = Color(0xFF1E1E1E)
+            shape = RoundedCornerShape(12.dp), color = Color.White
         ) {
             Text(
                 text = text,
-                color = Colors.White,
+                color = Colors.Black,
                 modifier = Modifier.padding(12.dp),
                 style = if (isRich) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall
             )

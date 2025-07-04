@@ -16,14 +16,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UserMessage(text: String) {
     Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
     ) {
         Surface(
-            shape = RoundedCornerShape(12.dp), color = Color(0xFF6C4DFF) // Purple-ish
+            shape = RoundedCornerShape(12.dp), color = Color.White
         ) {
             Text(
                 text = text,
-                color = Color(0xFFFFFFFF),
+                color = Color.Black,
                 modifier = Modifier.padding(12.dp),
                 style = MaterialTheme.typography.bodyMedium
             )

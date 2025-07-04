@@ -1,12 +1,19 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,12 +32,15 @@ import com.aiapp.flowcent.chat.presentation.UserAction
 import com.aiapp.flowcent.chat.presentation.components.BotMessage
 import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
-import com.aiapp.flowcent.chat.presentation.components.SpendingCard
+import com.aiapp.flowcent.chat.presentation.components.SpendingList
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
+import flowcent.composeapp.generated.resources.Res
+import flowcent.composeapp.generated.resources.outline_charger
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
@@ -129,23 +139,39 @@ fun ChatScreen(
                                 color = Color.Blue
                             )
                         } else {
-                            BotMessage(text = it.text)
-                            if (it.expenseItems.isNotEmpty()) {
-                                it.expenseItems.forEach { expenseItem ->
-                                    SpendingCard(expenseItem)
-                                }
-                                PromptSave(
-                                    onClickSave = {
-                                        viewModel.onAction(
-                                            UserAction.SaveExpenseItemsToDb(
-                                                it.expenseItems
-                                            )
-                                        )
-                                    },
-                                    onClickClose = {
-                                        viewModel.onAction(UserAction.DiscardExpenseItems)
-                                    }
+                            Row(
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.outline_charger),
+                                    contentDescription = null,
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(32.dp)
                                 )
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Column(
+                                    modifier = Modifier
+                                        .background(Color.White, shape = RoundedCornerShape(8.dp))
+                                        .padding(2.dp)
+                                ) {
+                                    BotMessage(text = it.text, isRich = true)
+                                    if (it.expenseItems.isNotEmpty()) {
+                                        SpendingList(it.expenseItems)
+                                        PromptSave(
+                                            onClickSave = {
+                                                viewModel.onAction(
+                                                    UserAction.SaveExpenseItemsToDb(
+                                                        it.expenseItems
+                                                    )
+                                                )
+                                            },
+                                            onClickClose = {
+                                                viewModel.onAction(UserAction.DiscardExpenseItems)
+                                            }
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

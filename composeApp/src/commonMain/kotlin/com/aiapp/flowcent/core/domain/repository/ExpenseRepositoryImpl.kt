@@ -7,7 +7,6 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getFormattedDate
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
-import dev.gitlive.firebase.firestore.Filter
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 

@@ -80,7 +80,7 @@ fun appTypography(): Typography {
         ),
         bodyMedium = TextStyle(
             fontFamily = AppFontFamily,
-            fontWeight = FontWeight.Light,
+            fontWeight = FontWeight.Medium,
             fontSize = 14.sp
         ),
         bodySmall = TextStyle(
