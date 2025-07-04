@@ -8,13 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aiapp.flowcent.core.domain.model.NavItem
+import com.aiapp.flowcent.core.platform.SpeechRecognizer
+import com.aiapp.flowcent.core.presentation.components.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.presentation.components.BottomNavigationBar
-import com.aiapp.flowcent.core.domain.model.NavItem
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
-import com.aiapp.flowcent.core.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.presentation.ui.theme.RadialGradientBackground
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -27,9 +26,9 @@ fun App(
     val navController = rememberNavController()
 
     val navItems = listOf(
-        NavItem("Home", Res.drawable.compose_multiplatform, AppNavRoutes.Home.route),
-        NavItem("Chat", Res.drawable.compose_multiplatform, AppNavRoutes.Chat.route),
-        NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route)
+        NavItem(Res.drawable.compose_multiplatform, AppNavRoutes.Home.route),
+        NavItem(Res.drawable.compose_multiplatform, AppNavRoutes.Chat.route),
+        NavItem(Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route)
     )
 
     val currentDestination by navController.currentBackStackEntryAsState()
