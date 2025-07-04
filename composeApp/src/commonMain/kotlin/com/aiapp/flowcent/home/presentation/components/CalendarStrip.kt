@@ -54,11 +54,13 @@ fun CalendarStrip(
     onDateSelected: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var selectedDateState by remember { mutableStateOf(selectedDate) }
+
     var currentMonthStart by remember {
         mutableStateOf(
             LocalDate(
-                selectedDate.year,
-                selectedDate.month,
+                selectedDateState.year,
+                selectedDateState.month,
                 1
             )
         )
@@ -125,12 +127,15 @@ fun CalendarStrip(
             }
             LazyRow(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 items(dates) { date ->
-                    val isSelected = date == selectedDate
+                    val isSelected = date == selectedDateState
                     Column(
                         modifier = Modifier
                             .clip(CircleShape)
                             .background(if (isSelected) Colors.LightPrimary else Color.Transparent)
-                            .clickable { onDateSelected(date) }
+                            .clickable {
+                                onDateSelected(date)
+                                selectedDateState = date
+                            }
                             .padding(vertical = 8.dp, horizontal = 12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -138,12 +143,12 @@ fun CalendarStrip(
                             text = date.dayOfWeek.name.first().toString(),
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(bottom = 12.dp),
-                            color = if(isSelected) Colors.White else Colors.LightPrimary
+                            color = if (isSelected) Colors.White else Colors.LightPrimary
                         )
                         Text(
                             text = date.dayOfMonth.toString(),
                             style = MaterialTheme.typography.titleMedium,
-                            color = if(isSelected) Colors.White else Colors.LightPrimary
+                            color = if (isSelected) Colors.White else Colors.LightPrimary
                         )
                     }
                 }
