@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "833635829850",
+    "project_id": "flowcent-2a41e",
+    "storage_bucket": "flowcent-2a41e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833635829850:android:a68904959e6964b500b063",
+        "android_client_info": {
+          "package_name": "com.aiapp.flowcent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYs4AV0_kmkVu3iQxNZiktsZquBM9jtes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
