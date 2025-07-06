@@ -5,9 +5,8 @@
 package com.aiapp.flowcent
 
 import android.app.Application
+import com.aiapp.flowcent.core.auth.FirebaseAuthInitializer
 import com.aiapp.flowcent.di.initKoin
-import com.mmk.kmpauth.google.GoogleAuthCredentials
-import com.mmk.kmpauth.google.GoogleAuthProvider
 import org.koin.android.ext.koin.androidContext
 
 class FlowCentApplication : Application() {
@@ -16,10 +15,6 @@ class FlowCentApplication : Application() {
         initKoin {
             androidContext(this@FlowCentApplication)
         }
-        GoogleAuthProvider.create(
-            credentials = GoogleAuthCredentials(
-                serverId = "161046411397-71cjns5cfjge3inb8gu9rep0b0nc2d8e.apps.googleusercontent.com"
-            )
-        )
+        FirebaseAuthInitializer.onApplicationStart()
     }
 }

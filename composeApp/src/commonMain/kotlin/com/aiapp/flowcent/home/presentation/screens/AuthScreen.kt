@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
-import com.aiapp.flowcent.home.presentation.UserAction
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
@@ -59,11 +57,11 @@ fun AuthScreen(
                 ) { this.onClick() }
         }
 
-        OutlinedButton(
-            onClick = { homeViewModel.onAction(UserAction.FirebaseSignOut) }
-
-        ) {
-            Text("Google sign out")
-        }
+//        OutlinedButton(
+//            onClick = { homeViewModel.onAction(UserAction.FirebaseSignOut) }
+//
+//        ) {
+//            Text("Google sign out")
+//        }
     }
 }
