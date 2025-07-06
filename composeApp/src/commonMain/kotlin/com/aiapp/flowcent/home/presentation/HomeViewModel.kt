@@ -10,6 +10,8 @@ import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.util.Resource
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.auth
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,6 +55,25 @@ class HomeViewModel(
             UserAction.FetchTotalAmount -> {
                 fetchTotalAmount()
             }
+
+            UserAction.NavigateToAuth -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToAuth)
+                }
+            }
+
+            UserAction.FirebaseSignOut -> {
+                viewModelScope.launch {
+                    googleSignOut()
+                }
+            }
+        }
+    }
+
+    private suspend fun googleSignOut() {
+        println("Sohan Firebase.auth.currentUser ${Firebase.auth.currentUser}")
+        if (Firebase.auth.currentUser != null) {
+            Firebase.auth.signOut()
         }
     }
 

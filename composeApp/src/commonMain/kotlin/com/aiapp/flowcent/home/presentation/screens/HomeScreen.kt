@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,12 +22,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
+import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
+import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -35,7 +39,8 @@ import org.jetbrains.compose.resources.painterResource
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
-    homeState: HomeState
+    homeState: HomeState,
+    navController: NavController
 ) {
 
     LaunchedEffect(key1 = homeState.selectedDate) {
@@ -46,6 +51,15 @@ fun HomeScreen(
         homeViewModel.onAction(UserAction.FetchTotalAmount)
     }
 
+    LaunchedEffect(key1 = rememberScaffoldState()) {
+        homeViewModel.uiEvent.collect {
+            when (it) {
+                UiEvent.NavigateToAuth -> navController.navigate(HomeNavRoutes.AuthScreen.route)
+                is UiEvent.ShowSnackbar -> {}
+            }
+        }
+    }
+
 
     Column {
         Row(
@@ -53,7 +67,7 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { homeViewModel.onAction(UserAction.NavigateToAuth) }) {
                 Icon(
                     painter = painterResource(Res.drawable.compose_multiplatform),
                     contentDescription = "Profile",

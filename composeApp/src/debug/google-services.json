@@ -12,7 +12,20 @@
           "package_name": "com.aiapp.flowcent"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "161046411397-vd8krjgda99ipf2v6dgts1k2n9dok6l5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aiapp.flowcent",
+            "certificate_hash": "c5893459d9a50759395fe80e36e671f7ae01ad46"
+          }
+        },
+        {
+          "client_id": "161046411397-71cjns5cfjge3inb8gu9rep0b0nc2d8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAU0Rxi_AnfuldyVfL6o6cdx0QiV1_Ie0k"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "161046411397-71cjns5cfjge3inb8gu9rep0b0nc2d8e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "161046411397-fr6m6cfpd5dqn41ij5h6cgjkro0ih4dk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aiapp.flowcent.FlowCent"
+              }
+            }
+          ]
         }
       }
     }

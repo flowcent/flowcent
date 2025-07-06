@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.home.presentation.HomeViewModel
+import com.aiapp.flowcent.home.presentation.screens.AuthScreen
 import com.aiapp.flowcent.home.presentation.screens.HomeScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -33,7 +34,17 @@ fun HomeNavGraph(
             HomeScreen(
                 modifier = modifier,
                 homeViewModel = viewModel,
-                homeState = state
+                homeState = state,
+                navController = localNavController
+            )
+        }
+
+        addAnimatedComposable(route = HomeNavRoutes.AuthScreen.route) {
+            AuthScreen(
+                modifier = modifier,
+                homeViewModel = viewModel,
+                homeState = state,
+                navController = localNavController
             )
         }
     }
