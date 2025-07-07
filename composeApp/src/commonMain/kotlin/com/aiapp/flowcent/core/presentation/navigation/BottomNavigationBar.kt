@@ -2,7 +2,7 @@
  * Created by Saeedus Salehin on 13/5/25, 2:41 PM.
  */
 
-package com.aiapp.flowcent.core.presentation.components
+package com.aiapp.flowcent.core.presentation.navigation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -46,11 +46,10 @@ fun BottomNavigationBar(
             // Animations
             val scale by animateFloatAsState(if (selected) 1.1f else 1f)
             val backgroundColor by animateColorAsState(
-                if (selected) Colors.LightPrimary.copy(alpha = 0.1f) else Color.Transparent
+                if (selected) Colors.LightSurface.copy(alpha = 0.5f) else Color.Transparent
             )
-            val borderColor by animateColorAsState(
-                if (selected) Colors.LightPrimary else Colors.LightSurface
-            )
+            val borderColor = Colors.LightSurface
+
             val contentColor by animateColorAsState(
                 if (selected) Colors.LightPrimary else Colors.LightSurface
             )
@@ -93,7 +92,7 @@ fun BottomNavigationBar(
                     if (selected) {
                         Text(
                             text = item.label,
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.titleMedium,
                             color = contentColor
                         )
                     }

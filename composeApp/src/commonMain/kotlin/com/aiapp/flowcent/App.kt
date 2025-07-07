@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.core.domain.model.NavItem
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.presentation.components.BottomNavigationBar
+import com.aiapp.flowcent.core.presentation.navigation.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
