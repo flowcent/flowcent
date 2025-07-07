@@ -10,4 +10,5 @@ sealed interface UserAction {
     data class CreateNewUser(
         val user: User
     ) : UserAction
+    data class SaveUserUid(val uid: String) : UserAction
 }

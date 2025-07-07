@@ -7,6 +7,7 @@ package com.aiapp.flowcent.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
+import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.util.Resource
@@ -20,7 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val expenseRepository: ExpenseRepository
+    private val expenseRepository: ExpenseRepository,
+    private val prefRepository: PrefRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
@@ -67,6 +69,17 @@ class HomeViewModel(
                     googleSignOut()
                 }
             }
+
+            UserAction.FetchUserUId -> {
+                viewModelScope.launch {
+                    prefRepository.uid.collect { uidFromDataStore ->
+                        println("Sohan home uidFromDataStore: $uidFromDataStore")
+                        _state.update { currentState ->
+                            currentState.copy(uid = uidFromDataStore ?: "")
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -79,7 +92,7 @@ class HomeViewModel(
 
     private fun fetchTotalAmount() {
         viewModelScope.launch {
-            when (val result = expenseRepository.totalAmount()) {
+            when (val result = expenseRepository.totalAmount(_state.value.uid)) {
                 is Resource.Error -> {
                     println("Sohan Error in fetching total amount: ${result.message}")
                 }
@@ -99,7 +112,10 @@ class HomeViewModel(
             try {
                 println("Sohan _state.value.selectedDate.toString() ${_state.value.selectedDate.toString()}")
                 when (val result =
-                    expenseRepository.getDailyExpenses(_state.value.selectedDate.toString())) {
+                    expenseRepository.getDailyExpenses(
+                        _state.value.uid,
+                        _state.value.selectedDate.toString()
+                    )) {
                     is Resource.Error -> {
                         println("Sohan Error in fetching expenses: ${result.message}")
                     }

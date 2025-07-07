@@ -51,6 +51,7 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = Unit) {
         homeViewModel.onAction(UserAction.FetchTotalAmount)
+        homeViewModel.onAction(UserAction.FetchUserUId)
     }
 
     LaunchedEffect(key1 = rememberScaffoldState()) {

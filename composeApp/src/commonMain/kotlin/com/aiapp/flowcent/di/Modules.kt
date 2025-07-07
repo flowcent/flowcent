@@ -8,6 +8,7 @@ import com.aiapp.flowcent.auth.domain.repository.AuthRepositoryImpl
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
+import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.FirebaseFirestore
@@ -21,13 +22,23 @@ private val firestore: FirebaseFirestore = Firebase.firestore
 
 val sharedModule = module {
     //ViewModels
-    viewModel { HomeViewModel(expenseRepository = ExpenseRepositoryImpl(firestore)) }
+    viewModel {
+        HomeViewModel(
+            expenseRepository = ExpenseRepositoryImpl(firestore),
+            prefRepository = PrefRepositoryImpl(get())
+        )
+    }
     viewModel {
         ChatViewModel(
             flowCentAi = get(), expenseRepository = ExpenseRepositoryImpl(
                 firestore
-            )
+            ), prefRepository = PrefRepositoryImpl(get())
         )
     }
-    viewModel { AuthViewModel(authRepository = AuthRepositoryImpl(firestore)) }
+    viewModel {
+        AuthViewModel(
+            authRepository = AuthRepositoryImpl(firestore),
+            prefRepository = PrefRepositoryImpl(get())
+        )
+    }
 }

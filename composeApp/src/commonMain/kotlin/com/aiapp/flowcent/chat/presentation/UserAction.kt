@@ -11,5 +11,5 @@ sealed interface UserAction {
     object CheckAudioPermission : UserAction
     data class SaveExpenseItemsToDb(val expenseItems: List<ExpenseItem>) : UserAction
     data object DiscardExpenseItems : UserAction
-
+    data object FetchUserUId : UserAction
 }

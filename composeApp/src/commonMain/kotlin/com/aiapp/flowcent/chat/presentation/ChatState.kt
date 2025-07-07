@@ -14,6 +14,7 @@ data class ChatState(
     val translatedVoiceText: String = "",
     val isListening: Boolean = false,
     val showSendButton: Boolean = false,
-    val isSendingMessage: Boolean = false
+    val isSendingMessage: Boolean = false,
+    val uid: String = ""
 )
 

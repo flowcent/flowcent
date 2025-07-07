@@ -61,6 +61,8 @@ fun AuthScreen(
                         )
                     )
                 )
+
+                authViewModel.onAction(UserAction.SaveUserUid(firebaseUser.uid))
             }
 
         } else {

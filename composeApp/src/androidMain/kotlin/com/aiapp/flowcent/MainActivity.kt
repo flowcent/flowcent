@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.remember
+import com.aiapp.flowcent.core.datastore.createDataStore
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
 import com.google.firebase.FirebaseApp
 
@@ -17,6 +19,9 @@ class MainActivity : ComponentActivity() {
             val speechRecognizer = SpeechRecognizer(applicationContext)
             App(
                 speechRecognizer = speechRecognizer,
+                prefs = remember {
+                    createDataStore(applicationContext)
+                }
             )
         }
     }

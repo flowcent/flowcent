@@ -8,6 +8,8 @@ import com.aiapp.flowcent.chat.util.ChatUtil.checkInvalidExpense
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
+import com.aiapp.flowcent.core.data.repository.PrefRepository
+import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
 import com.aiapp.flowcent.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -24,7 +26,8 @@ import kotlin.uuid.Uuid
 
 class ChatViewModel(
     private val flowCentAi: FlowCentAi,
-    private val expenseRepository: ExpenseRepository
+    private val expenseRepository: ExpenseRepository,
+    private val prefRepository: PrefRepository
 ) : ViewModel() {
 
     private val _chatState = MutableStateFlow(ChatState())
@@ -85,7 +88,10 @@ class ChatViewModel(
             is UserAction.SaveExpenseItemsToDb -> {
                 viewModelScope.launch {
                     when (val result =
-                        expenseRepository.saveExpenseItemsToDb(action.expenseItems)) {
+                        expenseRepository.saveExpenseItemsToDb(
+                            _chatState.value.uid,
+                            action.expenseItems
+                        )) {
                         is Resource.Success -> {
                             println("Sohan Expense saved successfully! ${result.data}")
                         }
@@ -99,6 +105,17 @@ class ChatViewModel(
                         }
                     }
 
+                }
+            }
+
+            UserAction.FetchUserUId -> {
+                viewModelScope.launch {
+                    prefRepository.uid.collect { uidFromDataStore ->
+                        println("Sohan chat uidFromDataStore: $uidFromDataStore")
+                        _chatState.update { currentState ->
+                            currentState.copy(uid = uidFromDataStore ?: "")
+                        }
+                    }
                 }
             }
         }

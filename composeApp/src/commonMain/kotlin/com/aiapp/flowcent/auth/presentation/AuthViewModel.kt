@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
+import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val prefRepository: PrefRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(AuthState())
     val state = _state.asStateFlow()
@@ -44,6 +46,11 @@ class AuthViewModel(
 
             UserAction.IsLoggedIn -> {}
             is UserAction.IsUserExist -> {}
+            is UserAction.SaveUserUid -> {
+                viewModelScope.launch {
+                    prefRepository.saveUid(action.uid)
+                }
+            }
         }
     }
 

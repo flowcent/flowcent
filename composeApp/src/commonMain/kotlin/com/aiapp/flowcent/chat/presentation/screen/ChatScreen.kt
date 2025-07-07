@@ -77,6 +77,7 @@ fun ChatScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onAction(UserAction.CheckAudioPermission)
+        viewModel.onAction(UserAction.FetchUserUId)
     }
 
     LaunchedEffect(Unit) {

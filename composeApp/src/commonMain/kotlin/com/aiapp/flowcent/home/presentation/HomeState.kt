@@ -9,5 +9,6 @@ import com.aiapp.flowcent.core.domain.model.ExpenseItem
 data class HomeState(
     val isLoading: Boolean = false,
     val latestTransactions: List<ExpenseItem> = emptyList(),
-    val selectedDate: String? = null
+    val selectedDate: String? = null,
+    val uid: String = ""
 )

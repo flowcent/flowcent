@@ -15,7 +15,10 @@ class ExpenseRepositoryImpl(
 ) : ExpenseRepository {
     private val transactionCollection = firestore.collection("transactions")
 
-    override suspend fun saveExpenseItemsToDb(expenseItems: List<ExpenseItem>): Resource<String> {
+    override suspend fun saveExpenseItemsToDb(
+        uid: String,
+        expenseItems: List<ExpenseItem>
+    ): Resource<String> {
         return try {
             if (expenseItems.isEmpty()) {
                 return Resource.Error("No expense items provided to save.")
@@ -29,12 +32,13 @@ class ExpenseRepositoryImpl(
                 "amount" to firstExpenseItem.amount,
                 "category" to firstExpenseItem.category,
                 "created_at" to getCurrentFormattedDateTime(),
-                "created_by" to "Sohan", // Consider making this dynamic (e.g., from user session)
+                "created_by" to uid,
                 "title" to firstExpenseItem.title,
                 "tn_id" to "tqcMiL3tg3jvWqqhHJ4I", // Consider if this should be dynamic or removed
                 "type" to "Expense",
                 "updated_at" to getCurrentFormattedDateTime(),
-                "updated_by" to "Sohan", // Consider making this dynamic
+                "updated_by" to uid,
+                "uid" to uid
             )
 
             val addDocRef = transactionCollection
@@ -47,9 +51,12 @@ class ExpenseRepositoryImpl(
         }
     }
 
-    override suspend fun getAllExpenses(): Resource<List<ExpenseItem>> {
+    override suspend fun getAllExpenses(uid: String): Resource<List<ExpenseItem>> {
         return try {
             val querySnapshot = transactionCollection
+                .where {
+                    "uid" equalTo uid
+                }
                 .orderBy("created_at", Direction.DESCENDING)
                 .get()
             val expenseList = querySnapshot.documents.map { document ->
@@ -62,11 +69,15 @@ class ExpenseRepositoryImpl(
 
     }
 
-    override suspend fun getDailyExpenses(dateString: String): Resource<List<ExpenseItem>> {
+    override suspend fun getDailyExpenses(
+        uid: String,
+        dateString: String
+    ): Resource<List<ExpenseItem>> {
         return try {
             val formattedDate = getFormattedDate(dateString)
             println("Sohan formattedDate $formattedDate")
             val querySnapshot = transactionCollection
+                .where { "uid" equalTo uid }
                 .where {
                     "created_at" greaterThanOrEqualTo formattedDate.plus(" 00:00:00")
                 }
@@ -85,9 +96,11 @@ class ExpenseRepositoryImpl(
 
     }
 
-    override suspend fun totalAmount(): Resource<Int> {
+    override suspend fun totalAmount(uid: String): Resource<Int> {
         return try {
-            val snapshot = transactionCollection.get()
+            val snapshot = transactionCollection
+                .where { "uid" equalTo uid }
+                .get()
             val total = snapshot.documents.sumOf {
                 it.data(ExpenseItem.serializer()).amount
             }
@@ -97,9 +110,10 @@ class ExpenseRepositoryImpl(
         }
     }
 
-    override suspend fun totalExpenses(): Resource<Int> {
+    override suspend fun totalExpenses(uid: String): Resource<Int> {
         return try {
             val snapshot = transactionCollection
+                .where { "uid" equalTo uid }
                 .where { "type" equalTo "Expense" }
                 .get()
             val total = snapshot.documents.sumOf {
@@ -111,12 +125,11 @@ class ExpenseRepositoryImpl(
         }
     }
 
-    override suspend fun totalIncome(): Resource<Int> {
+    override suspend fun totalIncome(uid: String): Resource<Int> {
         return try {
             val snapshot = transactionCollection
-                .where {
-                    "type" equalTo "Income"
-                }
+                .where { "uid" equalTo uid }
+                .where { "type" equalTo "Income" }
                 .get()
             val total = snapshot.documents.sumOf {
                 it.data(ExpenseItem.serializer()).amount

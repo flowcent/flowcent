@@ -82,6 +82,10 @@ kotlin {
             implementation(libs.kmpauth.google) //Google One Tap Sign-In
             implementation(libs.kmpauth.firebase) //Integrated Authentications with Firebase
             implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
+            // DataStore library
+            implementation(libs.androidx.datastore)
+            // The Preferences DataStore library
+            implementation(libs.androidx.datastore.preferences)
         }
 
         iosMain.dependencies {

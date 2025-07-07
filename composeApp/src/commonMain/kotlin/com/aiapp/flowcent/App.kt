@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.core.domain.model.NavItem
@@ -24,7 +26,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App(
-    speechRecognizer: SpeechRecognizer
+    speechRecognizer: SpeechRecognizer,
+    prefs: DataStore<Preferences>
 ) {
     val globalNavController = rememberNavController()
 
