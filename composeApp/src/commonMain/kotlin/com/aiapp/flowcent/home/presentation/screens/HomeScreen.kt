@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
+import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
@@ -56,7 +57,7 @@ fun HomeScreen(
     LaunchedEffect(key1 = rememberScaffoldState()) {
         homeViewModel.uiEvent.collect {
             when (it) {
-                UiEvent.NavigateToAuth -> globalNavController.navigate(AuthNavRoutes)
+                UiEvent.NavigateToAuth -> globalNavController.navigate(AppNavRoutes.Auth.route)
                 is UiEvent.ShowSnackbar -> {}
             }
         }

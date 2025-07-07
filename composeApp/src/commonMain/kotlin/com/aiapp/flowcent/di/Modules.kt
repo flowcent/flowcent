@@ -4,6 +4,7 @@
 
 package com.aiapp.flowcent.di
 
+import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
@@ -17,4 +18,5 @@ val sharedModule = module {
     //ViewModels
     viewModel { HomeViewModel(expenseRepository = ExpenseRepositoryImpl()) }
     viewModel { ChatViewModel(flowCentAi = get(), expenseRepository = ExpenseRepositoryImpl()) }
+    viewModel { AuthViewModel() }
 }
