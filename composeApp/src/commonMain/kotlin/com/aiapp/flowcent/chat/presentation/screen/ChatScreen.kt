@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
@@ -49,7 +50,9 @@ fun ChatScreen(
     chatState: ChatState,
     viewModel: ChatViewModel,
     speechRecognizer: SpeechRecognizer,
-    permissionsVM: PermissionsViewModel
+    permissionsVM: PermissionsViewModel,
+    localNavController: NavController,
+    globalNavController: NavController
 ) {
 
     var hasPermission: Boolean by remember { mutableStateOf(false) }

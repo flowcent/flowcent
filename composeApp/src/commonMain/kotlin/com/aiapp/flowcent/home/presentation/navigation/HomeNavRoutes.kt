@@ -6,5 +6,4 @@ package com.aiapp.flowcent.home.presentation.navigation
 
 sealed class HomeNavRoutes(val route: String) {
     data object HomeScreen : HomeNavRoutes("home_screen")
-    data object AuthScreen : HomeNavRoutes("auth_screen")
 }

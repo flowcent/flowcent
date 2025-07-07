@@ -23,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.HomeState
@@ -30,7 +32,6 @@ import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
-import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -40,7 +41,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
     homeState: HomeState,
-    navController: NavController
+    localNavController: NavController,
+    globalNavController: NavHostController
 ) {
 
     LaunchedEffect(key1 = homeState.selectedDate) {
@@ -54,7 +56,7 @@ fun HomeScreen(
     LaunchedEffect(key1 = rememberScaffoldState()) {
         homeViewModel.uiEvent.collect {
             when (it) {
-                UiEvent.NavigateToAuth -> navController.navigate(HomeNavRoutes.AuthScreen.route)
+                UiEvent.NavigateToAuth -> globalNavController.navigate(AuthNavRoutes)
                 is UiEvent.ShowSnackbar -> {}
             }
         }

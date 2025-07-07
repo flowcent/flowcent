@@ -5,6 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
@@ -19,6 +21,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ChatNavGraph(
     modifier: Modifier = Modifier,
+    globalNavController: NavHostController,
     startDestination: ChatNavRoutes,
     speechRecognizer: SpeechRecognizer
 ) {
@@ -47,7 +50,9 @@ fun ChatNavGraph(
                 chatState = chatState,
                 viewModel = viewModel,
                 speechRecognizer = speechRecognizer,
-                permissionsVM = permissionVM
+                permissionsVM = permissionVM,
+                localNavController = localNavController,
+                globalNavController = globalNavController,
             )
         }
     }

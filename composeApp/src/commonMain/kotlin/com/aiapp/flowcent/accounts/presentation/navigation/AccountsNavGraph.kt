@@ -6,6 +6,8 @@ package com.aiapp.flowcent.accounts.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
@@ -14,6 +16,7 @@ import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 @Composable
 fun AccountsNavGraph(
     modifier: Modifier = Modifier,
+    globalNavController: NavHostController,
     startDestination: AccountsNavRoutes
 ) {
     val localNavController = rememberNavController()

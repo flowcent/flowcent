@@ -26,7 +26,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App(
     speechRecognizer: SpeechRecognizer
 ) {
-    val navController = rememberNavController()
+    val globalNavController = rememberNavController()
 
     val navItems = listOf(
         NavItem("Home", Res.drawable.compose_multiplatform, AppNavRoutes.Home.route),
@@ -34,7 +34,7 @@ fun App(
         NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route)
     )
 
-    val currentDestination by navController.currentBackStackEntryAsState()
+    val currentDestination by globalNavController.currentBackStackEntryAsState()
     val currentRoute = currentDestination?.destination?.route
 
     val selectedIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
@@ -50,8 +50,8 @@ fun App(
                     onItemSelected = { index ->
                         val route = navItems[index].route
                         if (currentRoute != route) {
-                            navController.navigate(route) {
-                                popUpTo(navController.graph.startDestinationId) {
+                            globalNavController.navigate(route) {
+                                popUpTo(globalNavController.graph.startDestinationId) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -63,7 +63,7 @@ fun App(
             }
         ) { innerPadding ->
             AppNavGraph(
-                navController = navController,
+                globalNavController = globalNavController,
                 modifier = Modifier.padding(innerPadding),
                 speechRecognizer = speechRecognizer
             )

@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.home.presentation.screens
+package com.aiapp.flowcent.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,9 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aiapp.flowcent.home.presentation.HomeState
-import com.aiapp.flowcent.home.presentation.HomeViewModel
-import com.aiapp.flowcent.home.presentation.UserAction
+import com.aiapp.flowcent.auth.presentation.AuthState
+import com.aiapp.flowcent.auth.presentation.AuthViewModel
+import com.aiapp.flowcent.auth.presentation.UserAction
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
@@ -23,9 +23,10 @@ import dev.gitlive.firebase.auth.FirebaseUser
 @Composable
 fun AuthScreen(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel,
-    homeState: HomeState,
-    navController: NavController
+    authViewModel: AuthViewModel,
+    authState: AuthState,
+    localNavController: NavController,
+    globalNavController: NavController
 ) {
     var user: FirebaseUser? = null
     val onFirebaseResult: (Result<FirebaseUser?>) -> Unit = { result ->
@@ -60,7 +61,7 @@ fun AuthScreen(
         }
 
         OutlinedButton(
-            onClick = { homeViewModel.onAction(UserAction.FirebaseSignOut) }
+            onClick = { authViewModel.onAction(UserAction.FirebaseSignOut) }
 
         ) {
             Text("Google sign out")
