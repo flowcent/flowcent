@@ -7,14 +7,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
+import com.aiapp.flowcent.auth.presentation.UiEvent
 import com.aiapp.flowcent.auth.presentation.UserAction
+import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
@@ -28,12 +33,36 @@ fun AuthScreen(
     localNavController: NavController,
     globalNavController: NavController
 ) {
-    var user: FirebaseUser? = null
+
+    LaunchedEffect(key1 = rememberScaffoldState()) {
+        authViewModel.uiEvent.collect {
+            when (it) {
+                UiEvent.NavigateToHome -> {
+                    globalNavController.navigate(AppNavRoutes.Home.route)
+                }
+            }
+        }
+    }
+
     val onFirebaseResult: (Result<FirebaseUser?>) -> Unit = { result ->
         if (result.isSuccess) {
             val firebaseUser = result.getOrNull()
-            user = firebaseUser
-            println("Sohan onFirebaseResult firebaseUser: ${firebaseUser?.uid}")
+            if (firebaseUser != null) {
+                authViewModel.onAction(
+                    UserAction.CreateNewUser(
+                        User(
+                            uid = firebaseUser.uid,
+                            name = firebaseUser.displayName ?: "",
+                            email = firebaseUser.email ?: "",
+                            phoneNumber = firebaseUser.phoneNumber ?: "",
+                            imageUrl = firebaseUser.photoURL ?: "",
+                            providerId = firebaseUser.providerId,
+                            signInType = "google"
+                        )
+                    )
+                )
+            }
+
         } else {
             println("Sohan onFirebaseResult Error Result: ${result.exceptionOrNull()?.message}")
         }

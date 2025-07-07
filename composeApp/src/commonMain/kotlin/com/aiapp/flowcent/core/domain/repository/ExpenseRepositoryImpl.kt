@@ -11,7 +11,7 @@ import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 
 class ExpenseRepositoryImpl(
-    private val firestore: FirebaseFirestore = Firebase.firestore
+    firestore: FirebaseFirestore
 ) : ExpenseRepository {
     private val transactionCollection = firestore.collection("transactions")
 
@@ -22,6 +22,7 @@ class ExpenseRepositoryImpl(
             }
 
             // save the first item as per your original code
+            // TODO: Remember to change it with multiple expense items
             val firstExpenseItem = expenseItems[0]
 
             val transaction = hashMapOf(

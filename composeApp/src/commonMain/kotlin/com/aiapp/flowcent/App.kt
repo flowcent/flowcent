@@ -44,28 +44,31 @@ fun App(
             containerColor = Color.Transparent,
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             bottomBar = {
-                BottomNavigationBar(
-                    items = navItems,
-                    selectedIndex = selectedIndex,
-                    onItemSelected = { index ->
-                        val route = navItems[index].route
-                        if (currentRoute != route) {
-                            globalNavController.navigate(route) {
-                                popUpTo(globalNavController.graph.startDestinationId) {
-                                    saveState = true
+                if (currentRoute != AppNavRoutes.Auth.route) {
+                    BottomNavigationBar(
+                        items = navItems,
+                        selectedIndex = selectedIndex,
+                        onItemSelected = { index ->
+                            val route = navItems[index].route
+                            if (currentRoute != route) {
+                                globalNavController.navigate(route) {
+                                    popUpTo(globalNavController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         ) { innerPadding ->
             AppNavGraph(
                 globalNavController = globalNavController,
                 modifier = Modifier.padding(innerPadding),
-                speechRecognizer = speechRecognizer
+                speechRecognizer = speechRecognizer,
+                startDestination = AppNavRoutes.Auth
             )
         }
     }

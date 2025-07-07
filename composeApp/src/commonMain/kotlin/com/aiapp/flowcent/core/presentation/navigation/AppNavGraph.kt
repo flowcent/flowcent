@@ -25,7 +25,7 @@ import com.aiapp.flowcent.core.platform.SpeechRecognizer
 fun AppNavGraph(
     modifier: Modifier = Modifier,
     globalNavController: NavHostController,
-    startDestination: AppNavRoutes = AppNavRoutes.Home,
+    startDestination: AppNavRoutes = AppNavRoutes.Auth,
     speechRecognizer: SpeechRecognizer
 ) {
     NavHost(
