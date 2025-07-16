@@ -14,19 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UiEvent
 import com.aiapp.flowcent.auth.presentation.UserAction
+import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
+import com.aiapp.flowcent.util.Constants
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import dev.gitlive.firebase.auth.FirebaseUser
 
 @Composable
-fun AuthScreen(
+fun SignInScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     authState: AuthState,
@@ -34,32 +35,18 @@ fun AuthScreen(
     globalNavController: NavController
 ) {
 
-    LaunchedEffect(key1 = rememberScaffoldState()) {
-        authViewModel.uiEvent.collect {
-            when (it) {
-                UiEvent.NavigateToHome -> {
-                    globalNavController.navigate(AppNavRoutes.Home.route)
-                }
-            }
-        }
-    }
+    Events(
+        authViewModel = authViewModel,
+        globalNavController = globalNavController,
+        localNavController = localNavController
+    )
 
-    val onFirebaseResult: (Result<FirebaseUser?>) -> Unit = { result ->
+    val onGoogleSignInResult: (Result<FirebaseUser?>) -> Unit = { result ->
         if (result.isSuccess) {
             val firebaseUser = result.getOrNull()
             if (firebaseUser != null) {
                 authViewModel.onAction(
-                    UserAction.CreateNewUser(
-                        User(
-                            uid = firebaseUser.uid,
-                            name = firebaseUser.displayName ?: "",
-                            email = firebaseUser.email ?: "",
-                            phoneNumber = firebaseUser.phoneNumber ?: "",
-                            imageUrl = firebaseUser.photoURL ?: "",
-                            providerId = firebaseUser.providerId,
-                            signInType = "google"
-                        )
-                    )
+                    UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
                 )
 
                 authViewModel.onAction(UserAction.SaveUserUid(firebaseUser.uid))
@@ -81,7 +68,7 @@ fun AuthScreen(
         GoogleButtonUiContainerFirebase(
             linkAccount = false,
             filterByAuthorizedAccounts = false,
-            onResult = onFirebaseResult,
+            onResult = onGoogleSignInResult,
         ) {
             GoogleSignInButton(
                 modifier = Modifier.fillMaxWidth(),

@@ -36,7 +36,7 @@ fun AppNavGraph(
             AuthNavGraph(
                 modifier = modifier,
                 globalNavController = globalNavController,
-                startDestination = AuthNavRoutes.AuthScreen,
+                startDestination = AuthNavRoutes.SignInScreen,
             )
         }
 

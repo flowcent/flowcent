@@ -1,22 +1,20 @@
 package com.aiapp.flowcent.auth.data.model
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    @SerialName("uid")
     val uid: String,
-    @SerialName("name")
     val name: String,
-    @SerialName("email")
+    val userName: String,
     val email: String,
-    @SerialName("phoneNumber")
     val phoneNumber: String,
-    @SerialName("imageUrl")
     val imageUrl: String,
-    @SerialName("providerId")
+    val initialBalance: String,
     val providerId: String,
-    @SerialName("sign_in_type")
     val signInType: String,
-    )
+    val createdBy: String,
+    val createdAt: String,
+    val updatedAt: String,
+    val updatedBy: String
+)

@@ -7,7 +7,6 @@ import com.mmk.kmpauth.google.GoogleAuthProvider
 
 object FirebaseAuthInitializer {
     fun onApplicationStart() {
-        println("Sohan onApplicationStart get called")
         onApplicationStartPlatformSpecific()
         GoogleAuthProvider.create(
             credentials = GoogleAuthCredentials(

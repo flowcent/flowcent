@@ -28,7 +28,7 @@ class AuthRepositoryImpl(
             if (snapShot.exists) {
                 return Resource.Success(true)
             } else {
-                return Resource.Error("User does not exist")
+                return Resource.Success(false)
             }
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())

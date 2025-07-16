@@ -1,5 +1,7 @@
 package com.aiapp.flowcent.auth.presentation.navigation
 
 sealed class AuthNavRoutes(val route: String) {
-    data object AuthScreen : AuthNavRoutes("auth_screen")
+    data object SignInScreen : AuthNavRoutes("sign_in_screen")
+    data object SignUpScreen : AuthNavRoutes("sign_up_screen")
+    data object CongratsScreen : AuthNavRoutes("congrats_screen")
 }
