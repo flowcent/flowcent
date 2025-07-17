@@ -30,6 +30,7 @@ import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
+import com.aiapp.flowcent.home.presentation.components.LineGraph
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
@@ -104,6 +105,8 @@ fun HomeScreen(
                 homeViewModel.onAction(UserAction.SetSelectedDate(it))
             }
         )
+
+        LineGraph()
 
         Column {
             Text(
