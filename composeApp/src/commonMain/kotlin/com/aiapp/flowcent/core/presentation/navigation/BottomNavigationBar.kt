@@ -10,7 +10,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -21,11 +27,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.painterResource
 import com.aiapp.flowcent.core.domain.model.NavItem
-import com.aiapp.flowcent.core.presentation.ui.theme.Colors
+import org.jetbrains.compose.resources.painterResource
+
 
 @Composable
 fun BottomNavigationBar(
@@ -44,14 +52,34 @@ fun BottomNavigationBar(
             val selected = index == selectedIndex
 
             // Animations
-            val scale by animateFloatAsState(if (selected) 1.1f else 1f)
+            val scale by animateFloatAsState(if (selected) 1.1f else 1f, label = "scale")
+
+            val isDarkTheme = isSystemInDarkTheme()
+            val glassyColor =
+                if (isDarkTheme) Color.Black.copy(alpha = 0.3f) else Color.White.copy(alpha = 0.5f)
+            val glassyBorderColor =
+                if (isDarkTheme) Color.White.copy(alpha = 0.2f) else Color.Black.copy(alpha = 0.1f)
+
+
             val backgroundColor by animateColorAsState(
-                if (selected) Colors.LightSurface.copy(alpha = 0.5f) else Color.Transparent
+                if (selected) glassyColor else Color.Transparent,
+                label = "background"
             )
-            val borderColor = Colors.LightSurface
+            val borderColor by animateColorAsState(
+                if (selected) glassyBorderColor else MaterialTheme.colorScheme.outline,
+                label = "border"
+            )
 
             val contentColor by animateColorAsState(
-                if (selected) Colors.LightPrimary else Colors.LightSurface
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                label = "content"
+            )
+
+            val gradientBrush = Brush.linearGradient(
+                colors = listOf(
+                    Color(0xFF00C853), // Vivid green (mid-saturation, not too neon)
+                    Color(0xFF2196F3)  // Bright, clean blue (material blue 500)
+                )
             )
 
             Box(
@@ -92,8 +120,10 @@ fun BottomNavigationBar(
                     if (selected) {
                         Text(
                             text = item.label,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = contentColor
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                brush = gradientBrush,
+                                fontWeight = FontWeight.Medium
+                            ),
                         )
                     }
                 }
