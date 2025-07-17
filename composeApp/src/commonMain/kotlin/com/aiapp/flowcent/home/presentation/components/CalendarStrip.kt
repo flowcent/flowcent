@@ -11,6 +11,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -145,6 +146,8 @@ fun CalendarStrip(
                     }
                 }
             }
+            val isDarkTheme = isSystemInDarkTheme()
+
             LazyRow(
                 state = lazyListState,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -155,7 +158,7 @@ fun CalendarStrip(
 
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = if (isSelected) MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.5f) else Color.Transparent,
+                        color = if (isSelected) Color.White.copy(alpha = 0.4f) else Color.Transparent,
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
@@ -168,11 +171,17 @@ fun CalendarStrip(
                                 .padding(vertical = 12.dp, horizontal = 16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            val textColor = if (isSelected) {
+                                if (isDarkTheme) Color.White else Color.Black
+                            } else {
+                                MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.6f)
+                            }
+
                             // day-of-week initial
                             Text(
                                 text = date.dayOfWeek.name.first().toString(),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inverseSurface
+                                color = textColor
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
@@ -181,7 +190,7 @@ fun CalendarStrip(
                             Text(
                                 text = date.dayOfMonth.toString(),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inverseSurface
+                                color = textColor
                             )
                         }
                     }
