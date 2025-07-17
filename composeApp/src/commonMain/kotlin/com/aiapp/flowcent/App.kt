@@ -71,7 +71,7 @@ fun App(
                 globalNavController = globalNavController,
                 modifier = Modifier.padding(innerPadding),
                 speechRecognizer = speechRecognizer,
-                startDestination = AppNavRoutes.Auth
+                startDestination = AppNavRoutes.Home
             )
         }
     }

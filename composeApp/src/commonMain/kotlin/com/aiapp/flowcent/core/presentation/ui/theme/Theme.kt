@@ -2,10 +2,11 @@ package com.aiapp.flowcent.core.presentation.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = false, // Checks if your system is in dark theme mode.
+    darkTheme: Boolean = isSystemInDarkTheme(), // Checks if your system is in dark theme mode.
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) DarkColorScheme else LightColorScheme
@@ -14,7 +15,7 @@ fun AppTheme(
         typography = appTypography(),
         shapes = Shapes,
     ){
-        RadialGradientBackground {
+        RadialGradientBackground(darkTheme = darkTheme) {
             content()
         }
     }
