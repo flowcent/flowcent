@@ -21,6 +21,9 @@ import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
+import flowcent.composeapp.generated.resources.ic_chat
+import flowcent.composeapp.generated.resources.ic_home
+import flowcent.composeapp.generated.resources.ic_share_accounts
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -32,9 +35,9 @@ fun App(
     val globalNavController = rememberNavController()
 
     val navItems = listOf(
-        NavItem("Home", Res.drawable.compose_multiplatform, AppNavRoutes.Home.route),
-        NavItem("Chat", Res.drawable.compose_multiplatform, AppNavRoutes.Chat.route),
-        NavItem("Accounts", Res.drawable.compose_multiplatform, AppNavRoutes.Accounts.route)
+        NavItem("Home", Res.drawable.ic_home, AppNavRoutes.Home.route),
+        NavItem("Chat", Res.drawable.ic_chat, AppNavRoutes.Chat.route),
+        NavItem("Accounts", Res.drawable.ic_share_accounts, AppNavRoutes.Accounts.route)
     )
 
     val currentDestination by globalNavController.currentBackStackEntryAsState()

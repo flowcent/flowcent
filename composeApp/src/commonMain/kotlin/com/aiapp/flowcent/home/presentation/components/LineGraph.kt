@@ -3,6 +3,7 @@ package com.aiapp.flowcent.home.presentation.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun LineGraph(modifier: Modifier = Modifier) {
+    val isDarkTheme = isSystemInDarkTheme()
     val dummyData = remember {
         mapOf(
             "Food" to 120f,
@@ -92,7 +94,10 @@ fun LineGraph(modifier: Modifier = Modifier) {
             // Draw labels
             categories.forEachIndexed { i, category ->
                 val x = i * stepX
-                val textStyle = TextStyle(color = Color.Green, fontSize = 10.sp) // Use sp for font size
+                val textStyle = TextStyle(
+                    color = if (isDarkTheme) Color.White else Color.Black,
+                    fontSize = 10.sp
+                ) // Use sp for font size
                 val textLayoutResult = textMeasurer.measure(
                     text = category,
                     style = textStyle
@@ -104,7 +109,10 @@ fun LineGraph(modifier: Modifier = Modifier) {
                 drawText(
                     textMeasurer = textMeasurer,
                     text = category,
-                    topLeft = androidx.compose.ui.geometry.Offset(x - textWidth / 2, size.height - textHeight - 5.dp.toPx()),
+                    topLeft = androidx.compose.ui.geometry.Offset(
+                        x - textWidth / 2,
+                        size.height - textHeight - 5.dp.toPx()
+                    ),
                     style = textStyle
                 )
             }
