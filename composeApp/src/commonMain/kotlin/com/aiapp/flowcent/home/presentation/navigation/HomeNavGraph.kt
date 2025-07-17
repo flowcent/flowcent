@@ -36,7 +36,6 @@ fun HomeNavGraph(
                 modifier = modifier,
                 homeViewModel = viewModel,
                 homeState = state,
-                localNavController = localNavController,
                 globalNavController = globalNavController
             )
         }

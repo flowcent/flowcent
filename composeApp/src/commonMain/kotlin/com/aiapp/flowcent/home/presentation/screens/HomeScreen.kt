@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
@@ -41,7 +40,6 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
     homeState: HomeState,
-    localNavController: NavController,
     globalNavController: NavHostController
 ) {
 
@@ -74,6 +72,7 @@ fun HomeScreen(
                 Icon(
                     painter = painterResource(Res.drawable.compose_multiplatform),
                     contentDescription = "Profile",
+                    tint = MaterialTheme.colorScheme.inverseSurface,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -82,6 +81,7 @@ fun HomeScreen(
                     Icon(
                         painter = painterResource(Res.drawable.compose_multiplatform), // Placeholder
                         contentDescription = "Insight",
+                        tint = MaterialTheme.colorScheme.inverseSurface,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -90,6 +90,7 @@ fun HomeScreen(
                     Icon(
                         painter = painterResource(Res.drawable.compose_multiplatform), // Placeholder
                         contentDescription = "Notifications",
+                        tint = MaterialTheme.colorScheme.inverseSurface,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -109,6 +110,7 @@ fun HomeScreen(
                 text = "Latest Transaction",
                 fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+                color = MaterialTheme.colorScheme.inverseSurface,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 

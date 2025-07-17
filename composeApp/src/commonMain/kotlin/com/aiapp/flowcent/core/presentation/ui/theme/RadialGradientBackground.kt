@@ -24,8 +24,9 @@ fun RadialGradientBackground(
 
     val darkColors = listOf(
         Color(0xFF000000), // Pure black (outer)
-        Color(0xFF03140A), // Deep black with slight green
         Color(0xFF052515), // Subtle glowing green core
+        Color(0xFF03140A), // Deep black with slight green
+
         Color(0xFF000000)  // Pure black again (outer)
     )
 

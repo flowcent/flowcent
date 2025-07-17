@@ -85,6 +85,7 @@ fun CalendarStrip(
                 Icon(
                     painter = painterResource(Res.drawable.ic_arrow_left),
                     contentDescription = "Previous Month",
+                    tint = MaterialTheme.colorScheme.inverseSurface,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -97,7 +98,8 @@ fun CalendarStrip(
                     text = "${
                         targetDate.month.name.lowercase().replaceFirstChar { it.uppercase() }
                     } ${targetDate.year}",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.inverseSurface,
                 )
             }
 
@@ -108,6 +110,7 @@ fun CalendarStrip(
                 Icon(
                     painter = painterResource(Res.drawable.ic_arrow_right),
                     contentDescription = "Next Month",
+                    tint = MaterialTheme.colorScheme.inverseSurface,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -152,7 +155,7 @@ fun CalendarStrip(
 
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = if (isSelected) MaterialTheme.colorScheme.surface.copy(alpha = 0.5f) else Color.Transparent,
+                        color = if (isSelected) MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.5f) else Color.Transparent,
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
@@ -169,7 +172,7 @@ fun CalendarStrip(
                             Text(
                                 text = date.dayOfWeek.name.first().toString(),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inverseSurface
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
@@ -178,7 +181,7 @@ fun CalendarStrip(
                             Text(
                                 text = date.dayOfMonth.toString(),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inverseSurface
                             )
                         }
                     }
