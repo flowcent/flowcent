@@ -1,8 +1,9 @@
-package com.aiapp.flowcent.accounts.domain
+package com.aiapp.flowcent.accounts.domain.repository
 
 import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
-import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.accounts.domain.model.Account
+import com.aiapp.flowcent.accounts.domain.toAccounts
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
@@ -23,7 +24,7 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun getAccounts(userId: String): Resource<List<AccountDto>> {
+    override suspend fun getAccounts(userId: String): Resource<List<Account>> {
         return try {
             val querySnapshot = accountsRef
                 .where {
@@ -35,7 +36,7 @@ class AccountRepositoryImpl(
                 document.data(AccountDto.serializer())
             }
 
-            Resource.Success(expenseList)
+            Resource.Success(expenseList.toAccounts())
 
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())

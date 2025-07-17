@@ -104,6 +104,8 @@ android {
     namespace = "com.aiapp.flowcent"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    val appName = "flowcent"
+
     defaultConfig {
         applicationId = "com.aiapp.flowcent"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -136,8 +138,23 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro" // This points to the file you just created
+            )
         }
     }
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.all {
+            val output = this
+            if (output is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
+                output.outputFileName = "${appName}-${variant.name}-${variant.versionName}.apk"
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
