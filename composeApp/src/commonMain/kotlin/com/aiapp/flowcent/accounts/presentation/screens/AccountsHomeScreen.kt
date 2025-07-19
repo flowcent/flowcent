@@ -4,7 +4,6 @@
 
 package com.aiapp.flowcent.accounts.presentation.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
+import com.aiapp.flowcent.accounts.presentation.UserAction
+import com.aiapp.flowcent.accounts.presentation.components.Events
 
 @Composable
 fun AccountsHomeScreen(
@@ -30,6 +31,13 @@ fun AccountsHomeScreen(
     localNavController: NavController,
     globalNavController: NavController
 ) {
+
+    Events(
+        accountViewModel = viewModel,
+        globalNavController = globalNavController,
+        localNavController = localNavController
+    )
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -39,8 +47,7 @@ fun AccountsHomeScreen(
         )
 
         FloatingActionButton(
-            onClick = {
-            },
+            onClick = { viewModel.onAction(UserAction.ClickAdd) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

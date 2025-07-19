@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.auth.presentation.screen
+package com.aiapp.flowcent.auth.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

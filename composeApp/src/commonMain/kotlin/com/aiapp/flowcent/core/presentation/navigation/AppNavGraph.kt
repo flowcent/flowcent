@@ -44,7 +44,7 @@ fun AppNavGraph(
             AccountsNavGraph(
                 modifier = modifier,
                 globalNavController = globalNavController,
-                startDestination = AccountsNavRoutes.AccountsHome
+                startDestination = AccountsNavRoutes.AccountsHomeScreen
             )
         }
 

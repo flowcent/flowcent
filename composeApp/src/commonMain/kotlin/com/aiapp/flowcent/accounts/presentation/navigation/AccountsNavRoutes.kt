@@ -5,5 +5,6 @@
 package com.aiapp.flowcent.accounts.presentation.navigation
 
 sealed class AccountsNavRoutes(val route: String) {
-    data object AccountsHome : AccountsNavRoutes("accounts_home")
+    data object AccountsHomeScreen : AccountsNavRoutes("accounts_home_screen")
+    data object AddAccountScreen : AccountsNavRoutes("add_account_screen")
 }

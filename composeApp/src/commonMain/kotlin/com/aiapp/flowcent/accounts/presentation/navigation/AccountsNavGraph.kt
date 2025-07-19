@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
+import com.aiapp.flowcent.accounts.presentation.screens.AddAccountScreen
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -31,8 +31,18 @@ fun AccountsNavGraph(
         navController = localNavController,
         startDestination = startDestination.route
     ) {
-        addAnimatedComposable(route = AccountsNavRoutes.AccountsHome.route) {
+        addAnimatedComposable(route = AccountsNavRoutes.AccountsHomeScreen.route) {
             AccountsHomeScreen(
+                modifier = modifier,
+                viewModel = viewModel,
+                state = state,
+                localNavController = localNavController,
+                globalNavController = globalNavController
+            )
+        }
+
+        addAnimatedComposable(route = AccountsNavRoutes.AddAccountScreen.route) {
+            AddAccountScreen(
                 modifier = modifier,
                 viewModel = viewModel,
                 state = state,
