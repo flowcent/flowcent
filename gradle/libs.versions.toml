@@ -24,7 +24,7 @@ playServicesAuth = "21.3.0"
 credentials = "1.5.0"
 googleId = "1.1.1"
 firebaseBom = "33.15.0"
-firebaseFirestore = "2.1.0"
+gitlive = "2.1.0"
 kmpauthmirzemehdi = "2.4.0-alpha02"
 materialIconsExtended = "1.7.3"
 multidex = "2.0.1"
@@ -65,11 +65,10 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
 credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-ai = { module = "com.google.firebase:firebase-ai" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseFirestore" }
-google-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitlive" }
 kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauthmirzemehdi" }
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauthmirzemehdi" }
 kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauthmirzemehdi" }

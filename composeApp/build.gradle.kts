@@ -128,8 +128,6 @@ kotlin {
             implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
             api(libs.datastore.preferences)
             api(libs.datastore)
-            implementation("org.jetbrains.kotlinx:kotlinx-io-bytestring:0.3.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
         }
 
         iosMain.dependencies {
@@ -219,7 +217,6 @@ swiftPackageConfig {
                 products = {
                     add("FirebaseCore", exportToKotlin = true)
                     add("FirebaseAuth", exportToKotlin = true)
-                    add("FirebaseFirestore", exportToKotlin = true)
                 },
                 version = "11.12.0"
             )
