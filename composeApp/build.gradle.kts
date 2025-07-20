@@ -1,14 +1,19 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import java.util.Properties
 import java.io.FileInputStream
+import java.net.URI
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.google.services)
-    kotlin("plugin.serialization") version "2.1.21"
+    alias(libs.plugins.kotlin.serialization)
+//    alias(libs.plugins.kotlin.native.cocoapods)
+    id("io.github.frankois944.spmForKmp") version "0.11.3"
 }
 
 //@Sohan
@@ -17,23 +22,50 @@ plugins {
 //Hence I had to write this resolutionStrategy to overcome dependency mismatch crash
 //In future, we need to update this when Firebase sdk will support Ktor >= 3.x.x versions
 //So keep that in mind.
-configurations.all {
-    resolutionStrategy {
-        eachDependency {
-            if (requested.group == "io.ktor") {
-                useVersion("2.3.2")
-                because("This version is tested and verified for our app")
-            }
-        }
-    }
-}
+//configurations.all {
+//    resolutionStrategy {
+//        eachDependency {
+//            if (requested.group == "io.ktor") {
+//                useVersion("2.3.2")
+//                because("This version is tested and verified for our app")
+//            }
+//        }
+//    }
+//}
 
 kotlin {
+//    cocoapods {
+//        // this is the version that your generated .podspec will carry
+//        version = "1.0.0"
+//
+//        summary = "Shared module for my Compose Multiplatform app"
+//        homepage = "https://your.homepage.com"
+//        ios.deploymentTarget = "14.1"
+//
+//
+//        framework {
+//            baseName = "shared"
+//            isStatic = false
+//            @OptIn(ExperimentalKotlinGradlePluginApi::class)
+//            transitiveExport = false
+//        }
+//
+//        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
+//        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
+//
+//        pod("SDWebImage") {
+//            version = "5.20.0"
+//        }
+//
+//    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
+
+    val xcf = XCFramework()
 
     listOf(
         iosX64(),
@@ -43,49 +75,61 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            xcf.add(this)
         }
     }
 
-    sourceSets {
+    iosArm64().apply {
+        compilations["main"].cinterops.create("nativeIosShared")
+    }
 
+
+    sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.play.services.auth)
+            implementation(libs.androidx.credentials)
+            implementation(libs.googleid)
+            implementation(libs.credentials.play.services.auth)
             implementation(project.dependencies.platform(libs.firebase.bom))
-            implementation(libs.google.firebase.analytics)
             implementation(libs.firebase.ai)
             implementation(libs.androidx.multidex)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.material3)
-            implementation(compose.ui)
             implementation(libs.navigation.compose)
+            implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.koin)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.koin.compose)
             implementation(libs.koin.viewmodel)
             implementation(libs.koin.viewmodel.navigation)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.bundles.ktor)
             implementation(libs.material.icons.extended)
             implementation(libs.moko.permissions)
             implementation(libs.moko.permissions.compose)
             implementation(libs.moko.permissions.microphone)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.firebase.firestore)
             implementation(libs.kmpauth.google) //Google One Tap Sign-In
             implementation(libs.kmpauth.firebase) //Integrated Authentications with Firebase
             implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
-            // DataStore library
-            implementation(libs.androidx.datastore)
-            // The Preferences DataStore library
-            implementation(libs.androidx.datastore.preferences)
+            api(libs.datastore.preferences)
+            api(libs.datastore)
+            implementation("org.jetbrains.kotlinx:kotlinx-io-bytestring:0.3.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
         }
 
         iosMain.dependencies {
@@ -164,4 +208,24 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
+
+swiftPackageConfig {
+    create("nativeIosShared") {
+        minIos = "18.0"
+
+        dependency {
+            remotePackageVersion(
+                url = URI("https://github.com/firebase/firebase-ios-sdk.git"),
+                products = {
+                    add("FirebaseCore", exportToKotlin = true)
+                    add("FirebaseAuth", exportToKotlin = true)
+                    add("FirebaseFirestore", exportToKotlin = true)
+                },
+                version = "11.12.0"
+            )
+        }
+    }
+}
+
+
 
