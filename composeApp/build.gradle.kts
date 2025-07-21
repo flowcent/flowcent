@@ -1,10 +1,8 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-import java.util.Properties
 import java.io.FileInputStream
 import java.net.URI
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -16,49 +14,7 @@ plugins {
     id("io.github.frankois944.spmForKmp") version "0.11.3"
 }
 
-//@Sohan
-//Special Note: Current Firebase sdk does not support Ktor 3.x.x versions yet,
-//On the other hand Compose multiplatform default support for Ktor is >= 3.x.x versions,
-//Hence I had to write this resolutionStrategy to overcome dependency mismatch crash
-//In future, we need to update this when Firebase sdk will support Ktor >= 3.x.x versions
-//So keep that in mind.
-//configurations.all {
-//    resolutionStrategy {
-//        eachDependency {
-//            if (requested.group == "io.ktor") {
-//                useVersion("2.3.2")
-//                because("This version is tested and verified for our app")
-//            }
-//        }
-//    }
-//}
-
 kotlin {
-//    cocoapods {
-//        // this is the version that your generated .podspec will carry
-//        version = "1.0.0"
-//
-//        summary = "Shared module for my Compose Multiplatform app"
-//        homepage = "https://your.homepage.com"
-//        ios.deploymentTarget = "14.1"
-//
-//
-//        framework {
-//            baseName = "shared"
-//            isStatic = false
-//            @OptIn(ExperimentalKotlinGradlePluginApi::class)
-//            transitiveExport = false
-//        }
-//
-//        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
-//        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
-//
-//        pod("SDWebImage") {
-//            version = "5.20.0"
-//        }
-//
-//    }
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
