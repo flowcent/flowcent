@@ -9,19 +9,58 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlin.serialization)
-//    alias(libs.plugins.kotlin.native.cocoapods)
-    id("io.github.frankois944.spmForKmp") version "0.11.3"
+    kotlin("plugin.serialization") version "2.1.21"
+    alias(libs.plugins.kotlin.native.cocoapods)
+    alias(libs.plugins.google.services)
+//    id("io.github.frankois944.spmForKmp") version "0.11.3"
 }
 
+//@Sohan
+//Special Note: Current Firebase sdk does not support Ktor 3.x.x versions yet,
+//On the other hand Compose multiplatform default support for Ktor is >= 3.x.x versions,
+//Hence I had to write this resolutionStrategy to overcome dependency mismatch crash
+//In future, we need to update this when Firebase sdk will support Ktor >= 3.x.x versions
+//So keep that in mind.
+
+//configurations.all {
+//    resolutionStrategy {
+//        eachDependency {
+//            if (requested.group == "io.ktor") {
+//                useVersion("2.3.0")
+//                isTransitive = true
+//                because("This version is tested and verified for our app")
+//            }
+//        }
+//    }
+//}
+
 kotlin {
+    cocoapods {
+        version = "1.0.0"
+        summary = "FlowCent App"
+        homepage = "https://your.project.url"
+        ios.deploymentTarget = "14.0"
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+
+        pod("FirebaseCore") {
+            version = "10.21.0" // or latest stable
+        }
+        pod("FirebaseAuth") {
+            version = "10.21.0" // or latest stable
+        }
+    }
+
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
-    val xcf = XCFramework()
+//    val xcf = XCFramework()
 
     listOf(
         iosX64(),
@@ -31,13 +70,13 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            xcf.add(this)
+//            xcf.add(this)
         }
     }
 
-    iosArm64().apply {
-        compilations["main"].cinterops.create("nativeIosShared")
-    }
+//    iosArm64().apply {
+//        compilations["main"].cinterops.create("nativeIosShared")
+//    }
 
 
     sourceSets {
@@ -55,6 +94,8 @@ kotlin {
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.firebase.ai)
             implementation(libs.androidx.multidex)
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.cio)
         }
 
         commonMain.dependencies {
@@ -69,7 +110,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.koin.compose)
+            implementation(libs.koin)
             implementation(libs.koin.viewmodel)
             implementation(libs.koin.viewmodel.navigation)
             implementation(libs.kotlinx.coroutines.core)
@@ -84,6 +125,9 @@ kotlin {
             implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
             api(libs.datastore.preferences)
             api(libs.datastore)
+//            implementation("org.jetbrains.kotlinx:kotlinx-io-bytestring:0.3.0")
+//            implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
+//            implementation("io.ktor:ktor-io:2.3.2")
         }
 
         iosMain.dependencies {
@@ -163,22 +207,23 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
-swiftPackageConfig {
-    create("nativeIosShared") {
-        minIos = "18.0"
+//swiftPackageConfig {
+//    create("nativeIosShared") {
+//        minIos = "18.0"
+//
+//        dependency {
+//            remotePackageVersion(
+//                url = URI("https://github.com/firebase/firebase-ios-sdk.git"),
+//                products = {
+//                    add("FirebaseCore", exportToKotlin = true)
+//                    add("FirebaseAuth", exportToKotlin = true)
+//                },
+//                version = "12.0.0"
+//            )
+//        }
+//    }
+//}
 
-        dependency {
-            remotePackageVersion(
-                url = URI("https://github.com/firebase/firebase-ios-sdk.git"),
-                products = {
-                    add("FirebaseCore", exportToKotlin = true)
-                    add("FirebaseAuth", exportToKotlin = true)
-                },
-                version = "11.12.0"
-            )
-        }
-    }
-}
 
 
 
