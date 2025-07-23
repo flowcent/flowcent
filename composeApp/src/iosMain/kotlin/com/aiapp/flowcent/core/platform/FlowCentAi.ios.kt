@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.core.platform
 
+import FlowCent.composeApp.BuildConfig
 import com.aiapp.flowcent.core.data.ContentBlock
 import com.aiapp.flowcent.core.data.ContentPart
 import com.aiapp.flowcent.core.data.GeminiContentRequest
@@ -11,6 +12,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -18,20 +20,6 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-actual class FlowCentAi {
-    /**
-     * Sends a prompt to the generative AI model and returns a structured result.
-     * @param prompt The input text prompt for the AI.
-     * @return A [Result] containing [ChatResult] on success, or an [Exception] on failure.
-     */
-
-
-//    private val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
-//        .generativeModel("gemini-2.0-flash")
-
-//    private val generativeModel = GenerativeModel(
-//        modelName = "gemma-3-27b-it", apiKey = "AIzaSyDgyl1Ir3VxoXid_cdP57EF67-troYy7oI"
-//    )
 
 //@Sohan
 //@Important note:
@@ -39,6 +27,13 @@ actual class FlowCentAi {
 // still has not published. That's why, for now we are doing it with the Gemini
 // rest api for the ios part.
 //When Firebase ai logic will be available, we have to replace it with it
+
+actual class FlowCentAi {
+    /**
+     * Sends a prompt to the generative AI model and returns a structured result.
+     * @param prompt The input text prompt for the AI.
+     * @return A [Result] containing [ChatResult] on success, or an [Exception] on failure.
+     */
 
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -50,7 +45,7 @@ actual class FlowCentAi {
         }
     }
 
-    private val apiKey = "AIzaSyDgyl1Ir3VxoXid_cdP57EF67-troYy7oI"
+    private val apiKey = BuildConfig.FIREBASE_AI_API_KEY_IOS
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -76,23 +71,32 @@ actual class FlowCentAi {
                 contentType(ContentType.Application.Json)
                 setBody(requestBody)
             }
-            val responseText = response.bodyAsText()
+            if (response.status == HttpStatusCode.OK) {
+                val responseText = response.bodyAsText()
 
-            // 🔍 Extracting plain JSON text if it's wrapped in content format
-            val jsonElement = json.parseToJsonElement(responseText)
-            val textOutput = jsonElement
-                .jsonObject["candidates"]
-                ?.jsonArray?.getOrNull(0)
-                ?.jsonObject?.get("content")
-                ?.jsonObject?.get("parts")
-                ?.jsonArray?.getOrNull(0)
-                ?.jsonObject?.get("text")
-                ?.jsonPrimitive?.content
-                ?: throw IllegalStateException("Missing expected response content")
+                // 🔍 Extracting plain JSON text if it's wrapped in content format
+                val jsonElement = json.parseToJsonElement(responseText)
+                val textOutput = jsonElement
+                    .jsonObject["candidates"]
+                    ?.jsonArray?.getOrNull(0)
+                    ?.jsonObject?.get("content")
+                    ?.jsonObject?.get("parts")
+                    ?.jsonArray?.getOrNull(0)
+                    ?.jsonObject?.get("text")
+                    ?.jsonPrimitive?.content
+                    ?: throw IllegalStateException("Missing expected response content")
 
-            val cleanJson = cleanJsonFromMarkdown(textOutput)
-            val chatResult = json.decodeFromString<ChatResult>(cleanJson)
-            Result.success(chatResult)
+                val cleanJson = cleanJsonFromMarkdown(textOutput)
+                val chatResult = json.decodeFromString<ChatResult>(cleanJson)
+                Result.success(chatResult)
+            } else {
+                if (response.status == HttpStatusCode.PaymentRequired) {
+                    Result.failure(Exception("Payment Required"))
+                } else {
+                    Result.failure(Exception("Error: Status code-> ${response.status}"))
+                }
+            }
+
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,6 +60,7 @@ fun HomeScreen(
             when (it) {
                 UiEvent.NavigateToAuth -> globalNavController.navigate(AppNavRoutes.Auth.route)
                 is UiEvent.ShowSnackbar -> {}
+                UiEvent.NavigateToProfile -> globalNavController.navigate(AppNavRoutes.Profile.route)
             }
         }
     }
@@ -69,9 +72,9 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { homeViewModel.onAction(UserAction.NavigateToAuth) }) {
+            IconButton(onClick = { homeViewModel.onAction(UserAction.NavigateToProfile) }) {
                 Icon(
-                    painter = painterResource(Res.drawable.compose_multiplatform),
+                    imageVector = Icons.Filled.Person,
                     contentDescription = "Profile",
                     tint = MaterialTheme.colorScheme.inverseSurface,
                     modifier = Modifier.size(24.dp)

@@ -80,6 +80,12 @@ class HomeViewModel(
                     }
                 }
             }
+
+            UserAction.NavigateToProfile -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToProfile)
+                }
+            }
         }
     }
 

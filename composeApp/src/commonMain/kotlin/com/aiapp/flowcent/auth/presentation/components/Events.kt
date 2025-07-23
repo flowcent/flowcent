@@ -24,6 +24,10 @@ fun Events(
                 UiEvent.NavigateToCongratulations -> {
                     localNavController.navigate(AuthNavRoutes.CongratsScreen.route)
                 }
+
+                UiEvent.NavigateToSignIn -> {
+                    localNavController.navigate(AuthNavRoutes.SignInScreen.route)
+                }
             }
         }
     }

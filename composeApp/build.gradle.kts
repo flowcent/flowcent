@@ -1,8 +1,8 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import java.io.FileInputStream
-import java.net.URI
 import java.util.Properties
+
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -10,8 +10,25 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
-//    alias(libs.plugins.kotlin.native.cocoapods)
-    id("io.github.frankois944.spmForKmp") version "0.11.3"
+    alias(libs.plugins.google.services)
+    id("com.github.gmazzo.buildconfig") version "5.6.7"
+}
+
+//@Sohan
+//Special Note: Current Firebase sdk does not support Ktor 3.x.x versions yet,
+//On the other hand Compose multiplatform default support for Ktor is >= 3.x.x versions,
+//Hence I had to write this resolutionStrategy to overcome dependency mismatch crash
+//In future, we need to update this when Firebase sdk will support Ktor >= 3.x.x versions
+//So keep that in mind.
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "io.ktor") {
+                useVersion("2.3.2")
+                because("This version is tested and verified for our app")
+            }
+        }
+    }
 }
 
 kotlin {
@@ -21,8 +38,6 @@ kotlin {
         }
     }
 
-    val xcf = XCFramework()
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -31,14 +46,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            xcf.add(this)
         }
     }
-
-    iosArm64().apply {
-        compilations["main"].cinterops.create("nativeIosShared")
-    }
-
 
     sourceSets {
         androidMain.dependencies {
@@ -89,6 +98,14 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
+    }
+
+    buildConfig {
+        val firebaseAiApiKeyIos: String =
+            gradleLocalProperties(rootDir, providers).getProperty("FIREBASE_AI_API_KEY_IOS")
+
+        buildConfigField("FIREBASE_AI_API_KEY_IOS", firebaseAiApiKeyIos)
+        buildConfigField("APP_VERSION", "1.0")
     }
 }
 
@@ -163,22 +180,11 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
-swiftPackageConfig {
-    create("nativeIosShared") {
-        minIos = "18.0"
 
-        dependency {
-            remotePackageVersion(
-                url = URI("https://github.com/firebase/firebase-ios-sdk.git"),
-                products = {
-                    add("FirebaseCore", exportToKotlin = true)
-                    add("FirebaseAuth", exportToKotlin = true)
-                },
-                version = "11.12.0"
-            )
-        }
-    }
-}
+
+
+
+
 
 
 

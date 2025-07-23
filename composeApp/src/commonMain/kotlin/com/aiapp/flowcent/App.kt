@@ -19,6 +19,8 @@ import com.aiapp.flowcent.core.presentation.navigation.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.auth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import flowcent.composeapp.generated.resources.ic_chat
@@ -45,12 +47,17 @@ fun App(
 
     val selectedIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
 
+    val shouldNotShowBottomNavs = currentRoute == AppNavRoutes.Auth.route ||
+            currentRoute == AppNavRoutes.Profile.route
+
+    val hasCurrentUser = Firebase.auth.currentUser != null
+
     AppTheme {
         Scaffold(
             containerColor = Color.Transparent,
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             bottomBar = {
-                if (currentRoute != AppNavRoutes.Auth.route) {
+                if (shouldNotShowBottomNavs.not()) {
                     BottomNavigationBar(
                         items = navItems,
                         selectedIndex = selectedIndex,
@@ -74,7 +81,7 @@ fun App(
                 globalNavController = globalNavController,
                 modifier = Modifier.padding(innerPadding),
                 speechRecognizer = speechRecognizer,
-                startDestination = AppNavRoutes.Home
+                startDestination = if (hasCurrentUser) AppNavRoutes.Home else AppNavRoutes.Auth
             )
         }
     }

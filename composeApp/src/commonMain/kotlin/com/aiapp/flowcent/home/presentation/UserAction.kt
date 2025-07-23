@@ -9,4 +9,5 @@ sealed interface UserAction {
     data object NavigateToAuth: UserAction
     data object FirebaseSignOut: UserAction
     data object FetchUserUId: UserAction
+    data object NavigateToProfile: UserAction
 }

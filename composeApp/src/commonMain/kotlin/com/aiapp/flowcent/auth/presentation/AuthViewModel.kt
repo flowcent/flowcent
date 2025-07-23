@@ -150,6 +150,7 @@ class AuthViewModel(
         println("Sohan Firebase.auth.currentUser ${Firebase.auth.currentUser}")
         if (Firebase.auth.currentUser != null) {
             Firebase.auth.signOut()
+            _uiEvent.send(UiEvent.NavigateToSignIn)
         }
     }
 }

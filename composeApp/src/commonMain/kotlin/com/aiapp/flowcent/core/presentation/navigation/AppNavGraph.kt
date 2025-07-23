@@ -70,5 +70,13 @@ fun AppNavGraph(
                 speechRecognizer = speechRecognizer
             )
         }
+
+        composable(route = AppNavRoutes.Profile.route) {
+            AuthNavGraph(
+                modifier = modifier,
+                globalNavController = globalNavController,
+                startDestination = AuthNavRoutes.ProfileScreen,
+            )
+        }
     }
 }
