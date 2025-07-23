@@ -80,5 +80,12 @@ fun SignInScreen(
         ) {
             Text("Google sign out")
         }
+
+        OutlinedButton(
+            onClick = { authViewModel.onAction(UserAction.SendVerificationCode) }
+
+        ) {
+            Text("Send Code")
+        }
     }
 }

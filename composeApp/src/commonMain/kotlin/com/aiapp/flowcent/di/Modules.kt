@@ -4,7 +4,6 @@
 
 package com.aiapp.flowcent.di
 
-import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.repository.AccountRepositoryImpl
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.auth.domain.repository.AuthRepositoryImpl
@@ -12,8 +11,12 @@ import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
+import com.aiapp.flowcent.core.platform.phoneVerificationProvider
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.FirebaseAuth
+import dev.gitlive.firebase.auth.PhoneVerificationProvider
+import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.module.Module
@@ -22,6 +25,8 @@ import org.koin.dsl.module
 
 expect val platformModule: Module
 private val firestore: FirebaseFirestore = Firebase.firestore
+private val firebaseAuth: FirebaseAuth = Firebase.auth
+private val phoneVerificationProvider: PhoneVerificationProvider = phoneVerificationProvider()
 
 val sharedModule = module {
     //ViewModels
@@ -40,7 +45,7 @@ val sharedModule = module {
     }
     viewModel {
         AuthViewModel(
-            authRepository = AuthRepositoryImpl(firestore),
+            authRepository = AuthRepositoryImpl(firestore, firebaseAuth, phoneVerificationProvider),
             prefRepository = PrefRepositoryImpl(get())
         )
     }

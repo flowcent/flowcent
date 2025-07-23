@@ -7,6 +7,7 @@ package com.aiapp.flowcent.di
 import com.aiapp.flowcent.core.datastore.createDataStore
 import com.aiapp.flowcent.core.datastore.dataStoreFileName
 import com.aiapp.flowcent.core.platform.FlowCentAi
+import dev.gitlive.firebase.auth.PhoneVerificationProvider
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import platform.Foundation.NSDocumentDirectory
@@ -30,4 +31,6 @@ actual val platformModule: Module = module {
             }
         )
     }
+
+    factory<PhoneVerificationProvider> { get() }
 }

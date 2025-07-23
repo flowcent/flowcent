@@ -32,6 +32,9 @@ multidex = "2.0.1"
 moko = "0.19.1"
 google-service = "4.4.3"
 playServicesBase = "18.7.2"
+recaptcha = "18.8.0-beta01"
+uiDesktop = "1.7.0"
+uiDesktopVersion = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -81,7 +84,7 @@ moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "mok
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
 moko-permissions-microphone = { module = "dev.icerock.moko:permissions-microphone", version.ref = "moko" }
 play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
-
+recaptcha = { module = "com.google.android.recaptcha:recaptcha", version.ref = "recaptcha" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

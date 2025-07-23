@@ -121,6 +121,24 @@ class AuthViewModel(
                     }
                 }
             }
+
+            UserAction.SendVerificationCode -> {
+                viewModelScope.launch {
+                    val credential = authRepository.sendVerificationCode("+1 650-555-1234")
+                    println("Sohan credential $credential")
+                    _state.update {
+                        it.copy(
+                            credential = credential
+                        )
+                    }
+                }
+            }
+
+            UserAction.VerifyPhoneNumber -> {
+                viewModelScope.launch {
+                    _state.value.credential?.let { authRepository.signInWithCredential(it) }
+                }
+            }
         }
     }
 
