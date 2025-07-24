@@ -74,6 +74,29 @@ fun CongratsScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+
+        OutlinedTextField(
+            value = authState.phoneNumber,
+            onValueChange = { newValue ->
+                authViewModel.onAction(UserAction.UpdatePhoneNumber(newValue))
+            },
+            placeholder = { Text("Phone Number ") },
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Colors.Black,
+                cursorColor = Colors.Black,
+                unfocusedContainerColor = Colors.White,
+                focusedContainerColor = Colors.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            maxLines = 1,
+            singleLine = true,
+            textStyle = MaterialTheme.typography.bodyMedium,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)
+        )
+
+
         OutlinedTextField(
             value = authState.initialBalance,
             onValueChange = { newValue ->

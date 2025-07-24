@@ -40,10 +40,6 @@ class HomeViewModel(
 
     fun onAction(action: UserAction) {
         when (action) {
-            is UserAction.FetchLatestTransactions -> {
-                fetchLatestTransactions()
-            }
-
             is UserAction.SetSelectedDate -> {
                 viewModelScope.launch {
                     _state.update {
@@ -52,10 +48,6 @@ class HomeViewModel(
                         )
                     }
                 }
-            }
-
-            UserAction.FetchTotalAmount -> {
-                fetchTotalAmount()
             }
 
             UserAction.NavigateToAuth -> {
@@ -72,10 +64,16 @@ class HomeViewModel(
 
             UserAction.FetchUserUId -> {
                 viewModelScope.launch {
-                    prefRepository.uid.collect { uidFromDataStore ->
-                        println("Sohan home uidFromDataStore: $uidFromDataStore")
-                        _state.update { currentState ->
-                            currentState.copy(uid = uidFromDataStore ?: "")
+                    if (_state.value.uid.isNotEmpty()) {
+                        fetchLatestTransactions(_state.value.uid)
+                        fetchTotalAmount(_state.value.uid)
+                    } else {
+                        prefRepository.uid.collect { uidFromDataStore ->
+                            _state.update { currentState ->
+                                currentState.copy(uid = uidFromDataStore ?: "")
+                            }
+                            fetchLatestTransactions(uid = uidFromDataStore)
+                            fetchTotalAmount(uid = uidFromDataStore)
                         }
                     }
                 }
@@ -96,9 +94,13 @@ class HomeViewModel(
         }
     }
 
-    private fun fetchTotalAmount() {
+    private fun fetchTotalAmount(uid: String?) {
+        if (uid.isNullOrEmpty()) {
+            println("Sohan 404 No user found")
+            return
+        }
         viewModelScope.launch {
-            when (val result = expenseRepository.totalAmount(_state.value.uid)) {
+            when (val result = expenseRepository.totalAmount(uid)) {
                 is Resource.Error -> {
                     println("Sohan Error in fetching total amount: ${result.message}")
                 }
@@ -113,13 +115,18 @@ class HomeViewModel(
         }
     }
 
-    private fun fetchLatestTransactions() {
+    private fun fetchLatestTransactions(uid: String?) {
+        if (uid.isNullOrEmpty()) {
+            println("Sohan 404 No User Found")
+            return
+        }
         viewModelScope.launch {
             try {
                 println("Sohan _state.value.selectedDate.toString() ${_state.value.selectedDate.toString()}")
+                println("Sohan _state.value.uid ${_state.value.uid}")
                 when (val result =
                     expenseRepository.getDailyExpenses(
-                        _state.value.uid,
+                        uid,
                         _state.value.selectedDate.toString()
                     )) {
                     is Resource.Error -> {
@@ -135,6 +142,8 @@ class HomeViewModel(
                             )
                         }
                         println("Sohan Success in fetching expenses: $expenseList")
+
+
                     }
                 }
             } catch (error: Exception) {

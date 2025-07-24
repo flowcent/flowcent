@@ -73,12 +73,5 @@ fun SignInScreen(
 
                 ) { this.onClick() }
         }
-
-        OutlinedButton(
-            onClick = { authViewModel.onAction(UserAction.FirebaseSignOut) }
-
-        ) {
-            Text("Google sign out")
-        }
     }
 }

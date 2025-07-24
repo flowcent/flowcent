@@ -8,5 +8,6 @@ data class AuthState(
     val userName: String = "",
     val initialBalance: String = "",
     val firebaseUser: FirebaseUser? = null,
-    val signInType: String = ""
+    val signInType: String = "",
+    val phoneNumber: String = ""
 )

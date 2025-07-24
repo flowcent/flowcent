@@ -12,4 +12,5 @@ sealed interface UserAction {
     data class SaveUserUid(val uid: String) : UserAction
     data class UpdateUserName(val userName: String) : UserAction
     data class UpdateInitialBalance(val initialBalance: String) : UserAction
+    data class UpdatePhoneNumber(val phoneNumber: String) : UserAction
 }

@@ -48,7 +48,8 @@ class AuthViewModel(
                         name = _state.value.firebaseUser?.displayName ?: "",
                         userName = _state.value.userName,
                         email = _state.value.firebaseUser?.email ?: "",
-                        phoneNumber = _state.value.firebaseUser?.phoneNumber ?: "",
+                        phoneNumber = _state.value.firebaseUser?.phoneNumber
+                            ?: _state.value.phoneNumber,
                         imageUrl = _state.value.firebaseUser?.photoURL ?: "",
                         initialBalance = _state.value.initialBalance,
                         providerId = _state.value.firebaseUser?.providerId ?: "",
@@ -78,12 +79,12 @@ class AuthViewModel(
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
-                                    firebaseUser = action.firebaseUser
+                                    firebaseUser = action.firebaseUser,
+                                    signInType = action.signInType
                                 )
                             }
                             if (result.data == true) {
                                 _uiEvent.send(UiEvent.NavigateToHome)
-                                println("Sohan ${result.data}")
                             } else {
                                 _uiEvent.send(UiEvent.NavigateToCongratulations)
                             }
@@ -117,6 +118,16 @@ class AuthViewModel(
                     _state.update {
                         it.copy(
                             userName = action.userName
+                        )
+                    }
+                }
+            }
+
+            is UserAction.UpdatePhoneNumber -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            phoneNumber = action.phoneNumber
                         )
                     }
                 }

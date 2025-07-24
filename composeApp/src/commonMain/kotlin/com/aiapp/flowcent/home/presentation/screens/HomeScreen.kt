@@ -47,11 +47,6 @@ fun HomeScreen(
 ) {
 
     LaunchedEffect(key1 = homeState.selectedDate) {
-        homeViewModel.onAction(UserAction.FetchLatestTransactions)
-    }
-
-    LaunchedEffect(key1 = Unit) {
-        homeViewModel.onAction(UserAction.FetchTotalAmount)
         homeViewModel.onAction(UserAction.FetchUserUId)
     }
 

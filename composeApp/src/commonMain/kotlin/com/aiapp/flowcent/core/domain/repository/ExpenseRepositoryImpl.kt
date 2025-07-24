@@ -76,6 +76,7 @@ class ExpenseRepositoryImpl(
         return try {
             val formattedDate = getFormattedDate(dateString)
             println("Sohan formattedDate $formattedDate")
+            println("Sohan uid $uid")
             val querySnapshot = transactionCollection
                 .where { "uid" equalTo uid }
                 .where {
@@ -86,6 +87,8 @@ class ExpenseRepositoryImpl(
                 }
                 .orderBy("created_at", Direction.DESCENDING)
                 .get()
+
+            println("Sohan querySnapshot ${querySnapshot.documents}")
             val expenseList = querySnapshot.documents.map { document ->
                 document.data(ExpenseItem.serializer())
             }
