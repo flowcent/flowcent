@@ -7,4 +7,5 @@ interface AuthRepository {
     suspend fun createNewUser(user: User): Resource<String>
     suspend fun isUserExist(uid: String): Resource<Boolean>
     suspend fun fetchUserProfile(uid: String): Resource<User>
+    suspend fun fetchAllUsersPhoneNumbers(): Resource<List<String>>
 }

@@ -123,8 +123,6 @@ class HomeViewModel(
         }
         viewModelScope.launch {
             try {
-                println("Sohan _state.value.selectedDate.toString() ${_state.value.selectedDate.toString()}")
-                println("Sohan _state.value.uid ${_state.value.uid}")
                 when (val result =
                     expenseRepository.getDailyExpenses(
                         uid,

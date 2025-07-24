@@ -47,4 +47,12 @@ class AuthRepositoryImpl(
             Resource.Error(ex.message.toString())
         }
     }
+
+    override suspend fun fetchAllUsersPhoneNumbers(): Resource<List<String>> {
+        val allUsersSnapshot = userCollection.get()
+        val allUsersPhoneNumbers = allUsersSnapshot.documents.map {
+            it.data(User.serializer()).phoneNumber
+        }
+        return Resource.Success(allUsersPhoneNumbers)
+    }
 }

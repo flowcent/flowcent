@@ -9,6 +9,7 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -132,7 +133,33 @@ class AuthViewModel(
                     }
                 }
             }
+
+            UserAction.FetchRegisteredPhoneNumbers -> {
+                fetchRegisteredPhoneNumbers()
+            }
         }
+    }
+
+    private fun fetchRegisteredPhoneNumbers() {
+        if (_state.value.registeredPhoneNumbersCache != null) return
+        viewModelScope.launch {
+            when (val result = authRepository.fetchAllUsersPhoneNumbers()) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in fetching registered phone numbers: ${result.message}")
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in fetching registered phone numbers: ${result.data}")
+                    _state.update {
+                        it.copy(
+                            registeredPhoneNumbersCache = result.data?.toSet()
+                        )
+                    }
+                }
+            }
+        }
+
     }
 
     private fun createNewUserToDb(user: User) {
