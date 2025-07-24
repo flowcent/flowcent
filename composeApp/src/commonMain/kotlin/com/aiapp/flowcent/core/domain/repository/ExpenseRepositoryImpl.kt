@@ -9,6 +9,7 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
+import io.github.aakira.napier.Napier
 
 class ExpenseRepositoryImpl(
     firestore: FirebaseFirestore
@@ -75,8 +76,6 @@ class ExpenseRepositoryImpl(
     ): Resource<List<ExpenseItem>> {
         return try {
             val formattedDate = getFormattedDate(dateString)
-            println("Sohan formattedDate $formattedDate")
-            println("Sohan uid $uid")
             val querySnapshot = transactionCollection
                 .where { "uid" equalTo uid }
                 .where {

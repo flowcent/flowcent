@@ -93,6 +93,7 @@ kotlin {
             implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
             api(libs.datastore.preferences)
             api(libs.datastore)
+            implementation(libs.napier)
         }
 
         iosMain.dependencies {

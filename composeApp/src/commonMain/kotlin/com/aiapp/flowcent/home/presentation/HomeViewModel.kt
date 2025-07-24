@@ -13,6 +13,7 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -96,7 +97,7 @@ class HomeViewModel(
 
     private fun fetchTotalAmount(uid: String?) {
         if (uid.isNullOrEmpty()) {
-            println("Sohan 404 No user found")
+            Napier.e("Sohan 404 No user found")
             return
         }
         viewModelScope.launch {
@@ -117,7 +118,7 @@ class HomeViewModel(
 
     private fun fetchLatestTransactions(uid: String?) {
         if (uid.isNullOrEmpty()) {
-            println("Sohan 404 No User Found")
+            Napier.e("Sohan 404 No User Found")
             return
         }
         viewModelScope.launch {
