@@ -39,11 +39,6 @@ fun CongratsScreen(
         localNavController = localNavController
     )
 
-    LaunchedEffect(key1 = Unit) {
-        authViewModel.onAction(UserAction.FetchRegisteredPhoneNumbers)
-    }
-
-
     Column(
         modifier = Modifier.padding(
             horizontal = 16.dp,

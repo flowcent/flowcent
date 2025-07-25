@@ -4,7 +4,6 @@
 
 package com.aiapp.flowcent.di
 
-import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.repository.AccountRepositoryImpl
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.auth.domain.repository.AuthRepositoryImpl
@@ -41,14 +40,16 @@ val sharedModule = module {
     viewModel {
         AuthViewModel(
             authRepository = AuthRepositoryImpl(firestore),
-            prefRepository = PrefRepositoryImpl(get())
+            prefRepository = PrefRepositoryImpl(get()),
         )
     }
 
     viewModel {
         AccountViewModel(
             accountRepository = AccountRepositoryImpl(firestore),
-            prefRepository = PrefRepositoryImpl(get())
+            prefRepository = PrefRepositoryImpl(get()),
+            authRepository = AuthRepositoryImpl(firestore),
+            contactFetcher = get()
         )
     }
 }

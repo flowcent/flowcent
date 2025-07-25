@@ -8,4 +8,5 @@ interface AuthRepository {
     suspend fun isUserExist(uid: String): Resource<Boolean>
     suspend fun fetchUserProfile(uid: String): Resource<User>
     suspend fun fetchAllUsersPhoneNumbers(): Resource<List<String>>
+    suspend fun fetchMatchingUsers(phoneNumbers: List<String>): Resource<List<User>>
 }

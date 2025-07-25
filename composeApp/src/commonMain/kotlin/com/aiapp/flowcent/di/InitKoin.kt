@@ -9,7 +9,7 @@ import org.koin.core.logger.Level
 import org.koin.dsl.KoinAppDeclaration
 
 fun initKoin(config: KoinAppDeclaration? = null) {
-    startKoin{
+    startKoin {
         config?.invoke(this)
         printLogger(Level.DEBUG)
         modules(sharedModule, platformModule)

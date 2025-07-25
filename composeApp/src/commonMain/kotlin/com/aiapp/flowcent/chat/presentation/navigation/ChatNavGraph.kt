@@ -5,7 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -13,7 +13,7 @@ import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.screen.ChatScreen
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.presentation.PermissionsViewModel
+import com.aiapp.flowcent.core.permission.PermissionsViewModel
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.compose.viewmodel.koinViewModel
@@ -36,9 +36,11 @@ fun ChatNavGraph(
 
     BindEffect(controller)
 
-    val permissionVM = androidx.lifecycle.viewmodel.compose.viewModel {
+    val permissionVM = viewModel {
         PermissionsViewModel(controller)
     }
+
+    val fcPermissionsState by permissionVM.state.collectAsState()
 
     NavHost(
         navController = localNavController,
@@ -51,6 +53,7 @@ fun ChatNavGraph(
                 viewModel = viewModel,
                 speechRecognizer = speechRecognizer,
                 permissionsVM = permissionVM,
+                fcPermissionsState = fcPermissionsState,
                 localNavController = localNavController,
                 globalNavController = globalNavController,
             )

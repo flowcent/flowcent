@@ -1,6 +1,5 @@
 package com.aiapp.flowcent.auth.presentation
 
-import com.aiapp.flowcent.auth.data.model.User
 import dev.gitlive.firebase.auth.FirebaseUser
 
 sealed interface UserAction {

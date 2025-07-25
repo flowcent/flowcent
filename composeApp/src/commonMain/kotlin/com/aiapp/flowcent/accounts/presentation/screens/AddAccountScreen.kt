@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -19,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,8 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
+import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.Events
+import com.aiapp.flowcent.core.permission.FCPermissionState
+import com.aiapp.flowcent.core.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.ui.theme.Colors
+import dev.icerock.moko.permissions.PermissionState
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,17 +47,51 @@ fun AddAccountScreen(
     viewModel: AccountViewModel,
     state: AccountState,
     localNavController: NavController,
-    globalNavController: NavController
+    globalNavController: NavController,
+    permissionVm: PermissionsViewModel,
+    fcPermissionState: FCPermissionState
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val coroutineScope = rememberCoroutineScope()
-    var showSheet by remember { mutableStateOf(false) }  // NEW
-
     Events(
         accountViewModel = viewModel,
         globalNavController = globalNavController,
         localNavController = localNavController
     )
+
+
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
+    var showSheet by remember { mutableStateOf(false) }  // NEW
+
+    var hasContactPermission: Boolean by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = Unit) {
+        permissionVm.provideOrRequestContactPermission()
+    }
+
+
+    LaunchedEffect(key1 = fcPermissionState.contactPermissionState) {
+        hasContactPermission = when (fcPermissionState.contactPermissionState) {
+            PermissionState.NotDetermined -> false
+
+            PermissionState.NotGranted -> false
+
+            PermissionState.Granted -> true
+
+            PermissionState.Denied -> false
+
+            PermissionState.DeniedAlways -> false
+
+            null -> false
+        }
+    }
+
+    fun handleAddMembers() {
+        if (hasContactPermission) {
+            viewModel.onAction(UserAction.FetchRegisteredPhoneNumbers)
+        } else {
+            Napier.e("Sohan Contact permission denied. Please enable it in app settings.")
+        }
+    }
 
     Column(
         modifier = Modifier.padding(16.dp),
@@ -109,10 +147,11 @@ fun AddAccountScreen(
 
             OutlinedButton(
                 onClick = {
-                    showSheet = true
-                    coroutineScope.launch {
-                        bottomSheetState.show()
-                    }
+//                    showSheet = true
+//                    coroutineScope.launch {
+//                        bottomSheetState.show()
+//                    }
+                    handleAddMembers()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

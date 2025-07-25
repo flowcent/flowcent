@@ -78,7 +78,7 @@ androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "mult
 moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "moko" }
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
 moko-permissions-microphone = { module = "dev.icerock.moko:permissions-microphone", version.ref = "moko" }
-
+moko-permissions-contacts = { module = "dev.icerock.moko:permissions-contacts", version.ref = "moko" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

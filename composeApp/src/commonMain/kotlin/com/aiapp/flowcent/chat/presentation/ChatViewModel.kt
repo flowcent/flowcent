@@ -111,7 +111,6 @@ class ChatViewModel(
             UserAction.FetchUserUId -> {
                 viewModelScope.launch {
                     prefRepository.uid.collect { uidFromDataStore ->
-                        println("Sohan chat uidFromDataStore: $uidFromDataStore")
                         _chatState.update { currentState ->
                             currentState.copy(uid = uidFromDataStore ?: "")
                         }

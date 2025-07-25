@@ -21,6 +21,7 @@ import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import dev.gitlive.firebase.auth.FirebaseUser
+import io.github.aakira.napier.Napier
 
 @Composable
 fun SignInScreen(
@@ -38,18 +39,22 @@ fun SignInScreen(
     )
 
     val onGoogleSignInResult: (Result<FirebaseUser?>) -> Unit = { result ->
-        if (result.isSuccess) {
-            val firebaseUser = result.getOrNull()
-            if (firebaseUser != null) {
-                authViewModel.onAction(
-                    UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
-                )
+        try {
+            if (result.isSuccess) {
+                val firebaseUser = result.getOrNull()
+                if (firebaseUser != null) {
+                    authViewModel.onAction(
+                        UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
+                    )
 
-                authViewModel.onAction(UserAction.SaveUserUid(firebaseUser.uid))
+                    authViewModel.onAction(UserAction.SaveUserUid(firebaseUser.uid))
+                }
+
+            } else {
+                Napier.e("Sohan onFirebaseResult Error Result: ${result.exceptionOrNull()?.message}")
             }
-
-        } else {
-            println("Sohan onFirebaseResult Error Result: ${result.exceptionOrNull()?.message}")
+        } catch (ex: Exception) {
+            Napier.e("Sohan onFirebaseResult Error Result: ${ex.message}")
         }
 
     }

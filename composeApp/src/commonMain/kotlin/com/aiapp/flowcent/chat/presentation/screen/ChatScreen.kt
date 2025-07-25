@@ -35,8 +35,9 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
 import com.aiapp.flowcent.chat.presentation.components.SpendingList
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
+import com.aiapp.flowcent.core.permission.FCPermissionState
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.presentation.PermissionsViewModel
+import com.aiapp.flowcent.core.permission.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.outline_charger
@@ -51,16 +52,17 @@ fun ChatScreen(
     viewModel: ChatViewModel,
     speechRecognizer: SpeechRecognizer,
     permissionsVM: PermissionsViewModel,
+    fcPermissionsState: FCPermissionState,
     localNavController: NavController,
     globalNavController: NavController
 ) {
 
-    var hasPermission: Boolean by remember { mutableStateOf(false) }
+    var hasAudioPermission: Boolean by remember { mutableStateOf(false) }
     var isListening by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = permissionsVM.state) {
-        hasPermission = when (permissionsVM.state) {
+    LaunchedEffect(key1 = fcPermissionsState.audioPermissionState) {
+        hasAudioPermission = when (fcPermissionsState.audioPermissionState) {
             PermissionState.NotDetermined -> false
 
             PermissionState.NotGranted -> false
@@ -95,7 +97,7 @@ fun ChatScreen(
             when (it) {
                 is UiEvent.ShowSnackBar -> {}
                 UiEvent.StartAudioPlayer -> {
-                    if (hasPermission) {
+                    if (hasAudioPermission) {
                         coroutineScope.launch {
                             speechRecognizer.startListening().collect { text ->
                                 viewModel.onAction(UserAction.UpdateText(text))

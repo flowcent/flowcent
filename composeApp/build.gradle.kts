@@ -87,6 +87,7 @@ kotlin {
             implementation(libs.moko.permissions)
             implementation(libs.moko.permissions.compose)
             implementation(libs.moko.permissions.microphone)
+            implementation(libs.moko.permissions.contacts)
             implementation(libs.firebase.firestore)
             implementation(libs.kmpauth.google) //Google One Tap Sign-In
             implementation(libs.kmpauth.firebase) //Integrated Authentications with Firebase
