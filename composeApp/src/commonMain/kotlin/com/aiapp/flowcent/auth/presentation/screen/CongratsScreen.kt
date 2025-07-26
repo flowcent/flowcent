@@ -2,8 +2,10 @@ package com.aiapp.flowcent.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +13,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +23,7 @@ import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.auth.presentation.components.Events
+import com.aiapp.flowcent.core.component.countryCodePicker.ui.CountryPickerBasicTextField
 import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
 @Composable
@@ -54,33 +56,33 @@ fun CongratsScreen(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        OutlinedTextField(
-            value = authState.userName,
-            onValueChange = { newValue ->
-                authViewModel.onAction(UserAction.UpdateUserName(newValue))
-            },
-            placeholder = { Text("User Name ") },
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = Colors.Black,
-                cursorColor = Colors.Black,
-                unfocusedContainerColor = Colors.White,
-                focusedContainerColor = Colors.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            maxLines = 1,
-            singleLine = true,
-            textStyle = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-
-        OutlinedTextField(
-            value = authState.phoneNumber,
-            onValueChange = { newValue ->
+        CountryPickerBasicTextField(
+            mobileNumber = authState.phoneNumber,
+            defaultCountryCode = "ad",
+            onMobileNumberChange = { newValue ->
                 authViewModel.onAction(UserAction.UpdatePhoneNumber(newValue))
             },
-            placeholder = { Text("Phone Number ") },
+            onCountrySelected = { country ->
+                authViewModel.onAction(UserAction.UpdateCountry(country))
+            },
+            modifier = Modifier.fillMaxWidth(),
+            defaultPaddingValues = PaddingValues(6.dp),
+            showCountryFlag = true,
+            showCountryPhoneCode = true,
+            showCountryName = false,
+            showCountryCode = false,
+            showArrowDropDown = true,
+            spaceAfterCountryFlag = 8.dp,
+            spaceAfterCountryPhoneCode = 6.dp,
+            spaceAfterCountryName = 6.dp,
+            spaceAfterCountryCode = 6.dp,
+            label = {
+                Text(text = "Mobile Number")
+            },
+            focusedBorderThickness = 2.dp,
+            unfocusedBorderThickness = 1.dp,
+            shape = RoundedCornerShape(10.dp),
+            verticalDividerColor = Color(0XFFDDDDDD),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Colors.Black,
                 cursorColor = Colors.Black,
@@ -89,11 +91,6 @@ fun CongratsScreen(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
-            maxLines = 1,
-            singleLine = true,
-            textStyle = MaterialTheme.typography.bodyMedium,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)
         )
 
 

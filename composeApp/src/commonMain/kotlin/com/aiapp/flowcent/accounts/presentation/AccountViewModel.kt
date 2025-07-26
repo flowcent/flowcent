@@ -30,13 +30,13 @@ class AccountViewModel(
     fun onAction(action: UserAction) {
         when (action) {
             is UserAction.AddAccount -> TODO()
-            UserAction.ClickAdd -> {
+            is UserAction.ClickAdd -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.ClickAdd)
                 }
             }
 
-            UserAction.FetchRegisteredPhoneNumbers -> {
+            is UserAction.FetchRegisteredPhoneNumbers -> {
                 fetchRegisteredPhoneNumbers()
             }
         }
@@ -53,10 +53,11 @@ class AccountViewModel(
                     Napier.e("Sohan Error in fetching registered phone numbers: ${result.message}")
                 }
 
-                Resource.Loading -> {}
+                is Resource.Loading -> {}
                 is Resource.Success -> {
                     Napier.e("Sohan Success in fetching registered phone numbers: ${result.data}")
                     val deviceContacts = contactFetcher.fetchContacts()
+                    Napier.e("Sohan deviceContacts: $deviceContacts")
                     val matchedPhoneNumbers = deviceContacts
                         .map { it.phoneNumber }
                         .filter { result.data?.contains(it) == true }

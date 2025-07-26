@@ -47,10 +47,8 @@ class AuthViewModel(
                     User(
                         uid = _state.value.firebaseUser?.uid ?: "",
                         name = _state.value.firebaseUser?.displayName ?: "",
-                        userName = _state.value.userName,
                         email = _state.value.firebaseUser?.email ?: "",
-                        phoneNumber = _state.value.firebaseUser?.phoneNumber
-                            ?: _state.value.phoneNumber,
+                        phoneNumber = _state.value.countryDetails?.countryPhoneNumberCode + _state.value.phoneNumber,
                         imageUrl = _state.value.firebaseUser?.photoURL ?: "",
                         initialBalance = _state.value.initialBalance,
                         providerId = _state.value.firebaseUser?.providerId ?: "",
@@ -114,17 +112,8 @@ class AuthViewModel(
                 }
             }
 
-            is UserAction.UpdateUserName -> {
-                viewModelScope.launch {
-                    _state.update {
-                        it.copy(
-                            userName = action.userName
-                        )
-                    }
-                }
-            }
-
             is UserAction.UpdatePhoneNumber -> {
+                Napier.e("Sohan action.phoneNumber ${action.phoneNumber}")
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
@@ -134,32 +123,17 @@ class AuthViewModel(
                 }
             }
 
-            UserAction.FetchRegisteredPhoneNumbers -> {
-                fetchRegisteredPhoneNumbers()
-            }
-        }
-    }
-
-    private fun fetchRegisteredPhoneNumbers() {
-        if (_state.value.registeredPhoneNumbersCache != null) return
-        viewModelScope.launch {
-            when (val result = authRepository.fetchAllUsersPhoneNumbers()) {
-                is Resource.Error -> {
-                    Napier.e("Sohan Error in fetching registered phone numbers: ${result.message}")
-                }
-
-                Resource.Loading -> {}
-                is Resource.Success -> {
-                    Napier.e("Sohan Success in fetching registered phone numbers: ${result.data}")
+            is UserAction.UpdateCountry -> {
+                Napier.e("Sohan action.countryDetails ${action.countryDetails}")
+                viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            registeredPhoneNumbersCache = result.data?.toSet()
+                            countryDetails = action.countryDetails
                         )
                     }
                 }
             }
         }
-
     }
 
     private fun createNewUserToDb(user: User) {
