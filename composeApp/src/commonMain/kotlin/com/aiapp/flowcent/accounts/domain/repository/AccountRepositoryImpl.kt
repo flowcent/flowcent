@@ -1,6 +1,6 @@
 package com.aiapp.flowcent.accounts.domain.repository
 
-import com.aiapp.flowcent.accounts.data.model.AccountDto
+import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.toAccounts
@@ -14,10 +14,10 @@ class AccountRepositoryImpl(
 
     private val accountsRef = firestore.collection("accounts")
 
-    override suspend fun addAccount(accountDto: AccountDto): Resource<String> {
+    override suspend fun addAccount(createAccountDto: CreateAccountDto): Resource<String> {
         return try {
             val addAccountRef = accountsRef
-                .add(accountDto)
+                .add(createAccountDto)
             Resource.Success(addAccountRef.id)
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())
@@ -33,7 +33,7 @@ class AccountRepositoryImpl(
                 .orderBy("created_at", Direction.DESCENDING)
                 .get()
             val expenseList = querySnapshot.documents.map { document ->
-                document.data(AccountDto.serializer())
+                document.data(CreateAccountDto.serializer())
             }
 
             Resource.Success(expenseList.toAccounts())

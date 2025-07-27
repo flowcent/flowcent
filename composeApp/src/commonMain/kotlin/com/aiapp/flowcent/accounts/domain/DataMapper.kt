@@ -1,18 +1,17 @@
 package com.aiapp.flowcent.accounts.domain
 
-import com.aiapp.flowcent.accounts.data.model.AccountDto
+import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
 import com.aiapp.flowcent.accounts.data.model.AccountMemberDto
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.model.AccountMember
+import com.aiapp.flowcent.auth.data.model.User
 
 
 fun AccountMemberDto.toAccountMember(): AccountMember {
     return AccountMember(
         memberId = memberId,
         memberUserName = memberUserName,
-        memberProfileImage = memberProfileImage,
-        totalAmountAdded = totalAmountAdded,
-        totalAmountSpent = totalAmountSpent
+        memberProfileImage = memberProfileImage
     )
 }
 
@@ -20,13 +19,11 @@ fun AccountMember.toAccountMemberDto(): AccountMemberDto {
     return AccountMemberDto(
         memberId = memberId,
         memberUserName = memberUserName,
-        memberProfileImage = memberProfileImage,
-        totalAmountAdded = totalAmountAdded,
-        totalAmountSpent = totalAmountSpent
+        memberProfileImage = memberProfileImage
     )
 }
 
-fun AccountDto.toAccount(): Account {
+fun CreateAccountDto.toAccount(): Account {
     return Account(
         createdAt = createdAt,
         createdBy = createdBy,
@@ -44,8 +41,8 @@ fun AccountDto.toAccount(): Account {
     )
 }
 
-fun Account.toAccountDto(): AccountDto {
-    return AccountDto(
+fun Account.toAccountDto(): CreateAccountDto {
+    return CreateAccountDto(
         createdAt = createdAt,
         createdBy = createdBy,
         initialBalance = initialBalance,
@@ -62,10 +59,22 @@ fun Account.toAccountDto(): AccountDto {
     )
 }
 
-fun List<AccountDto>.toAccounts(): List<Account> {
+fun User.toAcMemberDto(): AccountMemberDto {
+    return AccountMemberDto(
+        memberId = uid,
+        memberUserName = name,
+        memberProfileImage = imageUrl,
+    )
+}
+
+fun List<CreateAccountDto>.toAccounts(): List<Account> {
     return map { it.toAccount() }
 }
 
-fun List<Account>.toAccountDtos(): List<AccountDto> {
+fun List<Account>.toAccountDtos(): List<CreateAccountDto> {
     return map { it.toAccountDto() }
+}
+
+fun List<User>.toAcMemberDtos(): List<AccountMemberDto> {
+    return map { it.toAcMemberDto() }
 }

@@ -22,6 +22,7 @@ import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import dev.gitlive.firebase.auth.FirebaseUser
 import io.github.aakira.napier.Napier
+import kotlin.coroutines.cancellation.CancellationException
 
 @Composable
 fun SignInScreen(
@@ -51,10 +52,14 @@ fun SignInScreen(
                 }
 
             } else {
-                Napier.e("Sohan onFirebaseResult Error Result: ${result.exceptionOrNull()?.message}")
+                if (result.exceptionOrNull() is CancellationException) {
+                    Napier.e("Sohan Google Sign-In was cancelled by the user.")
+                } else {
+                    Napier.e("Sohan onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
+                }
             }
         } catch (ex: Exception) {
-            Napier.e("Sohan onFirebaseResult Error Result: ${ex.message}")
+            Napier.e("Sohan onFirebaseResult Exception: ${ex.message}")
         }
 
     }

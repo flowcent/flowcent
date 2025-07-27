@@ -54,6 +54,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.android)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.core.ktx)
@@ -95,6 +96,8 @@ kotlin {
             api(libs.datastore.preferences)
             api(libs.datastore)
             implementation(libs.napier)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
 
         iosMain.dependencies {

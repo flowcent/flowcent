@@ -3,7 +3,7 @@ package com.aiapp.flowcent.accounts.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AccountDto(
+data class CreateAccountDto(
     val createdAt: String? = null,
     val createdBy: String? = null,
     val initialBalance: String? = null,

@@ -2,7 +2,9 @@ package com.aiapp.flowcent.accounts.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
+import com.aiapp.flowcent.accounts.domain.toAcMemberDto
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.platform.ContactFetcher
@@ -20,7 +22,7 @@ class AccountViewModel(
     private val prefRepository: PrefRepository,
     private val authRepository: AuthRepository,
     private val contactFetcher: ContactFetcher
-) : ViewModel()  {
+) : ViewModel() {
     private val _state = MutableStateFlow(AccountState())
     val state = _state.asStateFlow()
 
@@ -39,15 +41,112 @@ class AccountViewModel(
             is UserAction.FetchRegisteredPhoneNumbers -> {
                 fetchRegisteredPhoneNumbers()
             }
+
+            is UserAction.UpdateSheetState -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            showSheet = action.sheetState
+                        )
+                    }
+                }
+            }
+
+            is UserAction.UpdateAcInitialBalance -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            acInitialBalance = action.initialBalance
+                        )
+                    }
+                }
+            }
+
+            is UserAction.UpdateAccountName -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            accountName = action.accountName
+                        )
+                    }
+                }
+            }
+
+            is UserAction.OnUserCheckedChange -> {
+                viewModelScope.launch {
+                    val selectedUserSet = _state.value.selectedUsers.toMutableSet()
+                    if (action.checked) {
+                        selectedUserSet.add(action.user)
+                    } else {
+                        selectedUserSet.remove(action.user)
+                    }
+                    _state.update {
+                        it.copy(
+                            selectedUsers = selectedUserSet.toList()
+                        )
+                    }
+                }
+            }
+
+            is UserAction.OnRemoveUser -> {
+                viewModelScope.launch {
+                    val selectedUserSet =
+                        _state.value.selectedUsers.toMutableSet()
+                    selectedUserSet.remove(action.user)
+                    _state.update {
+                        it.copy(
+                            selectedUsers = selectedUserSet.toList()
+                        )
+                    }
+                }
+            }
+
+            UserAction.CreateAccount -> {
+                createAccount()
+            }
+        }
+    }
+
+    private fun createAccount() {
+        viewModelScope.launch {
+            when (val result = accountRepository.addAccount(
+                CreateAccountDto(
+                    accountName = _state.value.accountName,
+                    initialBalance = _state.value.acInitialBalance,
+                    members = _state.value.selectedUsers.map { it.toAcMemberDto() },
+                    accountId = "TestId",
+                    createdBy = "TestUser",
+                    createdAt = "TestDate",
+                    updatedBy = "TestUser",
+                    updatedAt = "TestDate"
+                )
+            )) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in creating account: ${result.message}")
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in creating account: ${result.data}")
+                }
+
+            }
+
         }
     }
 
 
     private fun fetchRegisteredPhoneNumbers() {
-        if (_state.value.matchingUsers != null) {
-            return
-        }
         viewModelScope.launch {
+            if (_state.value.matchingUsers != null) {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        showSheet = true
+                    )
+                }
+                return@launch
+            }
             when (val result = authRepository.fetchAllUsersPhoneNumbers()) {
                 is Resource.Error -> {
                     Napier.e("Sohan Error in fetching registered phone numbers: ${result.message}")
@@ -84,7 +183,8 @@ class AccountViewModel(
                 Napier.e("Sohan Success in fetching matching users: ${result.data}")
                 _state.update {
                     it.copy(
-                        matchingUsers = result.data?.toSet()
+                        matchingUsers = result.data?.toSet(),
+                        showSheet = true
                     )
                 }
             }
