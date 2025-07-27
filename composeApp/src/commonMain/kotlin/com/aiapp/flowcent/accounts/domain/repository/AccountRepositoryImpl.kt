@@ -5,9 +5,7 @@ import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.toAccounts
 import com.aiapp.flowcent.util.Resource
-import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
-import io.github.aakira.napier.Napier
 
 class AccountRepositoryImpl(
     firestore: FirebaseFirestore

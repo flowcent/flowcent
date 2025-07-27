@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "161046411397-vd8krjgda99ipf2v6dgts1k2n9dok6l5.apps.googleusercontent.com",
+          "client_id": "161046411397-a68664i9auvvumg178o1rgnocofb237d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.aiapp.flowcent",
-            "certificate_hash": "c5893459d9a50759395fe80e36e671f7ae01ad46"
+            "certificate_hash": "1172cc2cba466a24161d48c45806b5e59584db7f"
           }
         },
         {

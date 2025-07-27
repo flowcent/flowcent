@@ -140,6 +140,12 @@ android {
     }
 
     signingConfigs {
+        create("fcdebug") {
+            keyAlias = "fcdebug"
+            keyPassword = "fcdebug"
+            storeFile = file("../keys/flowcent.debug.keystore")
+            storePassword = "fcdebug"
+        }
         create("release") {
             if (keystorePropertiesFile.exists()) {
                 keyAlias = keystoreProperties["keyAlias"] as String
@@ -154,6 +160,7 @@ android {
         getByName("debug") {
             isMinifyEnabled = false
             versionNameSuffix = "-DEBUG"
+            signingConfig = signingConfigs.getByName("fcdebug")
         }
         getByName("release") {
             isMinifyEnabled = true
