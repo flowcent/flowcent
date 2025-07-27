@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.toAcMemberDto
+import com.aiapp.flowcent.accounts.domain.toAcMemberDtos
+import com.aiapp.flowcent.accounts.domain.toMemberIds
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.platform.ContactFetcher
@@ -31,7 +33,6 @@ class AccountViewModel(
 
     fun onAction(action: UserAction) {
         when (action) {
-            is UserAction.AddAccount -> TODO()
             is UserAction.ClickAdd -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.ClickAdd)
@@ -104,6 +105,54 @@ class AccountViewModel(
             UserAction.CreateAccount -> {
                 createAccount()
             }
+
+            UserAction.FetchUserUId -> {
+                viewModelScope.launch {
+                    if (_state.value.uid.isNotEmpty()) {
+                        fetchAccounts(_state.value.uid)
+                    } else {
+                        prefRepository.uid.collect { uidFromDataStore ->
+                            _state.update { currentState ->
+                                currentState.copy(uid = uidFromDataStore ?: "")
+                            }
+                            fetchAccounts(uidFromDataStore)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchAccounts(uid: String?) {
+        if (uid == null) return
+        viewModelScope.launch {
+            when (val result = accountRepository.getAccounts(uid)) {
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            accounts = emptyList()
+                        )
+                    }
+                }
+
+                Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            accounts = result.data ?: emptyList()
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -113,12 +162,14 @@ class AccountViewModel(
                 CreateAccountDto(
                     accountName = _state.value.accountName,
                     initialBalance = _state.value.acInitialBalance,
-                    members = _state.value.selectedUsers.map { it.toAcMemberDto() },
+                    members = _state.value.selectedUsers.toAcMemberDtos(),
+                    memberIds = _state.value.selectedUsers.toMemberIds(),
                     accountId = "TestId",
-                    createdBy = "TestUser",
+                    createdBy = _state.value.uid,
                     createdAt = "TestDate",
-                    updatedBy = "TestUser",
-                    updatedAt = "TestDate"
+                    updatedBy = _state.value.uid,
+                    updatedAt = "TestDate",
+                    creatorUserId = _state.value.uid,
                 )
             )) {
                 is Resource.Error -> {

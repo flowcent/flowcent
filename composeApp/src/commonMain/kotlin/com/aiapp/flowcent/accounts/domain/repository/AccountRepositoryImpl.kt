@@ -7,6 +7,7 @@ import com.aiapp.flowcent.accounts.domain.toAccounts
 import com.aiapp.flowcent.util.Resource
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import io.github.aakira.napier.Napier
 
 class AccountRepositoryImpl(
     firestore: FirebaseFirestore
@@ -26,22 +27,30 @@ class AccountRepositoryImpl(
 
     override suspend fun getAccounts(userId: String): Resource<List<Account>> {
         return try {
-            val querySnapshot = accountsRef
+            val userAccountsQuery = accountsRef
                 .where {
-                    "uid" equalTo userId
+                    "creatorUserId" equalTo userId
                 }
-                .orderBy("created_at", Direction.DESCENDING)
                 .get()
-            val expenseList = querySnapshot.documents.map { document ->
+
+            val memberAccountsQuery = accountsRef
+                .where {
+                    "memberIds" contains userId
+                }
+                .get()
+
+
+            val allDocuments = (userAccountsQuery.documents + memberAccountsQuery.documents)
+                .distinctBy { it.id }
+
+            val accountList = allDocuments.map { document ->
                 document.data(CreateAccountDto.serializer())
             }
 
-            Resource.Success(expenseList.toAccounts())
+            Resource.Success(accountList.toAccounts())
 
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())
         }
     }
-
-
 }

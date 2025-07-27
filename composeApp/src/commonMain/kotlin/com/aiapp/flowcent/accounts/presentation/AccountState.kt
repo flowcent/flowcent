@@ -10,5 +10,6 @@ data class AccountState(
     val showSheet: Boolean = false,
     val accountName: String = "",
     val acInitialBalance: String = "",
-    val selectedUsers: List<User> = emptyList()
+    val selectedUsers: List<User> = emptyList(),
+    val uid: String = ""
 )

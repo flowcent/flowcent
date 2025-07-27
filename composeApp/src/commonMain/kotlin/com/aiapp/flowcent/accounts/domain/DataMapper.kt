@@ -32,7 +32,6 @@ fun CreateAccountDto.toAccount(): Account {
         accountId = accountId,
         accountName = accountName,
         creatorUserId = creatorUserId,
-        creatorUserName = creatorUserName,
         members = members?.map { it.toAccountMember() },
         profileImage = profileImage,
         totalExpense = totalExpense,
@@ -50,7 +49,6 @@ fun Account.toAccountDto(): CreateAccountDto {
         accountId = accountId,
         accountName = accountName,
         creatorUserId = creatorUserId,
-        creatorUserName = creatorUserName,
         members = members?.map { it.toAccountMemberDto() },
         profileImage = profileImage,
         totalExpense = totalExpense,
@@ -67,6 +65,7 @@ fun User.toAcMemberDto(): AccountMemberDto {
     )
 }
 
+
 fun List<CreateAccountDto>.toAccounts(): List<Account> {
     return map { it.toAccount() }
 }
@@ -77,4 +76,8 @@ fun List<Account>.toAccountDtos(): List<CreateAccountDto> {
 
 fun List<User>.toAcMemberDtos(): List<AccountMemberDto> {
     return map { it.toAcMemberDto() }
+}
+
+fun List<User>.toMemberIds(): List<String> {
+    return map { it.toAcMemberDto().memberId.toString() }
 }
