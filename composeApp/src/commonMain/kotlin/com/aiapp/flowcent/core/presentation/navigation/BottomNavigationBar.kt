@@ -72,7 +72,7 @@ fun BottomNavigationBar(
                         indication = ripple()
                     ) { onItemSelected(index) }
                     .background(
-                        color = MaterialTheme.colorScheme.surface,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
                         shape = if (isSelected) RoundedCornerShape(24.dp) else CircleShape
                     )
                     .border(
@@ -93,17 +93,23 @@ fun BottomNavigationBar(
                     Icon(
                         painter = painterResource(item.icon),
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier
+                            .size(24.dp)
                             .graphicsLayer(alpha = 0.99f)
-                            .drawWithCache {
-                                onDrawWithContent {
-                                    drawContent()
-                                    drawRect(
-                                        gradientBrush,
-                                        blendMode = BlendMode.SrcAtop
-                                    )
-                                }
-                            },
+                            .then(
+                                if (isSelected) Modifier.drawWithCache {
+                                    onDrawWithContent {
+                                        drawContent()
+                                        drawRect(
+                                            brush = gradientBrush,
+                                            blendMode = BlendMode.SrcAtop
+                                        )
+                                    }
+                                } else Modifier
+                            ),
+                        tint = if (isSelected) Color.Unspecified else MaterialTheme.colorScheme.inverseSurface.copy(
+                            alpha = 0.8f
+                        )
                     )
                     if (isSelected) {
                         Text(
