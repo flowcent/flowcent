@@ -54,14 +54,15 @@ fun App(
     val shouldNotShowBottomNavs = currentRoute == AppNavRoutes.Auth.route ||
             currentRoute == AppNavRoutes.Profile.route
 
-    var hasCurrentUser by remember { mutableStateOf(false) }
-
-
-    LaunchedEffect(key1 = Unit) {
-        Firebase.auth.authStateChanged.collectLatest {
-            hasCurrentUser = it?.uid != null
-        }
-    }
+//    var hasCurrentUser by remember { mutableStateOf(false) }
+//
+//
+//    LaunchedEffect(key1 = Unit) {
+//        Firebase.auth.authStateChanged.collectLatest {
+//            hasCurrentUser = it?.uid != null
+//        }
+//    }
+    val hasCurrentUser = Firebase.auth.currentUser != null
 
 
     AppTheme {
