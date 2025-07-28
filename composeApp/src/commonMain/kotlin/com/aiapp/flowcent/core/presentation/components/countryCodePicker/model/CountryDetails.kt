@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.component.countryCodePicker.model
+package com.aiapp.flowcent.core.presentation.components.countryCodePicker.model
 
 import org.jetbrains.compose.resources.DrawableResource
 

@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.component.countryCodePicker.ui
+package com.aiapp.flowcent.core.presentation.components.countryCodePicker.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -55,10 +55,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.aiapp.flowcent.core.component.countryCodePicker.model.CountryDetails
-import com.aiapp.flowcent.core.component.countryCodePicker.utils.Utils
-import com.aiapp.flowcent.core.component.countryCodePicker.utils.Utils.noRippleClickable
-import com.aiapp.flowcent.core.component.countryCodePicker.utils.Utils.searchCountry
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.CountryDetails
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.utils.Utils
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.utils.Utils.noRippleClickable
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.utils.Utils.searchCountry
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.component.countryCodePicker.ui
+package com.aiapp.flowcent.core.presentation.components.countryCodePicker.ui
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.core.component.countryCodePicker.model.CountryDetails
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.CountryDetails
 
 @Composable
 fun CountryPickerBasicTextField(

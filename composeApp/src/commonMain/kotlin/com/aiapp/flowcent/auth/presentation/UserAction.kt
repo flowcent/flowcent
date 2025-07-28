@@ -1,7 +1,7 @@
 package com.aiapp.flowcent.auth.presentation
 
 import dev.gitlive.firebase.auth.FirebaseUser
-import com.aiapp.flowcent.core.component.countryCodePicker.model.CountryDetails
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.CountryDetails
 
 sealed interface UserAction {
     data object NavigateToHome : UserAction

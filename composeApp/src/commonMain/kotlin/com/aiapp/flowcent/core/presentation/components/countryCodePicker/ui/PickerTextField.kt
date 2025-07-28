@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.component.countryCodePicker.ui
+package com.aiapp.flowcent.core.presentation.components.countryCodePicker.ui
 
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource

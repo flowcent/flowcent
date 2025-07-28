@@ -1,11 +1,11 @@
-package com.aiapp.flowcent.core.component.countryCodePicker.utils
+package com.aiapp.flowcent.core.presentation.components.countryCodePicker.utils
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import com.aiapp.flowcent.core.component.countryCodePicker.model.CountryDetails
+import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.CountryDetails
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ad
 import flowcent.composeapp.generated.resources.ae

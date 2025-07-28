@@ -1,72 +1,45 @@
 package com.aiapp.flowcent.accounts.presentation.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
+import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
 import com.aiapp.flowcent.accounts.presentation.components.Events
-import com.aiapp.flowcent.auth.data.model.User
+import com.aiapp.flowcent.accounts.presentation.components.SelectedUserCard
 import com.aiapp.flowcent.core.permission.FCPermissionState
 import com.aiapp.flowcent.core.permission.PermissionsViewModel
-import com.aiapp.flowcent.core.presentation.ui.theme.Colors
+import com.aiapp.flowcent.core.presentation.components.AppIconButton
+import com.aiapp.flowcent.core.presentation.components.AppTextField
+import com.aiapp.flowcent.core.presentation.components.NumericInputField
 import dev.icerock.moko.permissions.PermissionState
-import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.compose_multiplatform
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,48 +123,23 @@ fun AddAccountScreen(
                 text = "Add account screen"
             )
 
-            OutlinedTextField(
+            AppTextField(
                 value = state.accountName,
                 onValueChange = { newValue ->
                     viewModel.onAction(UserAction.UpdateAccountName(newValue))
                 },
-                placeholder = { Text("Account Name ") },
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = Colors.Black,
-                    cursorColor = Colors.Black,
-                    unfocusedContainerColor = Colors.White,
-                    focusedContainerColor = Colors.White,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                maxLines = 1,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth()
+                placeholder = "Account Name"
             )
 
-            OutlinedTextField(
+
+            NumericInputField(
                 value = state.acInitialBalance,
                 onValueChange = { newValue ->
                     viewModel.onAction(UserAction.UpdateAcInitialBalance(newValue))
                 },
-                placeholder = { Text("Account Starting Balance ") },
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = Colors.Black,
-                    cursorColor = Colors.Black,
-                    unfocusedContainerColor = Colors.White,
-                    focusedContainerColor = Colors.White,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                maxLines = 1,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.bodyMedium,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp)
+                placeholder = "Account Starting Balance"
             )
+
 
             Row(
                 modifier = Modifier
@@ -199,87 +147,23 @@ fun AddAccountScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                IconButton(
+                AppIconButton(
                     onClick = { handleAddMembers() },
-                    modifier = Modifier
-                        .size(30.dp)
-                        .background(Color.Black, shape = CircleShape)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Members",
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White,
+                    icon = Icons.Default.Add,
+                    contentDescription = "Add Members",
+                    iconSize = 16.dp,
+                    buttonSize = 30.dp
+                )
 
                 LazyRow {
                     if (state.selectedUsers.isNotEmpty()) {
                         items(state.selectedUsers) { user ->
-                            Box(
-                                modifier = Modifier
-                                    .padding(12.dp)
-                                    .width(80.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier.align(Alignment.Center),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    // Profile image with box for layering cross icon
-                                    Box(
-                                        modifier = Modifier
-                                            .size(64.dp)
-                                    ) {
-                                        AsyncImage(
-                                            model = user.imageUrl,
-                                            contentDescription = null,
-                                            contentScale = ContentScale.Crop,
-                                            placeholder = painterResource(Res.drawable.compose_multiplatform),
-                                            modifier = Modifier
-                                                .size(64.dp)
-                                                .clip(CircleShape)
-                                                .border(2.dp, Color.Black, CircleShape)
-                                        )
-
-                                        // ❌ Remove icon
-                                        Icon(
-                                            imageVector = Icons.Default.Close,
-                                            contentDescription = "Remove",
-                                            tint = Color.Red,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .align(Alignment.TopEnd)
-                                                .offset(x = 6.dp, y = (-6).dp)
-                                                .clickable {
-                                                    viewModel.onAction(
-                                                        UserAction.OnRemoveUser(
-                                                            user
-                                                        )
-                                                    )
-                                                }
-                                                .background(Color.White, CircleShape)
-                                                .border(1.dp, Color.Gray, CircleShape)
-                                        )
-                                    }
-
-                                    Spacer(modifier = Modifier.height(4.dp))
-
-                                    Text(
-                                        text = user.name,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-
-                                    Text(
-                                        text = user.phoneNumber,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = Color.Gray,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                            }
+                            SelectedUserCard(
+                                user = user,
+                                onRemoveClick = { viewModel.onAction(UserAction.OnRemoveUser(user)) }
+                            )
                         }
                     }
                 }
@@ -288,7 +172,7 @@ fun AddAccountScreen(
 
         Column {
             OutlinedButton(
-                onClick = { viewModel.onAction(UserAction.CreateAccount)},
+                onClick = { viewModel.onAction(UserAction.CreateAccount) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Create Account")
@@ -296,7 +180,6 @@ fun AddAccountScreen(
         }
     }
 
-    // Render BottomSheet only when showSheet == true
     if (state.showSheet) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -304,192 +187,13 @@ fun AddAccountScreen(
             },
             sheetState = bottomSheetState,
         ) {
-            Text(
-                "Add Members",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
-            )
-
-            OutlinedTextField(
-                value = "",
-                onValueChange = { },
-                placeholder = { Text("Search name or number ") },
-                leadingIcon = { Icon(Icons.Default.Search, null) },
-                trailingIcon = { },
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
-            )
-
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(Color.White)
-            ) {
-                if (state.selectedUsers.isNotEmpty()) {
-                    items(state.selectedUsers) { user ->
-                        Box(
-                            modifier = Modifier
-                                .padding(12.dp)
-                                .width(80.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.align(Alignment.Center),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                // Profile image with box for layering cross icon
-                                Box(
-                                    modifier = Modifier
-                                        .size(64.dp)
-                                ) {
-                                    AsyncImage(
-                                        model = user.imageUrl,
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        placeholder = painterResource(Res.drawable.compose_multiplatform),
-                                        modifier = Modifier
-                                            .size(64.dp)
-                                            .clip(CircleShape)
-                                            .border(2.dp, Color.Black, CircleShape)
-                                    )
-
-                                    // ❌ Remove icon
-                                    Icon(
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "Remove",
-                                        tint = Color.Red,
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .align(Alignment.TopEnd)
-                                            .offset(x = 6.dp, y = (-6).dp)
-                                            .clickable {
-                                                viewModel.onAction(
-                                                    UserAction.OnRemoveUser(
-                                                        user
-                                                    )
-                                                )
-                                            }
-                                            .background(Color.White, CircleShape)
-                                            .border(1.dp, Color.Gray, CircleShape)
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.height(4.dp))
-
-                                Text(
-                                    text = user.name,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-
-                                Text(
-                                    text = user.phoneNumber,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Color.Gray,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(Color.White)
-            ) {
-                state.matchingUsers?.forEach { user ->
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row {
-                                // Circular image
-                                AsyncImage(
-                                    model = user.imageUrl,
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    placeholder = painterResource(Res.drawable.compose_multiplatform),
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(CircleShape)
-                                        .border(
-                                            width = 2.dp,
-                                            color = Color.Black,
-                                            shape = CircleShape
-                                        )
-                                )
-
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                Column {
-                                    Text(
-                                        text = user.name,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = Color.Black,
-                                    )
-                                    Text(
-                                        text = user.phoneNumber,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = Color.Black,
-                                        modifier = Modifier.padding(top = 5.dp)
-                                    )
-                                }
-                            }
-
-                            Row(
-                                modifier = Modifier.size(40.dp).padding(end = 10.dp)
-                            ) {
-                                val isSelected = state.selectedUsers.contains(user)
-                                IconToggleButton(
-                                    checked = isSelected,
-                                    onCheckedChange = { checked ->
-                                        viewModel.onAction(
-                                            UserAction.OnUserCheckedChange(
-                                                user,
-                                                checked
-                                            )
-                                        )
-                                    },
-                                    modifier = Modifier
-                                        .size(28.dp)
-                                        .clip(CircleShape)
-                                        .background(if (isSelected) Color(0xFF4CAF50) else Color.Transparent) // Green when selected
-                                        .border(2.dp, Color.Black, CircleShape)
-                                ) {
-                                    if (isSelected) {
-                                        Icon(
-                                            imageVector = Icons.Default.Done,
-                                            contentDescription = "Selected",
-                                            tint = Color.White,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            OutlinedButton(
-                onClick = {
+            AddMembersSheetContent(
+                state = state,
+                viewModel = viewModel,
+                onDoneClick = {
                     handleHideBottomSheet()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text("Done")
-            }
+                }
+            )
         }
     }
 }
