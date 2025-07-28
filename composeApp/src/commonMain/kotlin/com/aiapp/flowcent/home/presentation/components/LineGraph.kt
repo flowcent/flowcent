@@ -70,7 +70,13 @@ fun LineGraph(modifier: Modifier = Modifier) {
 
             drawPath(
                 path = path,
-                color = Color.Blue,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF2196F3),
+                        Color(0xFF00C853),
+                        Color.Transparent
+                    )
+                ),
                 style = Stroke(width = 3.dp.toPx())
             )
 
@@ -85,7 +91,8 @@ fun LineGraph(modifier: Modifier = Modifier) {
                 path = fillPath,
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color.White.copy(alpha = 0.4f),
+                        Color(0xFF87EBDF).copy(alpha = 0.3f),
+                        Color(0xFF87EBDF).copy(alpha = 0.1f),
                         Color.Transparent
                     )
                 )

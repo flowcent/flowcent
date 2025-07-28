@@ -11,7 +11,7 @@ internal val LightColorScheme = lightColorScheme(
     surface = Colors.LightSurface,
     onSurface = Colors.LightPrimary,
     secondary = Colors.LightSecondary,
-    onSecondary = Colors.LightOnBackground,
+    onSecondary = Colors.LightOnBackground
 )
 
 internal val DarkColorScheme = darkColorScheme(

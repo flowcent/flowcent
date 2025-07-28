@@ -4,7 +4,6 @@
 
 package com.aiapp.flowcent.core.presentation.navigation
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,9 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.domain.model.NavItem
@@ -49,31 +51,13 @@ fun BottomNavigationBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         items.forEachIndexed { index, item ->
-            val selected = index == selectedIndex
+            val isSelected = index == selectedIndex
 
             // Animations
-            val scale by animateFloatAsState(if (selected) 1.1f else 1f, label = "scale")
+            val scale by animateFloatAsState(if (isSelected) 1.1f else 1f, label = "scale")
 
             val isDarkTheme = isSystemInDarkTheme()
-            val glassyColor =
-                if (isDarkTheme) Color.Black.copy(alpha = 0.3f) else Color.White.copy(alpha = 0.5f)
-            val glassyBorderColor =
-                if (isDarkTheme) Color.White.copy(alpha = 0.2f) else Color.Black.copy(alpha = 0.1f)
 
-
-            val backgroundColor by animateColorAsState(
-                if (selected) glassyColor else Color.Transparent,
-                label = "background"
-            )
-            val borderColor by animateColorAsState(
-                if (selected) glassyBorderColor else MaterialTheme.colorScheme.outline,
-                label = "border"
-            )
-
-            val contentColor by animateColorAsState(
-                MaterialTheme.colorScheme.onSurfaceVariant,
-                label = "content"
-            )
 
             val gradientBrush = Brush.linearGradient(
                 colors = listOf(
@@ -91,18 +75,18 @@ fun BottomNavigationBar(
                     ) { onItemSelected(index) }
                     // shape + background
                     .background(
-                        color = backgroundColor,
-                        shape = if (selected) RoundedCornerShape(24.dp) else CircleShape
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = if (isSelected) RoundedCornerShape(24.dp) else CircleShape
                     )
                     // outline
                     .border(
-                        width = 1.dp,
-                        color = borderColor,
-                        shape = if (selected) RoundedCornerShape(24.dp) else CircleShape
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.05f),
+                        shape = if (isSelected) RoundedCornerShape(24.dp) else CircleShape
                     )
                     // padding: pill has horizontal padding, circle uses fixed size
                     .then(
-                        if (selected) Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                        if (isSelected) Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                         else Modifier.size(48.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -114,10 +98,19 @@ fun BottomNavigationBar(
                     Icon(
                         painter = painterResource(item.icon),
                         contentDescription = null,
-                        tint = contentColor,
                         modifier = Modifier.size(24.dp)
+                            .graphicsLayer(alpha = 0.99f) // force layer rendering
+                            .drawWithCache {
+                                onDrawWithContent {
+                                    drawContent()
+                                    drawRect(
+                                        gradientBrush,
+                                        blendMode = BlendMode.SrcAtop
+                                    )
+                                }
+                            },
                     )
-                    if (selected) {
+                    if (isSelected) {
                         Text(
                             text = item.label,
                             style = MaterialTheme.typography.titleMedium.copy(
