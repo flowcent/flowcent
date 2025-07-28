@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,10 +20,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.BlendMode
@@ -53,38 +54,32 @@ fun BottomNavigationBar(
         items.forEachIndexed { index, item ->
             val isSelected = index == selectedIndex
 
-            // Animations
             val scale by animateFloatAsState(if (isSelected) 1.1f else 1f, label = "scale")
-
-            val isDarkTheme = isSystemInDarkTheme()
-
 
             val gradientBrush = Brush.linearGradient(
                 colors = listOf(
-                    Color(0xFF00C853), // Vivid green (mid-saturation, not too neon)
-                    Color(0xFF2196F3)  // Bright, clean blue (material blue 500)
+                    Color(0xFF2196F3),
+                    Color(0xFF00C853)
                 )
             )
 
             Box(
                 modifier = Modifier
                     .scale(scale)
+                    .clip(if (isSelected) RoundedCornerShape(24.dp) else CircleShape)
                     .clickable(
                         interactionSource = MutableInteractionSource(),
-                        indication = null
+                        indication = ripple()
                     ) { onItemSelected(index) }
-                    // shape + background
                     .background(
                         color = MaterialTheme.colorScheme.surface,
                         shape = if (isSelected) RoundedCornerShape(24.dp) else CircleShape
                     )
-                    // outline
                     .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.05f),
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.08f),
                         shape = if (isSelected) RoundedCornerShape(24.dp) else CircleShape
                     )
-                    // padding: pill has horizontal padding, circle uses fixed size
                     .then(
                         if (isSelected) Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                         else Modifier.size(48.dp)
@@ -99,7 +94,7 @@ fun BottomNavigationBar(
                         painter = painterResource(item.icon),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp)
-                            .graphicsLayer(alpha = 0.99f) // force layer rendering
+                            .graphicsLayer(alpha = 0.99f)
                             .drawWithCache {
                                 onDrawWithContent {
                                     drawContent()

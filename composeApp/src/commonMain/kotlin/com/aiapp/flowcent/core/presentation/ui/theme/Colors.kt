@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 object Colors {
     // Light Theme Colors
-    val LightBackground = Color(0xFFF7F7F7)
+    val LightBackground = Color(0xFFF2F2F2)
     val LightSurface = Color(0xFFFFFFFF)
 
     // Dark Theme Colors

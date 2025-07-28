@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +31,6 @@ import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
-import com.aiapp.flowcent.home.presentation.components.LineGraph
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
@@ -50,7 +48,7 @@ fun HomeScreen(
         homeViewModel.onAction(UserAction.FetchUserUId)
     }
 
-    LaunchedEffect(key1 = rememberScaffoldState()) {
+    LaunchedEffect(Unit) {
         homeViewModel.uiEvent.collect {
             when (it) {
                 UiEvent.NavigateToAuth -> globalNavController.navigate(AppNavRoutes.Auth.route)
@@ -61,7 +59,7 @@ fun HomeScreen(
     }
 
 
-    Column {
+    Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -103,8 +101,6 @@ fun HomeScreen(
                 homeViewModel.onAction(UserAction.SetSelectedDate(it))
             }
         )
-
-        LineGraph()
 
         Column {
             Text(
