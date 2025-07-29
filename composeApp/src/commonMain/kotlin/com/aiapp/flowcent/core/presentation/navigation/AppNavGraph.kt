@@ -15,11 +15,9 @@ import com.aiapp.flowcent.auth.presentation.navigation.AuthNavGraph
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavGraph
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
-import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
-import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavGraph
-import com.aiapp.flowcent.reflect.presentation.navigation.ReflectNavRoutes
-import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
+import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
+import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 
 @Composable
 fun AppNavGraph(
@@ -53,12 +51,6 @@ fun AppNavGraph(
                 modifier = modifier,
                 globalNavController = globalNavController,
                 startDestination = HomeNavRoutes.HomeScreen
-            )
-        }
-
-        composable(route = AppNavRoutes.Reflect.route) {
-            ReflectNavGraph(
-                startDestination = ReflectNavRoutes.ReflectHome
             )
         }
 
