@@ -93,7 +93,7 @@ fun ChatInput(
             modifier = Modifier
                 .weight(1f)
                 .border(
-                    width = 2.dp,
+                    width = 4.dp,
                     brush = glowingBrush,
                     shape = RoundedCornerShape(32.dp)
                 )
