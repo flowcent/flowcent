@@ -23,7 +23,7 @@ fun SpendingCard(expenseItem: ExpenseItem) {
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         colors = CardColors(
-            containerColor = Color.White.copy(alpha = 0.5f),
+            containerColor = MaterialTheme.colorScheme.surface,
             contentColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
             disabledContentColor = Color.Transparent
@@ -37,12 +37,12 @@ fun SpendingCard(expenseItem: ExpenseItem) {
             Column {
                 Text(
                     expenseItem.title,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
                     expenseItem.category,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
