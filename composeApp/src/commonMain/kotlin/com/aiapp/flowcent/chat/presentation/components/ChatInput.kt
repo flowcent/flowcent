@@ -84,7 +84,6 @@ fun ChatInput(
 
     Row(
         modifier = Modifier
-            .height(70.dp)
             .padding(vertical = 8.dp)
             .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
             .fillMaxWidth(),
