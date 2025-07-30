@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SelectionToggle(
-    isSelected: Boolean,
+    isSelected: Boolean = false,
     onToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {

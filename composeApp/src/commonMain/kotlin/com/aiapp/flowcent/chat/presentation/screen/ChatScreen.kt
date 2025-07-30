@@ -159,11 +159,14 @@ fun ChatScreen(
                                 Column(
                                     modifier = Modifier
                                         .background(Color.White, shape = RoundedCornerShape(8.dp))
-                                        .padding(2.dp)
+                                        .padding(16.dp)
                                 ) {
                                     BotMessage(text = it.text, isRich = true)
                                     if (it.expenseItems.isNotEmpty()) {
-                                        SpendingList(it.expenseItems)
+                                        SpendingList(
+                                            it.expenseItems,
+                                            modifier = Modifier.padding(vertical = 8.dp)
+                                        )
                                         PromptSave(
                                             onClickSave = {
                                                 viewModel.onAction(
