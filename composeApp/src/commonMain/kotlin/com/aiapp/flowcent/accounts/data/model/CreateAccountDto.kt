@@ -4,17 +4,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreateAccountDto(
-    val createdAt: String? = null,
-    val createdBy: String? = null,
-    val initialBalance: String? = null,
-    val currentBalance: String? = null,
-    val accountId: String? = null,
-    val accountName: String? = null,
-    val creatorUserId: String? = null,
+    val createdAt: String = "",
+    val createdBy: String = "",
+    val initialBalance: String = "",
+    val currentBalance: String = "",
+    val accountId: String = "",
+    val accountName: String = "",
+    val creatorUserId: String = "",
     val members: List<AccountMemberDto>? = emptyList(),
     val memberIds: List<String>? = emptyList(),
-    val profileImage: String? = null,
-    val totalExpense: String? = null,
-    val updatedAt: String? = null,
-    val updatedBy: String? = null
+    val profileImage: String = "",
+    val totalExpense: String = "0",
+    val updatedAt: String = "",
+    val updatedBy: String = ""
 )

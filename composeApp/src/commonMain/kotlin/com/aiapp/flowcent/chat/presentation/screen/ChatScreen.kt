@@ -127,7 +127,7 @@ fun ChatScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(20.dp)
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f),

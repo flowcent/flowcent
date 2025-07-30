@@ -107,6 +107,11 @@ class AccountViewModel(
 
             UserAction.FetchUserUId -> {
                 viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
                     if (_state.value.uid.isNotEmpty()) {
                         fetchAccounts(_state.value.uid)
                     } else {
@@ -135,13 +140,7 @@ class AccountViewModel(
                     }
                 }
 
-                Resource.Loading -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = true
-                        )
-                    }
-                }
+                Resource.Loading -> {}
 
                 is Resource.Success -> {
                     _state.update {

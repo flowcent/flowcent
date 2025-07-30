@@ -1,19 +1,19 @@
 package com.aiapp.flowcent.accounts.domain.model
 
 data class Account(
-    val createdAt: String? = null,
-    val createdBy: String? = null,
-    val initialBalance: String? = null,
-    val currentBalance: String? = null,
-    val accountId: String? = null,
-    val accountName: String? = null,
-    val creatorUserId: String? = null,
-    val creatorUserName: String? = null,
-    val members: List<AccountMember>? = null,
-    val profileImage: String? = null,
-    val totalExpense: String? = null,
-    val updatedAt: String? = null,
-    val updatedBy: String? = null
+    val createdAt: String = "",
+    val createdBy: String = "",
+    val initialBalance: String = "0",
+    val currentBalance: String = "",
+    val accountId: String = "",
+    val accountName: String = "",
+    val creatorUserId: String = "",
+    val creatorUserName: String = "",
+    val members: List<AccountMember>? = emptyList(),
+    val profileImage: String = "",
+    val totalExpense: String = "0",
+    val updatedAt: String = "",
+    val updatedBy: String = "",
 )
 
 ///Need to add members after searching

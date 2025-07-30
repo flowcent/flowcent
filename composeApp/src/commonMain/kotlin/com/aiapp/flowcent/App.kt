@@ -29,6 +29,7 @@ import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_chat
 import flowcent.composeapp.generated.resources.ic_home
 import flowcent.composeapp.generated.resources.ic_share_accounts
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

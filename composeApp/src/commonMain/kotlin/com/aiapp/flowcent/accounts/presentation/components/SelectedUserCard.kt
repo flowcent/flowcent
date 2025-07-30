@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,9 +44,16 @@ fun SelectedUserCard(
         ) {
             // Profile image with cross icon
             Box(
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .background(Color.LightGray)
+                    .align(Alignment.CenterHorizontally)
             ) {
-                UserProfileImage(imageUrl = user.imageUrl)
+                UserProfileImage(
+                    imageUrl = user.imageUrl,
+                    modifier = Modifier.align(Alignment.Center)
+                )
 
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -54,10 +62,9 @@ fun SelectedUserCard(
                     modifier = Modifier
                         .size(18.dp)
                         .align(Alignment.TopEnd)
-                        .offset(x = 6.dp, y = (-6).dp)
+                        .offset(x = (-6).dp, y = (-6).dp)
                         .clickable { onRemoveClick(user) }
                         .background(Color.White, CircleShape)
-                        .border(1.dp, Color.Gray, CircleShape)
                 )
             }
 
