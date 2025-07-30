@@ -37,15 +37,15 @@ fun ChatInput(
         modifier = Modifier
             .height(70.dp)
             .padding(vertical = 8.dp, horizontal = 8.dp)
-            .background(Colors.White, shape = RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = { onClickMic() }) {
             if (isListening) {
-                Icon(Icons.Default.Close, contentDescription = "Close", tint = Colors.Black)
+                Icon(Icons.Default.Close, contentDescription = "Close", tint = MaterialTheme.colorScheme.onBackground)
             } else {
-                Icon(Icons.Default.Mic, contentDescription = "Mic", tint = Colors.Black)
+                Icon(Icons.Default.Mic, contentDescription = "Mic", tint = MaterialTheme.colorScheme.onBackground)
             }
         }
         TextField(
@@ -55,10 +55,10 @@ fun ChatInput(
             },
             placeholder = { Text("Type your messenger here") },
             colors = TextFieldDefaults.colors(
-                focusedTextColor = Colors.Black,
-                cursorColor = Colors.Black,
-                unfocusedContainerColor = Colors.White,
-                focusedContainerColor = Colors.White,
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                cursorColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedContainerColor = MaterialTheme.colorScheme.background,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
@@ -70,7 +70,7 @@ fun ChatInput(
         IconButton(onClick = {
             onClickSend()
         }) {
-            Icon(Icons.Default.Send, contentDescription = "Send", tint = Colors.Black)
+            Icon(Icons.Default.Send, contentDescription = "Send", tint = MaterialTheme.colorScheme.onBackground)
         }
     }
 }

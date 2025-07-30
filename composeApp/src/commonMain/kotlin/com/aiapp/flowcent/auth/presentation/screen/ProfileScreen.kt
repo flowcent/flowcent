@@ -43,7 +43,7 @@ fun ProfileScreen(
         Column {
             Text(
                 text = "Hello ${authState.firebaseUser?.displayName}, this is your profile",
-                color = Colors.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(12.dp),
                 style = MaterialTheme.typography.bodyLarge
             )

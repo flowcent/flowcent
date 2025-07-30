@@ -45,7 +45,7 @@ fun CongratsScreen(
     ) {
         Text(
             text = "Congratulations! ${authState.firebaseUser?.displayName}, You got premium for 1 month",
-            color = Colors.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(12.dp),
             style = MaterialTheme.typography.bodyLarge
         )

@@ -27,7 +27,7 @@ fun BotMessage(text: String, isRich: Boolean = false) {
         ) {
             Text(
                 text = text,
-                color = Colors.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(12.dp),
                 style = if (isRich) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall
             )
