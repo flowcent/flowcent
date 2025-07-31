@@ -211,17 +211,6 @@ class ChatViewModel(
                 }
             }
         } catch (e: Exception) {
-//            _chatState.update { currentState ->
-//                currentState.copy(
-//                    error = "Error: ${e.message ?: "Unknown AI error"}",
-//                    messages = currentState.messages + ChatMessage(
-//                        e.message ?: "Something unexpected happened",
-//                        false,
-//                        expenseItems = emptyList(),
-//                        isLoading = false
-//                    ),
-//                )
-//            }
             _chatState.update { currentState ->
                 val updatedMessages = currentState.messages.map { msg ->
                     if (msg.id == botLoadingMessageId) {
