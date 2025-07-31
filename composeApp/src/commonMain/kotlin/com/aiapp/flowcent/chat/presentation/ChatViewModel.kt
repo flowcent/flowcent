@@ -257,19 +257,10 @@ class ChatViewModel(
             _chatState.update { currentState ->
                 currentState.copy(
                     messages = currentState.messages + userMessage + botLoadingMessage,
-                    isSendingMessage = true
+                    isSendingMessage = true,
+                    userText = ""
                 )
             }
-
-
-//            _chatState.update {
-//                it.copy(
-//                    messages = it.messages + ChatMessage(
-//                        text, true, expenseItems = emptyList()
-//                    ),
-//                    userText = ""
-//                )
-//            }
             sendPrompt(text, botLoadingMessageId)
         }
     }
