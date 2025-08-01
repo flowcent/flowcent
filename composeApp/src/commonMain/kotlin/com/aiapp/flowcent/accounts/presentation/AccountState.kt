@@ -9,7 +9,7 @@ data class AccountState(
     val matchingUsers: Set<User>? = null,
     val showSheet: Boolean = false,
     val accountName: String = "",
-    val acInitialBalance: String = "",
+    val acInitialBalance: Double = 0.0,
     val selectedUsers: List<User> = emptyList(),
     val uid: String = ""
 )

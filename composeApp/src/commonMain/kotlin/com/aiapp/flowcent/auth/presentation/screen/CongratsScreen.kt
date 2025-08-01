@@ -65,9 +65,9 @@ fun CongratsScreen(
 
 
         NumericInputField(
-            value = authState.initialBalance,
+            value = authState.initialBalance.toString(),
             onValueChange = { newValue ->
-                authViewModel.onAction(UserAction.UpdateInitialBalance(newValue))
+                authViewModel.onAction(UserAction.UpdateInitialBalance(newValue.toDouble()))
             },
             placeholder = "Initial Balancee"
         )

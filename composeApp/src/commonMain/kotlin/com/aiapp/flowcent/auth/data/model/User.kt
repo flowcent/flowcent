@@ -9,7 +9,7 @@ data class User(
     val email: String,
     val phoneNumber: String,
     val imageUrl: String,
-    val initialBalance: String,
+    val initialBalance: Double,
     val providerId: String,
     val signInType: String,
     val createdBy: String,

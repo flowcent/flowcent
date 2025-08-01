@@ -11,7 +11,9 @@ fun AccountMemberDto.toAccountMember(): AccountMember {
     return AccountMember(
         memberId = memberId,
         memberUserName = memberUserName,
-        memberProfileImage = memberProfileImage
+        memberProfileImage = memberProfileImage,
+        totalContribution = totalContribution,
+        totalExpense = totalExpense
     )
 }
 
@@ -19,7 +21,9 @@ fun AccountMember.toAccountMemberDto(): AccountMemberDto {
     return AccountMemberDto(
         memberId = memberId,
         memberUserName = memberUserName,
-        memberProfileImage = memberProfileImage
+        memberProfileImage = memberProfileImage,
+        totalContribution = totalContribution,
+        totalExpense = totalExpense
     )
 }
 
@@ -53,7 +57,8 @@ fun Account.toAccountDto(): CreateAccountDto {
         profileImage = profileImage,
         totalExpense = totalExpense,
         updatedAt = updatedAt,
-        updatedBy = updatedBy
+        updatedBy = updatedBy,
+        totalAddition = totalAddition
     )
 }
 

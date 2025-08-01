@@ -99,9 +99,9 @@ class AuthViewModel(
             }
 
             is UserAction.UpdateInitialBalance -> {
-                if (!action.initialBalance.matches(Regex("^\\d*\\.?\\d*\$"))) return
-                if (action.initialBalance.toDouble() < 0) return
-                if (action.initialBalance.toDouble() > 10000000) return
+                if (!action.initialBalance.toString().matches(Regex("^\\d*\\.?\\d*\$"))) return
+                if (action.initialBalance < 0) return
+                if (action.initialBalance > 10000000) return
 
                 viewModelScope.launch {
                     _state.update {

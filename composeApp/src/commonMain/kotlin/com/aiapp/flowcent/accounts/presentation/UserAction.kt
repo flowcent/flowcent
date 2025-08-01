@@ -7,9 +7,10 @@ sealed interface UserAction {
     data object FetchRegisteredPhoneNumbers : UserAction
     data class UpdateSheetState(val sheetState: Boolean) : UserAction
     data class UpdateAccountName(val accountName: String) : UserAction
-    data class UpdateAcInitialBalance(val initialBalance: String) : UserAction
+    data class UpdateAcInitialBalance(val initialBalance: Double) : UserAction
     data class OnUserCheckedChange(val user: User, val checked: Boolean) : UserAction
     data class OnRemoveUser(val user: User) : UserAction
     data object CreateAccount : UserAction
     data object FetchUserUId : UserAction
+    data class OnAccountItemClick(val accountId: String) : UserAction
 }

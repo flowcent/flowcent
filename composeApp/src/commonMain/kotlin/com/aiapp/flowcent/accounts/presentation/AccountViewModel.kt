@@ -6,9 +6,11 @@ import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.toAcMemberDtos
 import com.aiapp.flowcent.accounts.domain.toMemberIds
+import com.aiapp.flowcent.accounts.util.getAccountID
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.platform.ContactFetcher
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.util.Resource
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
@@ -124,6 +126,8 @@ class AccountViewModel(
                     }
                 }
             }
+
+            is UserAction.OnAccountItemClick -> TODO()
         }
     }
 
@@ -162,12 +166,14 @@ class AccountViewModel(
                     initialBalance = _state.value.acInitialBalance,
                     members = _state.value.selectedUsers.toAcMemberDtos(),
                     memberIds = _state.value.selectedUsers.toMemberIds(),
-                    accountId = "TestId",
+                    accountId = getAccountID(),
                     createdBy = _state.value.uid,
-                    createdAt = "TestDate",
+                    createdAt = DateTimeUtils.getCurrentFormattedDateTime(),
                     updatedBy = _state.value.uid,
-                    updatedAt = "TestDate",
+                    updatedAt = DateTimeUtils.getCurrentFormattedDateTime(),
                     creatorUserId = _state.value.uid,
+                    totalExpense = 0.0,
+                    totalAddition = 0.0,
                 )
             )) {
                 is Resource.Error -> {

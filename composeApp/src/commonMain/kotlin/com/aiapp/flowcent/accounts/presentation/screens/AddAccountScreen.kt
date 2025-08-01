@@ -133,9 +133,15 @@ fun AddAccountScreen(
 
 
             NumericInputField(
-                value = state.acInitialBalance,
+                value = if (state.acInitialBalance > 0.0) {
+                    if (state.acInitialBalance % 1.0 == 0.0) {
+                        state.acInitialBalance.toInt().toString() // Remove .0 for whole numbers
+                    } else {
+                        state.acInitialBalance.toString()
+                    }
+                } else "",
                 onValueChange = { newValue ->
-                    viewModel.onAction(UserAction.UpdateAcInitialBalance(newValue))
+                    viewModel.onAction(UserAction.UpdateAcInitialBalance(newValue.toDouble()))
                 },
                 placeholder = "Add an opening balance to the account.",
                 modifier = Modifier.padding(top = 12.dp)

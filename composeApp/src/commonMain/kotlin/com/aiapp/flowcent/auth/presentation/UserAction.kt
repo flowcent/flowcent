@@ -10,7 +10,7 @@ sealed interface UserAction {
     data object IsLoggedIn : UserAction
     data object CreateNewUser : UserAction
     data class SaveUserUid(val uid: String) : UserAction
-    data class UpdateInitialBalance(val initialBalance: String) : UserAction
+    data class UpdateInitialBalance(val initialBalance: Double) : UserAction
     data class UpdatePhoneNumber(val phoneNumber: String) : UserAction
     data class UpdateCountry(val countryDetails: CountryDetails) : UserAction
 }

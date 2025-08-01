@@ -28,7 +28,7 @@ import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.Events
-import com.aiapp.flowcent.core.presentation.components.AccountCard
+import com.aiapp.flowcent.accounts.presentation.components.AccountCard
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.ButtonStyle
 import com.aiapp.flowcent.core.presentation.components.NoAccountCard

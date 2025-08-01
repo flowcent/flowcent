@@ -98,7 +98,7 @@ class ExpenseRepositoryImpl(
 
     }
 
-    override suspend fun totalAmount(uid: String): Resource<Int> {
+    override suspend fun totalAmount(uid: String): Resource<Double> {
         return try {
             val snapshot = transactionCollection
                 .where { "uid" equalTo uid }
@@ -112,7 +112,7 @@ class ExpenseRepositoryImpl(
         }
     }
 
-    override suspend fun totalExpenses(uid: String): Resource<Int> {
+    override suspend fun totalExpenses(uid: String): Resource<Double> {
         return try {
             val snapshot = transactionCollection
                 .where { "uid" equalTo uid }
@@ -127,7 +127,7 @@ class ExpenseRepositoryImpl(
         }
     }
 
-    override suspend fun totalIncome(uid: String): Resource<Int> {
+    override suspend fun totalIncome(uid: String): Resource<Double> {
         return try {
             val snapshot = transactionCollection
                 .where { "uid" equalTo uid }

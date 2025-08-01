@@ -6,7 +6,7 @@ import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.C
 data class AuthState(
     val isLoading: Boolean = false,
     val uid: String = "",
-    val initialBalance: String = "",
+    val initialBalance: Double = 0.0,
     val firebaseUser: FirebaseUser? = null,
     val signInType: String = "",
     val phoneNumber: String = "",
