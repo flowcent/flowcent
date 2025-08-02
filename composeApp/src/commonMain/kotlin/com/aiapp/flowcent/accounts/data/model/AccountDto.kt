@@ -1,9 +1,11 @@
 package com.aiapp.flowcent.accounts.data.model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
-data class CreateAccountDto(
+data class AccountDto(
+    @Transient val id: String = "",
     val createdAt: String = "",
     val createdBy: String = "",
     val initialBalance: Double = 0.0,

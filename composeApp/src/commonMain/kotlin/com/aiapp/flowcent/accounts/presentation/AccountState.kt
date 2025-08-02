@@ -11,5 +11,6 @@ data class AccountState(
     val accountName: String = "",
     val acInitialBalance: Double = 0.0,
     val selectedUsers: List<User> = emptyList(),
-    val uid: String = ""
+    val uid: String = "",
+    val selectedAccount: Account? = null
 )

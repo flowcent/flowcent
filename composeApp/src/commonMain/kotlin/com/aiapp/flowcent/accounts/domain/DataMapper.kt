@@ -1,6 +1,6 @@
 package com.aiapp.flowcent.accounts.domain
 
-import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
+import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.model.AccountMemberDto
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.model.AccountMember
@@ -27,8 +27,9 @@ fun AccountMember.toAccountMemberDto(): AccountMemberDto {
     )
 }
 
-fun CreateAccountDto.toAccount(): Account {
+fun AccountDto.toAccount(): Account {
     return Account(
+        id = id,
         createdAt = createdAt,
         createdBy = createdBy,
         initialBalance = initialBalance,
@@ -44,8 +45,8 @@ fun CreateAccountDto.toAccount(): Account {
     )
 }
 
-fun Account.toAccountDto(): CreateAccountDto {
-    return CreateAccountDto(
+fun Account.toAccountDto(): AccountDto {
+    return AccountDto(
         createdAt = createdAt,
         createdBy = createdBy,
         initialBalance = initialBalance,
@@ -71,11 +72,11 @@ fun User.toAcMemberDto(): AccountMemberDto {
 }
 
 
-fun List<CreateAccountDto>.toAccounts(): List<Account> {
+fun List<AccountDto>.toAccounts(): List<Account> {
     return map { it.toAccount() }
 }
 
-fun List<Account>.toAccountDtos(): List<CreateAccountDto> {
+fun List<Account>.toAccountDtos(): List<AccountDto> {
     return map { it.toAccountDto() }
 }
 

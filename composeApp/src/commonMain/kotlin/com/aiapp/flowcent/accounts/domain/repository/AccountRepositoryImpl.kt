@@ -1,10 +1,11 @@
 package com.aiapp.flowcent.accounts.domain.repository
 
-import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
+import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.toAccounts
 import com.aiapp.flowcent.util.Resource
+import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.github.aakira.napier.Napier
 
@@ -14,10 +15,14 @@ class AccountRepositoryImpl(
 
     private val accountsRef = firestore.collection("accounts")
 
-    override suspend fun addAccount(createAccountDto: CreateAccountDto): Resource<String> {
+    fun getTransactionsCollection(accountId: String): CollectionReference {
+        return accountsRef.document(accountId).collection("transactions")
+    }
+
+    override suspend fun addAccount(accountDto: AccountDto): Resource<String> {
         return try {
             val addAccountRef = accountsRef
-                .add(createAccountDto)
+                .add(accountDto)
             Resource.Success(addAccountRef.id)
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())
@@ -26,7 +31,6 @@ class AccountRepositoryImpl(
 
     override suspend fun getAccounts(userId: String): Resource<List<Account>> {
         return try {
-            Napier.e("Sohan getAccounts userId: $userId")
             val userAccountsQuery = accountsRef
                 .where {
                     "creatorUserId" equalTo userId
@@ -39,14 +43,12 @@ class AccountRepositoryImpl(
                 }
                 .get()
 
-            Napier.e("Sohan getAccounts userAccountsQuery: ${userAccountsQuery.documents}")
-
-
             val allDocuments = (userAccountsQuery.documents + memberAccountsQuery.documents)
                 .distinctBy { it.id }
 
             val accountList = allDocuments.map { document ->
-                document.data(CreateAccountDto.serializer())
+                val dto = document.data(AccountDto.serializer())
+                dto.copy(id = document.id)
             }
 
             Resource.Success(accountList.toAccounts())

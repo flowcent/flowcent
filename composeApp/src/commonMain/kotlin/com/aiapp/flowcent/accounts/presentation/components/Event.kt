@@ -19,6 +19,10 @@ fun Events(
                 UiEvent.ClickAdd -> {
                     localNavController.navigate(AccountsNavRoutes.AddAccountScreen.route)
                 }
+
+                UiEvent.NavigateToAccountDetail -> {
+                    localNavController.navigate(AccountsNavRoutes.AccountDetailScreen.route)
+                }
             }
         }
     }

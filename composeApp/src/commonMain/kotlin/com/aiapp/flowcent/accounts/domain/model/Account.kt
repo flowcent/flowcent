@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.accounts.domain.model
 
 data class Account(
+    val id: String = "",
     val createdAt: String = "",
     val createdBy: String = "",
     val initialBalance: Double = 0.0,

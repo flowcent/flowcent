@@ -84,14 +84,14 @@ fun AccountsHomeScreen(
                             style = MaterialTheme.typography.titleSmall
                         )
 
-                       AppButton(
-                           btnText = "Add More +",
-                           textColor = Color.White,
-                           bgColor = Color.Black,
-                           style = ButtonStyle.PRIMARY,
-                           modifier = Modifier.width(180.dp),
-                           onClick = { viewModel.onAction(UserAction.ClickAdd) }
-                       )
+                        AppButton(
+                            btnText = "Add More +",
+                            textColor = Color.White,
+                            bgColor = Color.Black,
+                            style = ButtonStyle.PRIMARY,
+                            modifier = Modifier.width(180.dp),
+                            onClick = { viewModel.onAction(UserAction.ClickAdd) }
+                        )
                     }
 
                     LazyColumn(
@@ -99,7 +99,16 @@ fun AccountsHomeScreen(
                             .padding(vertical = 16.dp)
                     ) {
                         items(state.accounts) { account ->
-                            AccountCard(account = account, onClickItem = {})
+                            AccountCard(
+                                account = account,
+                                onClickItem = {
+                                    viewModel.onAction(
+                                        UserAction.OnAccountItemClick(
+                                            account
+                                        )
+                                    )
+                                }
+                            )
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.accounts.presentation
 
+import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.auth.data.model.User
 
 sealed interface UserAction {
@@ -12,5 +13,6 @@ sealed interface UserAction {
     data class OnRemoveUser(val user: User) : UserAction
     data object CreateAccount : UserAction
     data object FetchUserUId : UserAction
-    data class OnAccountItemClick(val accountId: String) : UserAction
+    data class OnAccountItemClick(val account: Account) : UserAction
+
 }

@@ -2,7 +2,7 @@ package com.aiapp.flowcent.accounts.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aiapp.flowcent.accounts.data.model.CreateAccountDto
+import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.toAcMemberDtos
 import com.aiapp.flowcent.accounts.domain.toMemberIds
@@ -127,7 +127,16 @@ class AccountViewModel(
                 }
             }
 
-            is UserAction.OnAccountItemClick -> TODO()
+            is UserAction.OnAccountItemClick -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            selectedAccount = action.account
+                        )
+                    }
+                    _uiEvent.send(UiEvent.NavigateToAccountDetail)
+                }
+            }
         }
     }
 
@@ -161,7 +170,7 @@ class AccountViewModel(
     private fun createAccount() {
         viewModelScope.launch {
             when (val result = accountRepository.addAccount(
-                CreateAccountDto(
+                AccountDto(
                     accountName = _state.value.accountName,
                     initialBalance = _state.value.acInitialBalance,
                     members = _state.value.selectedUsers.toAcMemberDtos(),

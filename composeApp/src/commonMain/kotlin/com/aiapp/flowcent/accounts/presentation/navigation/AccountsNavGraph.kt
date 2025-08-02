@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
+import com.aiapp.flowcent.accounts.presentation.screens.AccountDetailScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AddAccountScreen
 import com.aiapp.flowcent.core.permission.PermissionsViewModel
@@ -67,6 +68,16 @@ fun AccountsNavGraph(
                 globalNavController = globalNavController,
                 permissionVm = permissionVM,
                 fcPermissionState = fcPermissionState
+            )
+        }
+
+        addAnimatedComposable(route = AccountsNavRoutes.AccountDetailScreen.route) {
+            AccountDetailScreen(
+                modifier = modifier,
+                viewModel = viewModel,
+                state = state,
+                localNavController = localNavController,
+                globalNavController = globalNavController,
             )
         }
     }
