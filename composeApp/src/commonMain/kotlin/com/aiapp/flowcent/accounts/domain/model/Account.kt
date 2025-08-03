@@ -2,7 +2,7 @@ package com.aiapp.flowcent.accounts.domain.model
 
 data class Account(
     val id: String = "",
-    val createdAt: String = "",
+    val createdAt: Long = 0L,
     val createdBy: String = "",
     val initialBalance: Double = 0.0,
     val currentBalance: String = "",
@@ -14,7 +14,7 @@ data class Account(
     val profileImage: String = "",
     val totalExpense: Double = 0.0,
     val totalAddition: Double = 0.0,
-    val updatedAt: String = "",
+    val updatedAt: Long = 0L,
     val updatedBy: String = "",
 )
 

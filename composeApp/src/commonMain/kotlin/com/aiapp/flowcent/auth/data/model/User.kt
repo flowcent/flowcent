@@ -13,7 +13,7 @@ data class User(
     val providerId: String,
     val signInType: String,
     val createdBy: String,
-    val createdAt: String,
-    val updatedAt: String,
+    val createdAt: Long = 0L,
+    val updatedAt: Long = 0L,
     val updatedBy: String
 )

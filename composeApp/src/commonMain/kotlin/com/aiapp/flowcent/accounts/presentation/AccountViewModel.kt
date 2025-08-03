@@ -177,9 +177,9 @@ class AccountViewModel(
                     memberIds = _state.value.selectedUsers.toMemberIds(),
                     accountId = getAccountID(),
                     createdBy = _state.value.uid,
-                    createdAt = DateTimeUtils.getCurrentFormattedDateTime(),
+                    createdAt = DateTimeUtils.getCurrentTimeInMilli(),
                     updatedBy = _state.value.uid,
-                    updatedAt = DateTimeUtils.getCurrentFormattedDateTime(),
+                    updatedAt = DateTimeUtils.getCurrentTimeInMilli(),
                     creatorUserId = _state.value.uid,
                     totalExpense = 0.0,
                     totalAddition = 0.0,
@@ -218,7 +218,6 @@ class AccountViewModel(
 
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    Napier.e("Sohan Success in fetching registered phone numbers: ${result.data}")
                     val deviceContacts = contactFetcher.fetchContacts()
                     Napier.e("Sohan deviceContacts: $deviceContacts")
                     val matchedPhoneNumbers = deviceContacts

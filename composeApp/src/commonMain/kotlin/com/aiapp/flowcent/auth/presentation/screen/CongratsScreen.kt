@@ -2,6 +2,8 @@ package com.aiapp.flowcent.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.OutlinedButton
@@ -16,6 +18,7 @@ import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.auth.presentation.components.Events
+import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppCountryPickerPhoneField
 import com.aiapp.flowcent.core.presentation.components.NumericInputField
 import com.aiapp.flowcent.core.presentation.ui.theme.Colors
@@ -36,48 +39,56 @@ fun CongratsScreen(
     )
 
     Column(
-        modifier = Modifier.padding(
-            horizontal = 16.dp,
-            vertical = 16.dp
-        ),
+        modifier = Modifier.fillMaxSize().padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = "Congratulations! ${authState.firebaseUser?.displayName}, You got premium for 1 month",
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(12.dp),
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Column {
+            Text(
+                text = "Congratulations! ${authState.firebaseUser?.displayName}, You got premium for 1 month",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyLarge
+            )
 
-        AppCountryPickerPhoneField(
-            mobileNumber = authState.phoneNumber,
-            defaultCountryCode = "ad",
-            onMobileNumberChange = { newValue ->
-                authViewModel.onAction(UserAction.UpdatePhoneNumber(newValue))
-            },
-            onCountrySelected = { country ->
-                authViewModel.onAction(UserAction.UpdateCountry(country))
-            },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Mobile Number") }
-        )
+            Spacer(modifier = modifier.padding(12.dp))
+
+            AppCountryPickerPhoneField(
+                mobileNumber = authState.phoneNumber,
+                defaultCountryCode = "ad",
+                onMobileNumberChange = { newValue ->
+                    authViewModel.onAction(UserAction.UpdatePhoneNumber(newValue))
+                },
+                onCountrySelected = { country ->
+                    authViewModel.onAction(UserAction.UpdateCountry(country))
+                },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Mobile Number") }
+            )
+
+            Spacer(modifier = modifier.padding(12.dp))
 
 
-        NumericInputField(
-            value = authState.initialBalance.toString(),
-            onValueChange = { newValue ->
-                authViewModel.onAction(UserAction.UpdateInitialBalance(newValue.toDouble()))
-            },
-            placeholder = "Initial Balancee"
-        )
+            NumericInputField(
+                value = if (authState.initialBalance > 0.0) {
+                    if (authState.initialBalance % 1.0 == 0.0) {
+                        authState.initialBalance.toInt().toString() // Remove .0 for whole numbers
+                    } else {
+                        authState.initialBalance.toString()
+                    }
+                } else "",
+                onValueChange = { newValue ->
+                    authViewModel.onAction(UserAction.UpdateInitialBalance(newValue.toDouble()))
+                },
+                placeholder = "Initial Balancee"
+            )
+        }
 
-        OutlinedButton(
-            onClick = { authViewModel.onAction(UserAction.CreateNewUser) },
-            modifier = Modifier.padding(top = 20.dp)
-
-        ) {
-            Text("Proceed")
+        Column {
+            AppButton(
+                btnText = "Proceed",
+                onClick = { authViewModel.onAction(UserAction.CreateNewUser) },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

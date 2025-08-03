@@ -2,15 +2,18 @@ package com.aiapp.flowcent.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aiapp.flowcent.core.platform.FlowCentAi
-import com.aiapp.flowcent.chat.util.ChatUtil.buildExpensePrompt
-import com.aiapp.flowcent.chat.util.ChatUtil.checkInvalidExpense
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
+import com.aiapp.flowcent.chat.util.ChatUtil.buildExpensePrompt
+import com.aiapp.flowcent.chat.util.ChatUtil.checkInvalidExpense
+import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
-import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
+import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.platform.FlowCentAi
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
 import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.util.getTransactionId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -90,7 +93,7 @@ class ChatViewModel(
                     when (val result =
                         expenseRepository.saveExpenseItemsToDb(
                             _chatState.value.uid,
-                            action.expenseItems
+                            createTransactionPayload(action.expenseItems)
                         )) {
                         is Resource.Success -> {
                             println("Sohan Expense saved successfully! ${result.data}")
@@ -118,6 +121,20 @@ class ChatViewModel(
                 }
             }
         }
+    }
+
+    private fun createTransactionPayload(expenseItems: List<ExpenseItem>): TransactionDto {
+        return TransactionDto(
+            totalAmount = expenseItems.sumOf { it.amount },
+            category = expenseItems.firstOrNull()?.category ?: "",
+            createdAt = getCurrentTimeInMilli(),
+            createdBy = _chatState.value.uid,
+            transactionId = getTransactionId(),
+            updatedAt = getCurrentTimeInMilli(),
+            updatedBy = _chatState.value.uid,
+            uid = _chatState.value.uid,
+            expenses = expenseItems
+        )
     }
 
     private suspend fun sendPrompt(prompt: String, botLoadingMessageId: String) {

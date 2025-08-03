@@ -6,12 +6,17 @@ package com.aiapp.flowcent.core.presentation.utils
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 object DateTimeUtils {
@@ -68,4 +73,28 @@ object DateTimeUtils {
             null
         }
     }
+
+    fun getCurrentTimeInMilli(): Long {
+        return Clock.System.now().toEpochMilliseconds()
+    }
+
+
+
+    fun getStartAndEndTimeMillis(dateString: String): Pair<Long, Long> {
+        val localDate = LocalDate.parse(dateString) // e.g. "2025-08-04"
+        val timeZone = TimeZone.currentSystemDefault()
+
+        // Start of day Instant in UTC
+        val startInstant = localDate.atStartOfDayIn(timeZone)
+        val startMillis = startInstant.toEpochMilliseconds()
+
+        // End of day: 23:59:59.999 (milliseconds precision)
+        val endLocalTime = LocalTime(23, 59, 59, 999_000_000) // 999 milliseconds
+        val endInstant = localDate.atTime(endLocalTime).toInstant(timeZone)
+        val endMillis = endInstant.toEpochMilliseconds()
+
+        return startMillis to endMillis
+    }
 }
+
+

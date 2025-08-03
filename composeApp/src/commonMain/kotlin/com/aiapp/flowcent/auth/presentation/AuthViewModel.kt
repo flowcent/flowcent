@@ -54,8 +54,8 @@ class AuthViewModel(
                         providerId = _state.value.firebaseUser?.providerId ?: "",
                         signInType = _state.value.signInType,
                         createdBy = _state.value.firebaseUser?.uid ?: "",
-                        createdAt = DateTimeUtils.getCurrentFormattedDateTime(),
-                        updatedAt = DateTimeUtils.getCurrentFormattedDateTime(),
+                        createdAt = DateTimeUtils.getCurrentTimeInMilli(),
+                        updatedAt = DateTimeUtils.getCurrentTimeInMilli(),
                         updatedBy = _state.value.firebaseUser?.uid ?: ""
                     )
                 )

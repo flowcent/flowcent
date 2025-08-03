@@ -6,6 +6,7 @@ package com.aiapp.flowcent.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
@@ -117,6 +118,7 @@ class HomeViewModel(
     }
 
     private fun fetchLatestTransactions(uid: String?) {
+        println("Sohan fetchLatestTransactions")
         if (uid.isNullOrEmpty()) {
             Napier.e("Sohan 404 No User Found")
             return
@@ -133,8 +135,9 @@ class HomeViewModel(
                     }
 
                     Resource.Loading -> {}
-                    is Resource.Success<List<ExpenseItem>> -> {
-                        val expenseList = result.data as List<ExpenseItem>
+                    is Resource.Success -> {
+                        val transactions = result.data as List<TransactionDto>
+                        val expenseList = transactions.map { transaction -> transaction.expenses }
                         _state.update {
                             it.copy(
                                 latestTransactions = expenseList

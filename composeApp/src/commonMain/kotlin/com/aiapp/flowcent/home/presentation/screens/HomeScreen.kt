@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -43,6 +44,7 @@ fun HomeScreen(
     homeState: HomeState,
     globalNavController: NavHostController
 ) {
+    val allTransactions = homeState.latestTransactions.flatten()
 
     LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchUserUId)
@@ -114,8 +116,7 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                items(homeState.latestTransactions.size) { index ->
-                    val transaction = homeState.latestTransactions[index]
+                items(allTransactions) { transaction ->
                     SpendingCard(expenseItem = transaction)
                 }
             }

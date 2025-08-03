@@ -1,15 +1,12 @@
 package com.aiapp.flowcent.core.domain.repository
 
+import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
-import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentFormattedDateTime
-import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getFormattedDate
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getStartAndEndTimeMillis
 import com.aiapp.flowcent.util.Resource
-import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
-import dev.gitlive.firebase.firestore.firestore
-import io.github.aakira.napier.Napier
 
 class ExpenseRepositoryImpl(
     firestore: FirebaseFirestore
@@ -18,32 +15,15 @@ class ExpenseRepositoryImpl(
 
     override suspend fun saveExpenseItemsToDb(
         uid: String,
-        expenseItems: List<ExpenseItem>
+        transactionDto: TransactionDto
     ): Resource<String> {
         return try {
-            if (expenseItems.isEmpty()) {
+            if (transactionDto.expenses.isEmpty()) {
                 return Resource.Error("No expense items provided to save.")
             }
 
-            // save the first item as per your original code
-            // TODO: Remember to change it with multiple expense items
-            val firstExpenseItem = expenseItems[0]
-
-            val transaction = hashMapOf(
-                "amount" to firstExpenseItem.amount,
-                "category" to firstExpenseItem.category,
-                "created_at" to getCurrentFormattedDateTime(),
-                "created_by" to uid,
-                "title" to firstExpenseItem.title,
-                "tn_id" to "tqcMiL3tg3jvWqqhHJ4I", // Consider if this should be dynamic or removed
-                "type" to "Expense",
-                "updated_at" to getCurrentFormattedDateTime(),
-                "updated_by" to uid,
-                "uid" to uid
-            )
-
             val addDocRef = transactionCollection
-                .add(transaction)
+                .add(transactionDto)
 
             Resource.Success(addDocRef.id)
         } catch (e: Exception) {
@@ -73,27 +53,24 @@ class ExpenseRepositoryImpl(
     override suspend fun getDailyExpenses(
         uid: String,
         dateString: String
-    ): Resource<List<ExpenseItem>> {
+    ): Resource<List<TransactionDto>> {
         return try {
-            val formattedDate = getFormattedDate(dateString)
+            val (start, end) = getStartAndEndTimeMillis(dateString)
             val querySnapshot = transactionCollection
                 .where { "uid" equalTo uid }
-                .where {
-                    "created_at" greaterThanOrEqualTo formattedDate.plus(" 00:00:00")
-                }
-                .where {
-                    "created_at" lessThanOrEqualTo formattedDate.plus(" 23:59:59")
-                }
-                .orderBy("created_at", Direction.DESCENDING)
+                .where { "createdAt" greaterThanOrEqualTo start }
+                .where { "createdAt" lessThanOrEqualTo end }
+                .orderBy("createdAt", Direction.DESCENDING)
                 .get()
 
-            println("Sohan querySnapshot ${querySnapshot.documents}")
-            val expenseList = querySnapshot.documents.map { document ->
-                document.data(ExpenseItem.serializer())
+            val transactions = querySnapshot.documents.map { document ->
+                val dto = document.data(TransactionDto.serializer())
+                dto.copy(id = document.id)
             }
-            Resource.Success(expenseList)
+
+            Resource.Success(transactions)
         } catch (e: Exception) {
-            Resource.Error("Error fetching expenses: ${e.message}")
+            Resource.Error("Sohan Error fetching expenses: ${e.message}")
         }
 
     }
@@ -104,7 +81,7 @@ class ExpenseRepositoryImpl(
                 .where { "uid" equalTo uid }
                 .get()
             val total = snapshot.documents.sumOf {
-                it.data(ExpenseItem.serializer()).amount
+                it.data(TransactionDto.serializer()).totalAmount
             }
             Resource.Success(total)
         } catch (e: Exception) {
