@@ -26,9 +26,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BalanceHighlightBox(modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier
-            .fillMaxWidth(0.5f)
-            .padding(16.dp),
+        modifier = modifier.padding(16.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
