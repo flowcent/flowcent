@@ -32,6 +32,7 @@ import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
+import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
@@ -63,7 +64,9 @@ fun HomeScreen(
 
     Column(modifier = modifier) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -103,6 +106,8 @@ fun HomeScreen(
                 homeViewModel.onAction(UserAction.SetSelectedDate(it))
             }
         )
+
+        BalanceHighlightBox()
 
         Column {
             Text(

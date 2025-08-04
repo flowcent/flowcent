@@ -1,0 +1,55 @@
+package com.aiapp.flowcent.home.presentation.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun BalanceHighlightBox(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth(0.5f)
+            .padding(16.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column {
+            Text(
+                text = "Overview",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.inverseSurface,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp)
+            )
+
+            HorizontalDivider()
+
+            Column(modifier = Modifier.padding(12.dp)) {
+                Text(
+                    text = "Spent",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.8f)
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = "1122.12",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+    }
+}
