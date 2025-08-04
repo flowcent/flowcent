@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -35,6 +37,7 @@ import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
+import com.aiapp.flowcent.home.presentation.components.DailyAverageSpendingCard
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -108,11 +111,25 @@ fun HomeScreen(
             }
         )
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            RingChart(
-                spent = 4500f,
-                budget = 8000f
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                RingChart(
+                    spent = 4500f,
+                    budget = 8000f
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                DailyAverageSpendingCard(
+                    dailyAverage = 853.0f,
+                    previousMonthAverage = 1201.12f
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
 
             BalanceHighlightBox()
         }

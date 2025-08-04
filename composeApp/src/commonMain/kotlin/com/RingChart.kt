@@ -50,7 +50,6 @@ fun RingChart(
     Row(
         modifier = modifier
             .fillMaxWidth(0.5f)
-            .padding(vertical = 16.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 12.dp, vertical = 12.dp),
