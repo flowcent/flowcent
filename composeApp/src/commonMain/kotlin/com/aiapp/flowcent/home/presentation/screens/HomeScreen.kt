@@ -4,6 +4,10 @@
 
 package com.aiapp.flowcent.home.presentation.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -23,8 +28,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.RingChart
@@ -50,6 +59,8 @@ fun HomeScreen(
     globalNavController: NavHostController
 ) {
     val allTransactions = homeState.latestTransactions.flatten()
+    val listState = rememberLazyListState()
+    val isScrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 } }
 
     LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchUserUId)
@@ -111,31 +122,38 @@ fun HomeScreen(
             }
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                RingChart(
-                    spent = 4500f,
-                    budget = 8000f
-                )
+        Column(modifier = Modifier.clipToBounds()) {
+            AnimatedVisibility(
+                visible = !isScrolled,
+                enter = slideInVertically(initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)),
+                exit = slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        RingChart(
+                            spent = 4500f,
+                            budget = 8000f
+                        )
 
-                Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier.height(12.dp))
 
-                DailyAverageSpendingCard(
-                    dailyAverage = 853.0f,
-                    previousMonthAverage = 1201.12f
-                )
+                        DailyAverageSpendingCard(
+                            dailyAverage = 853.0f,
+                            previousMonthAverage = 1201.12f
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+
+                    BalanceHighlightBox()
+                }
             }
 
-            Spacer(Modifier.width(12.dp))
-
-            BalanceHighlightBox()
-        }
-
-
-        Column {
             Text(
                 text = "Latest Transaction",
                 fontSize = MaterialTheme.typography.titleLarge.fontSize,
@@ -145,6 +163,7 @@ fun HomeScreen(
             )
 
             LazyColumn(
+                state = listState,
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 items(allTransactions) { transaction ->
