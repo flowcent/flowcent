@@ -49,19 +49,19 @@ fun RingChart(
 
     Row(
         modifier = modifier
-            .fillMaxWidth(0.5f)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 12.dp, vertical = 12.dp),
+            .padding(horizontal = 32.dp, vertical = 24.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(60.dp),
+                .size(100.dp),
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
-                val strokeWidth = size.width / 5f
+                val strokeWidth = size.width / 4f
 
                 // Background Ring
                 drawArc(
@@ -85,20 +85,20 @@ fun RingChart(
             }
         }
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(32.dp))
 
         // Text Info
         Column {
             Text(
                 text = "Spent",
                 color = MaterialTheme.colorScheme.inverseSurface.copy(0.8f),
-                fontSize = 13.sp
+                fontSize = 16.sp
             )
             Text(
                 text = "${spent.toInt()}/${budget.toInt()} BDT",
-                color = MaterialTheme.colorScheme.inverseSurface,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
+                color = Color(0xFFFF375F),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
             )
         }
     }

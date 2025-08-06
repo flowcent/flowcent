@@ -128,29 +128,36 @@ fun HomeScreen(
                 enter = slideInVertically(initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)),
                 exit = slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300))
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(horizontal = 12.dp)
                 ) {
-                    Column {
-                        RingChart(
-                            spent = 4500f,
-                            budget = 8000f
-                        )
+                    RingChart(
+                        spent = 4500f,
+                        budget = 8000f,
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                        Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(12.dp))
 
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         DailyAverageSpendingCard(
                             dailyAverage = 853.0f,
-                            previousMonthAverage = 1201.12f
+                            previousMonthAverage = 1201.12f,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        Spacer(Modifier.width(12.dp))
+
+                        BalanceHighlightBox(
+                            modifier = Modifier.weight(1f)
                         )
                     }
-
-                    Spacer(Modifier.width(12.dp))
-
-                    BalanceHighlightBox()
                 }
             }
 
