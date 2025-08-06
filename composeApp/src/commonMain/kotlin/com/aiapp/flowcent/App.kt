@@ -6,11 +6,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.DataStore
@@ -27,10 +23,11 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_chat
+import flowcent.composeapp.generated.resources.ic_chat_selected
 import flowcent.composeapp.generated.resources.ic_home
+import flowcent.composeapp.generated.resources.ic_home_selected
 import flowcent.composeapp.generated.resources.ic_share_accounts
-import io.github.aakira.napier.Napier
-import kotlinx.coroutines.flow.collectLatest
+import flowcent.composeapp.generated.resources.ic_share_accounts_selected
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -42,9 +39,9 @@ fun App(
     val globalNavController = rememberNavController()
 
     val navItems = listOf(
-        NavItem("Home", Res.drawable.ic_home, AppNavRoutes.Home.route),
-        NavItem("Chat", Res.drawable.ic_chat, AppNavRoutes.Chat.route),
-        NavItem("Accounts", Res.drawable.ic_share_accounts, AppNavRoutes.Accounts.route)
+        NavItem("Home", Res.drawable.ic_home, Res.drawable.ic_home_selected, AppNavRoutes.Home.route),
+        NavItem("Chat", Res.drawable.ic_chat, Res.drawable.ic_chat_selected, AppNavRoutes.Chat.route),
+        NavItem("Accounts", Res.drawable.ic_share_accounts, Res.drawable.ic_share_accounts_selected, AppNavRoutes.Accounts.route)
     )
 
     val currentDestination by globalNavController.currentBackStackEntryAsState()
@@ -55,14 +52,6 @@ fun App(
     val shouldNotShowBottomNavs = currentRoute == AppNavRoutes.Auth.route ||
             currentRoute == AppNavRoutes.Profile.route
 
-//    var hasCurrentUser by remember { mutableStateOf(false) }
-//
-//
-//    LaunchedEffect(key1 = Unit) {
-//        Firebase.auth.authStateChanged.collectLatest {
-//            hasCurrentUser = it?.uid != null
-//        }
-//    }
     val hasCurrentUser = Firebase.auth.currentUser != null
 
 
