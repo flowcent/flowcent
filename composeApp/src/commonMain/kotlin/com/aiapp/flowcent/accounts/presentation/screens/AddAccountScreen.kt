@@ -2,15 +2,10 @@ package com.aiapp.flowcent.accounts.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -25,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.presentation.AccountState
@@ -33,11 +27,9 @@ import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
 import com.aiapp.flowcent.accounts.presentation.components.Events
-import com.aiapp.flowcent.accounts.presentation.components.SelectedUserCard
-import com.aiapp.flowcent.core.permission.FCPermissionState
-import com.aiapp.flowcent.core.permission.PermissionsViewModel
+import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
+import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.components.AppButton
-import com.aiapp.flowcent.core.presentation.components.AppIconButton
 import com.aiapp.flowcent.core.presentation.components.AppTextField
 import com.aiapp.flowcent.core.presentation.components.IconCard
 import com.aiapp.flowcent.core.presentation.components.NumericInputField

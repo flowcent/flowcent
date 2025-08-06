@@ -2,7 +2,7 @@ package com.aiapp.flowcent.core.data.repository
 
 import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.core.domain.utils.Resource
 
 interface ExpenseRepository {
     suspend fun saveExpenseItemsToDb(uid: String, transactionDto: TransactionDto): Resource<String>

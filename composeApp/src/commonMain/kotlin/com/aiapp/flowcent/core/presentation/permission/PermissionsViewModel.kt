@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.permission
+package com.aiapp.flowcent.core.presentation.permission
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

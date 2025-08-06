@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.accounts.domain
+package com.aiapp.flowcent.accounts.domain.utils
 
 import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.model.AccountMemberDto

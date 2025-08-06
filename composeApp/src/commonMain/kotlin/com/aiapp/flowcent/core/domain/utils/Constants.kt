@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.util
+package com.aiapp.flowcent.core.domain.utils
 
 object Constants {
     const val SIGN_IN_TYPE_GOOGLE = "google"

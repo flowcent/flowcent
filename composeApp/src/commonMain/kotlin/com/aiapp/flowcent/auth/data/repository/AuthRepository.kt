@@ -1,7 +1,7 @@
 package com.aiapp.flowcent.auth.data.repository
 
 import com.aiapp.flowcent.auth.data.model.User
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.core.domain.utils.Resource
 
 interface AuthRepository {
     suspend fun createNewUser(user: User): Resource<String>

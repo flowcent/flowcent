@@ -4,7 +4,7 @@ import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getStartAndEndTimeMillis
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.core.domain.utils.Resource
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 

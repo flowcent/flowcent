@@ -16,7 +16,7 @@ import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.screens.AccountDetailScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AddAccountScreen
-import com.aiapp.flowcent.core.permission.PermissionsViewModel
+import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory

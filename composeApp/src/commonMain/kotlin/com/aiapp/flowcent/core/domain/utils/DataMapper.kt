@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.domain
+package com.aiapp.flowcent.core.domain.utils
 
 import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.domain.model.Transaction

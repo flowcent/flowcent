@@ -35,9 +35,9 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
 import com.aiapp.flowcent.chat.presentation.components.SpendingList
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
-import com.aiapp.flowcent.core.permission.FCPermissionState
+import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.permission.PermissionsViewModel
+import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.outline_charger

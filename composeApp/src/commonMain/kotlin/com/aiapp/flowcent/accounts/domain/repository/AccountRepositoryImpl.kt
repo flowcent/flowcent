@@ -3,8 +3,8 @@ package com.aiapp.flowcent.accounts.domain.repository
 import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.model.Account
-import com.aiapp.flowcent.accounts.domain.toAccounts
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.accounts.domain.utils.toAccounts
+import com.aiapp.flowcent.core.domain.utils.Resource
 import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.github.aakira.napier.Napier

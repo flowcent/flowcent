@@ -2,7 +2,7 @@ package com.aiapp.flowcent.auth.domain.repository
 
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.core.domain.utils.Resource
 import dev.gitlive.firebase.firestore.Filter
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.WhereConstraint

@@ -1,8 +1,4 @@
-package com.aiapp.flowcent.chat.util
-
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+package com.aiapp.flowcent.chat.domain.utils
 
 object ChatUtil {
     fun buildExpensePrompt(userText: String): String {

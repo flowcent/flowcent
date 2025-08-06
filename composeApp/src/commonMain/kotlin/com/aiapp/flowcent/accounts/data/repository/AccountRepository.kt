@@ -2,7 +2,7 @@ package com.aiapp.flowcent.accounts.data.repository
 
 import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.domain.model.Account
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.core.domain.utils.Resource
 
 interface AccountRepository {
     suspend fun addAccount(accountDto: AccountDto): Resource<String>

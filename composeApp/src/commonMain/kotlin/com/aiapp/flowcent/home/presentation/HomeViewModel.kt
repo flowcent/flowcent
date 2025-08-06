@@ -11,7 +11,7 @@ import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
-import com.aiapp.flowcent.util.Resource
+import com.aiapp.flowcent.core.domain.utils.Resource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import io.github.aakira.napier.Napier

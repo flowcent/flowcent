@@ -1,11 +1,11 @@
-package com.aiapp.flowcent.accounts.util
+package com.aiapp.flowcent.chat.domain.utils
 
-import com.aiapp.flowcent.util.Constants.UUID_PREFIX_ACCOUNT
+import com.aiapp.flowcent.core.domain.utils.Constants.UUID_PREFIX_TRANSACTION
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-fun getAccountID(): String {
+fun getTransactionId(): String {
     val currentMoment = Clock.System.now()
     val localTime = currentMoment.toLocalDateTime(TimeZone.UTC)
     val milliseconds = currentMoment.toEpochMilliseconds() % 1000  // Get milliseconds
@@ -20,7 +20,7 @@ fun getAccountID(): String {
         append(milliseconds.toString().padStart(3, '0'))  // Pad milliseconds to 3 digits
     }
 
-    val accountID = "$UUID_PREFIX_ACCOUNT-$timestamp"
+    val accountID = "$UUID_PREFIX_TRANSACTION-$timestamp"
     println("Generated Account ID: $accountID")
     return accountID
 }

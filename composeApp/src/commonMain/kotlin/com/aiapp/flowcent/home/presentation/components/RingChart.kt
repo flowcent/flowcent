@@ -1,4 +1,4 @@
-package com
+package com.aiapp.flowcent.home.presentation.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

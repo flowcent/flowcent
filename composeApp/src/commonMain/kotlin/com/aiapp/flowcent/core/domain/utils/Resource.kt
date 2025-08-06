@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.util
+package com.aiapp.flowcent.core.domain.utils
 
 sealed class Resource<out T> {
     data class Success<out T>(val data: T?) : Resource<T>()
