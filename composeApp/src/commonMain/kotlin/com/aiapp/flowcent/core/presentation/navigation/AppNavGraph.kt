@@ -15,7 +15,7 @@ import com.aiapp.flowcent.auth.presentation.navigation.AuthNavGraph
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavGraph
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
-import com.aiapp.flowcent.core.platform.SpeechRecognizer
+import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
 

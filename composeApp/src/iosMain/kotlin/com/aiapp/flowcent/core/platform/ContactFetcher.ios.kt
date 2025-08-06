@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.core.platform
 
+import com.aiapp.flowcent.core.presentation.platform.DeviceContact
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Contacts.CNContactFetchRequest
 import platform.Contacts.CNContactStore

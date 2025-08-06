@@ -1,6 +1,6 @@
 package com.aiapp.flowcent.auth.data
 
-import com.aiapp.flowcent.core.platform.onApplicationStartPlatformSpecific
+import com.aiapp.flowcent.core.presentation.platform.onApplicationStartPlatformSpecific
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
 

@@ -9,7 +9,7 @@ import com.aiapp.flowcent.accounts.domain.utils.toMemberIds
 import com.aiapp.flowcent.accounts.domain.utils.getAccountID
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
-import com.aiapp.flowcent.core.platform.ContactFetcher
+import com.aiapp.flowcent.core.presentation.platform.ContactFetcher
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.domain.utils.Resource
 import io.github.aakira.napier.Napier

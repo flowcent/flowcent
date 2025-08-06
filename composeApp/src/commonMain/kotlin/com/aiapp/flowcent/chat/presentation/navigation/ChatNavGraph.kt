@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.screen.ChatScreen
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
-import com.aiapp.flowcent.core.platform.SpeechRecognizer
+import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory

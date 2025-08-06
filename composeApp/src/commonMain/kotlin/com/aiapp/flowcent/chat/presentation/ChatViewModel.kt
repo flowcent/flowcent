@@ -10,7 +10,7 @@ import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
-import com.aiapp.flowcent.core.platform.FlowCentAi
+import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.chat.domain.utils.getTransactionId
