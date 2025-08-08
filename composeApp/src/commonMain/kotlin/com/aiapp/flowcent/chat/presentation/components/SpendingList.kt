@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.domain.utils.EnumConstants
 import com.aiapp.flowcent.core.presentation.components.SelectionToggle
-import kotlin.reflect.typeOf
 
 @Composable
 fun SpendingList(
@@ -81,7 +79,10 @@ fun SpendingList(
                 }
                 Text(
                     expenseItem.amount.toString(),
-                    color = if (expenseItem.type == "Expense") Color.Red else Color.Green,
+                    color = when (expenseItem.type) {
+                        EnumConstants.TransactionType.INCOME, EnumConstants.TransactionType.BORROW -> Color.Green
+                        EnumConstants.TransactionType.EXPENSE, EnumConstants.TransactionType.LEND -> Color.Red
+                    },
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

@@ -14,6 +14,7 @@ import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.chat.domain.utils.getTransactionId
+import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -133,7 +134,7 @@ class ChatViewModel(
             updatedAt = getCurrentTimeInMilli(),
             updatedBy = _chatState.value.uid,
             uid = _chatState.value.uid,
-            expenses = expenseItems
+            expenses = expenseItems.map { it.toExpenseItemDto() }
         )
     }
 

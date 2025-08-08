@@ -12,6 +12,7 @@ import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.core.domain.utils.Resource
+import com.aiapp.flowcent.core.domain.utils.toExpenseItem
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import io.github.aakira.napier.Napier
@@ -137,7 +138,7 @@ class HomeViewModel(
                     Resource.Loading -> {}
                     is Resource.Success -> {
                         val transactions = result.data as List<TransactionDto>
-                        val expenseList = transactions.map { transaction -> transaction.expenses }
+                        val expenseList = transactions.map { transaction -> transaction.expenses.map { it.toExpenseItem() } }
                         _state.update {
                             it.copy(
                                 latestTransactions = expenseList

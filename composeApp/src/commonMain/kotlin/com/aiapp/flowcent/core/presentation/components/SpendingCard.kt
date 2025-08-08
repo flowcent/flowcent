@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.domain.utils.EnumConstants
 
 @Composable
 fun SpendingCard(expenseItem: ExpenseItem) {
@@ -47,8 +48,11 @@ fun SpendingCard(expenseItem: ExpenseItem) {
                 )
             }
             Text(
-                expenseItem.amount.toString(),
-                color = Color.Red,
+                text = expenseItem.amount.toString(),
+                color = when (expenseItem.type) {
+                    EnumConstants.TransactionType.INCOME, EnumConstants.TransactionType.BORROW -> Color.Green
+                    EnumConstants.TransactionType.EXPENSE, EnumConstants.TransactionType.LEND -> Color.Red
+                },
                 style = MaterialTheme.typography.bodyLarge
             )
         }

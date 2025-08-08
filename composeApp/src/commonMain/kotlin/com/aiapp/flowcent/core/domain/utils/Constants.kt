@@ -8,3 +8,12 @@ object Constants {
     const val UUID_PREFIX_TRANSACTION = "FCTN"
 
 }
+
+object EnumConstants {
+    enum class TransactionType {
+        INCOME,
+        EXPENSE,
+        LEND,
+        BORROW
+    }
+}

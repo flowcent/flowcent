@@ -15,5 +15,5 @@ data class TransactionDto(
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
     val uid: String = "",
-    val expenses: List<ExpenseItem> = emptyList()
+    val expenses: List<ExpenseItemDto> = emptyList()
 )
