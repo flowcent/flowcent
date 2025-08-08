@@ -119,47 +119,45 @@ fun HomeScreen(
             }
         )
 
+        AnimatedVisibility(
+            visible = !isScrolled,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth().animateEnterExit()
+            ) {
+                RingChart(
+                    spent = 4500f,
+                    budget = 8000f,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DailyAverageSpendingCard(
+                        dailyAverage = 853.0f,
+                        previousMonthAverage = 1201.12f,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(Modifier.width(12.dp))
+
+                    BalanceHighlightBox(
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+
         LazyColumn(
             state = listState,
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
-            item(key = "bento-boxes") {
-                AnimatedVisibility(
-                    visible = !isScrolled,
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth().animateEnterExit()
-                    ) {
-                        RingChart(
-                            spent = 4500f,
-                            budget = 8000f,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            DailyAverageSpendingCard(
-                                dailyAverage = 853.0f,
-                                previousMonthAverage = 1201.12f,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            Spacer(Modifier.width(12.dp))
-
-                            BalanceHighlightBox(
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-            }
-
             stickyHeader(key = "latest-transaction-header") {
                 Text(
                     text = "Latest Transaction",
