@@ -94,7 +94,7 @@ fun RingChart(
         // Text Info
         Column {
             Text(
-                text = "Spent",
+                text = "Monthly spent",
                 color = MaterialTheme.colorScheme.inverseSurface.copy(0.8f),
                 fontSize = 16.sp
             )
