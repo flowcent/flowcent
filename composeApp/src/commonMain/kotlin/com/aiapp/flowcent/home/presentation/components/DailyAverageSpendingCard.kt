@@ -4,6 +4,8 @@
 
 package com.aiapp.flowcent.home.presentation.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -15,9 +17,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +48,6 @@ fun DailyAverageSpendingCard(
         else -> "No change from last month"
     }
 
-
     val trendColor = when {
         diff == null -> subTextColor
         diff > 0 -> Color.Red.copy(alpha = 0.8f)
@@ -48,8 +55,23 @@ fun DailyAverageSpendingCard(
         else -> subTextColor
     }
 
+    // Animation state for fade + scale
+    var visible by remember { mutableStateOf(false) }
+    val alphaAnim by animateFloatAsState(targetValue = if (visible) 1f else 0f, animationSpec = tween(500))
+    val scaleAnim by animateFloatAsState(targetValue = if (visible) 1f else 0.95f, animationSpec = tween(500))
+
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
     Column(
-        modifier = modifier.fillMaxWidth(0.5f)
+        modifier = modifier
+            .fillMaxWidth(0.5f)
+            .graphicsLayer {
+                alpha = alphaAnim
+                scaleX = scaleAnim
+                scaleY = scaleAnim
+            }
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)

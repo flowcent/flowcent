@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.home.presentation.components
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -19,7 +20,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +31,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +45,22 @@ fun RingChart(
     val progress = remember { Animatable(0f) }
     val isSystemInDarkTheme = isSystemInDarkTheme()
 
+    // Animation state for fade + scale
+    var visible by remember { mutableStateOf(false) }
+    val alphaAnim by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(500)
+    )
+    val scaleAnim by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.95f,
+        animationSpec = tween(500)
+    )
+
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
+
     LaunchedEffect(spent, budget) {
         progress.animateTo(
             targetValue = if (budget > 0) spent / budget else 0f,
@@ -47,9 +68,16 @@ fun RingChart(
         )
     }
 
+    val animatedSpent = (progress.value * budget).toInt()
+
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .graphicsLayer {
+                alpha = alphaAnim
+                scaleX = scaleAnim
+                scaleY = scaleAnim
+            }
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 32.dp, vertical = 24.dp),
@@ -95,7 +123,7 @@ fun RingChart(
                 fontSize = 16.sp
             )
             Text(
-                text = "${spent.toInt()}/${budget.toInt()} BDT",
+                text = "$animatedSpent/${budget.toInt()} BDT",
                 color = Color(0xFFFF375F),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp

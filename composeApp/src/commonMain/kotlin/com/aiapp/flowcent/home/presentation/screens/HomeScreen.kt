@@ -121,6 +121,7 @@ fun HomeScreen(
 
         AnimatedVisibility(
             visible = !isScrolled,
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -160,7 +161,7 @@ fun HomeScreen(
         ) {
             stickyHeader(key = "latest-transaction-header") {
                 Text(
-                    text = "Latest Transaction",
+                    text = "Transactions",
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
                     color = MaterialTheme.colorScheme.inverseSurface,
