@@ -18,9 +18,9 @@ import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.domain.utils.EnumConstants
 
 @Composable
-fun SpendingCard(expenseItem: ExpenseItem) {
+fun SpendingCard(expenseItem: ExpenseItem, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         colors = CardColors(

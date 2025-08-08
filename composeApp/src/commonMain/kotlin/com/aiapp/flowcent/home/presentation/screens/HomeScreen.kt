@@ -5,9 +5,7 @@
 package com.aiapp.flowcent.home.presentation.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,10 +31,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.aiapp.flowcent.home.presentation.components.RingChart
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
@@ -47,6 +43,7 @@ import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import com.aiapp.flowcent.home.presentation.components.DailyAverageSpendingCard
+import com.aiapp.flowcent.home.presentation.components.RingChart
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -122,60 +119,64 @@ fun HomeScreen(
             }
         )
 
-        Column(modifier = Modifier.clipToBounds()) {
-            AnimatedVisibility(
-                visible = !isScrolled,
-                enter = slideInVertically(initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)),
-                exit = slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300))
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            item(key = "bento-boxes") {
+                AnimatedVisibility(
+                    visible = !isScrolled,
                 ) {
-                    RingChart(
-                        spent = 4500f,
-                        budget = 8000f,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth().animateEnterExit()
                     ) {
-                        DailyAverageSpendingCard(
-                            dailyAverage = 853.0f,
-                            previousMonthAverage = 1201.12f,
-                            modifier = Modifier.weight(1f)
+                        RingChart(
+                            spent = 4500f,
+                            budget = 8000f,
+                            modifier = Modifier.fillMaxWidth()
                         )
 
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.height(12.dp))
 
-                        BalanceHighlightBox(
-                            modifier = Modifier.weight(1f)
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            DailyAverageSpendingCard(
+                                dailyAverage = 853.0f,
+                                previousMonthAverage = 1201.12f,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            Spacer(Modifier.width(12.dp))
+
+                            BalanceHighlightBox(
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 }
             }
 
-            Text(
-                text = "Latest Transaction",
-                fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
-                color = MaterialTheme.colorScheme.inverseSurface,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+            stickyHeader(key = "latest-transaction-header") {
+                Text(
+                    text = "Latest Transaction",
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(vertical = 8.dp)
+                )
+            }
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                items(allTransactions) { transaction ->
-                    SpendingCard(expenseItem = transaction)
-                }
+            items(allTransactions, key = { it.title }) { transaction ->
+                SpendingCard(
+                    expenseItem = transaction,
+                    modifier = Modifier.animateItem()
+                )
             }
         }
     }
