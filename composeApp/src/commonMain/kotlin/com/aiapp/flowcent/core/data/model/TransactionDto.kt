@@ -1,6 +1,5 @@
 package com.aiapp.flowcent.core.data.model
 
-import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

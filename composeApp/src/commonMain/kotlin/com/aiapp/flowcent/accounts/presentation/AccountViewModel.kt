@@ -8,6 +8,7 @@ import com.aiapp.flowcent.accounts.domain.utils.toAcMemberDtos
 import com.aiapp.flowcent.accounts.domain.utils.toMemberIds
 import com.aiapp.flowcent.accounts.domain.utils.getAccountID
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
+import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.presentation.platform.ContactFetcher
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
@@ -137,7 +138,25 @@ class AccountViewModel(
                     _uiEvent.send(UiEvent.NavigateToAccountDetail)
                 }
             }
+
+            is UserAction.AddTransactionToAccount -> {}
         }
+    }
+
+    private fun addAccountTransaction(accountId: String, transactionDto: TransactionDto) {
+        viewModelScope.launch {
+            when (val result = accountRepository.addAccountTransaction(accountId, transactionDto)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in adding account transaction: ${result.message}")
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in adding account transaction: ${result.data}")
+                }
+            }
+        }
+
     }
 
     private fun fetchAccounts(uid: String?) {

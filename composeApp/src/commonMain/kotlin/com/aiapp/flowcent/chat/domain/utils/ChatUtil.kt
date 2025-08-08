@@ -17,7 +17,7 @@ object ChatUtil {
           - the amount
           - the associated title or short description (what it was for)
           - the appropriate category (Food, Transport, Shopping, Entertainment, Bills, Other, Salary, Loan, Debt Repayment)
-          - the **type** of transaction: "Expense", "Income", "Lend", "Borrow", "Debt Payment Received", "Loan Repayment Given"
+          - the **type** of transaction: "Expense", "Income", "Lend", "Borrow"
           - If it's a loan or debt, identify the **involved party** (creditor or debtor name/identifier, if explicitly mentioned).
 
         - Output a **clean JSON object** with two fields:

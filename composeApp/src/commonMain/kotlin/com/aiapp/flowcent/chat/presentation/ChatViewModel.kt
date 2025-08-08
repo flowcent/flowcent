@@ -2,6 +2,7 @@ package com.aiapp.flowcent.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.buildExpensePrompt
@@ -91,21 +92,28 @@ class ChatViewModel(
 
             is UserAction.SaveExpenseItemsToDb -> {
                 viewModelScope.launch {
-                    when (val result =
-                        expenseRepository.saveExpenseItemsToDb(
-                            _chatState.value.uid,
-                            createTransactionPayload(action.expenseItems)
+                    if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
+                        _chatState.update {
+                            it.copy(
+                                showAccounts = true
+                            )
+                        }
+                    } else {
+                        //Personal finance
+                        when (val result = expenseRepository.saveExpenseItemsToDb(
+                            _chatState.value.uid, createTransactionPayload(action.expenseItems)
                         )) {
-                        is Resource.Success -> {
-                            println("Sohan Expense saved successfully! ${result.data}")
-                        }
+                            is Resource.Success -> {
+                                println("Sohan Expense saved successfully! ${result.data}")
+                            }
 
-                        is Resource.Error -> {
-                            println("Sohan Error saving expense: ${result.message}")
-                        }
+                            is Resource.Error -> {
+                                println("Sohan Error saving expense: ${result.message}")
+                            }
 
-                        Resource.Loading -> {
-                            // Optionally handle loading state in UI
+                            Resource.Loading -> {
+                                // Optionally handle loading state in UI
+                            }
                         }
                     }
 
@@ -119,6 +127,12 @@ class ChatViewModel(
                             currentState.copy(uid = uidFromDataStore ?: "")
                         }
                     }
+                }
+            }
+
+            is UserAction.UpdateAccountSelectionType -> {
+                _chatState.update { currentState ->
+                    currentState.copy(selectionType = action.selectionType)
                 }
             }
         }
@@ -175,8 +189,7 @@ class ChatViewModel(
                         )
                     }
 
-                }
-                    .onFailure { error ->
+                }.onFailure { error ->
 //                        _chatState.update { currentState ->
 //                            currentState.copy(
 //                                error = "Error: ${error.message ?: "Unknown AI error"}",
@@ -189,24 +202,24 @@ class ChatViewModel(
 //                            )
 //                        }
 
-                        _chatState.update { currentState ->
-                            val updatedMessages = currentState.messages.map { msg ->
-                                if (msg.id == botLoadingMessageId) {
-                                    msg.copy(
-                                        text = error.message ?: "Something unexpected happened",
-                                        isLoading = false,
-                                        expenseItems = emptyList() // Clear any partial data on error
-                                    )
-                                } else {
-                                    msg
-                                }
+                    _chatState.update { currentState ->
+                        val updatedMessages = currentState.messages.map { msg ->
+                            if (msg.id == botLoadingMessageId) {
+                                msg.copy(
+                                    text = error.message ?: "Something unexpected happened",
+                                    isLoading = false,
+                                    expenseItems = emptyList() // Clear any partial data on error
+                                )
+                            } else {
+                                msg
                             }
-                            currentState.copy(
-                                messages = updatedMessages,
-                                isSendingMessage = false // Release the input field lock even on error
-                            )
                         }
+                        currentState.copy(
+                            messages = updatedMessages,
+                            isSendingMessage = false // Release the input field lock even on error
+                        )
                     }
+                }
 
             } else {
                 val chatResult = Json.decodeFromString<ChatResult>(hasInvalidPrompt)
@@ -214,8 +227,7 @@ class ChatViewModel(
                     val updatedMessages = currentState.messages.map { msg ->
                         if (msg.id == botLoadingMessageId) {
                             msg.copy(
-                                text = chatResult.answer,
-                                isLoading = false, // Set loading to false
+                                text = chatResult.answer, isLoading = false, // Set loading to false
                                 expenseItems = chatResult.data
                             )
                         } else {
@@ -242,8 +254,7 @@ class ChatViewModel(
                     }
                 }
                 currentState.copy(
-                    messages = updatedMessages,
-                    isSendingMessage = false
+                    messages = updatedMessages, isSendingMessage = false
                 )
             }
         }
@@ -255,17 +266,15 @@ class ChatViewModel(
             val botLoadingMessageId = getUuid()
 
             val botLoadingMessage = ChatMessage(
-                id = botLoadingMessageId,
-                text = "Thinking...",
-                isUser = false,
-                isLoading = true
+                id = botLoadingMessageId, text = "Thinking...", isUser = false, isLoading = true
             )
 
             _chatState.update { currentState ->
                 currentState.copy(
                     messages = currentState.messages + userMessage + botLoadingMessage,
                     isSendingMessage = true,
-                    userText = ""
+                    userText = "",
+                    showAccounts = false
                 )
             }
             sendPrompt(text, botLoadingMessageId)

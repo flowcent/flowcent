@@ -1,19 +1,25 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +36,7 @@ import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
+import com.aiapp.flowcent.chat.presentation.components.AccountSelectionToggle
 import com.aiapp.flowcent.chat.presentation.components.BotMessage
 import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
@@ -61,6 +68,8 @@ fun ChatScreen(
     var isListening by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
+    val accounts = listOf("Flat B1", "51/L")
+
     LaunchedEffect(key1 = fcPermissionsState.audioPermissionState) {
         hasAudioPermission = when (fcPermissionsState.audioPermissionState) {
             PermissionState.NotDetermined -> false
@@ -82,14 +91,13 @@ fun ChatScreen(
         viewModel.onAction(UserAction.FetchUserUId)
     }
 
-    LaunchedEffect(Unit) {
-        if (!speechRecognizer.isRecognitionAvailable()) {
-            println("Sohan Speech recognition not available on this device")
-        } else {
-            println("Sohan Speech recognition is available on this device")
-        }
-    }
-
+//    LaunchedEffect(Unit) {
+//        if (!speechRecognizer.isRecognitionAvailable()) {
+//            println("Sohan Speech recognition not available on this device")
+//        } else {
+//            println("Sohan Speech recognition is available on this device")
+//        }
+//    }
 
 
     LaunchedEffect(key1 = rememberScaffoldState()) {
@@ -129,6 +137,21 @@ fun ChatScreen(
             .fillMaxSize()
             .padding(20.dp)
     ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AccountSelectionToggle(
+                selectionType = chatState.selectionType,
+                onSelectionChanged = {
+                    viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             reverseLayout = true
@@ -179,6 +202,28 @@ fun ChatScreen(
                                                 viewModel.onAction(UserAction.DiscardExpenseItems)
                                             }
                                         )
+                                    }
+
+                                    if (chatState.showAccounts) {
+                                        LazyRow(
+                                            modifier = Modifier.padding(vertical = 8.dp),
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            items(accounts) {
+                                                Box(
+                                                    modifier = Modifier.size(100.dp)
+                                                        .padding(8.dp)
+                                                        .background(Color.Yellow)
+                                                ) {
+                                                    Text(
+                                                        text = it,
+                                                        color = Color.White,
+                                                        modifier = Modifier.align(Alignment.Center)
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }

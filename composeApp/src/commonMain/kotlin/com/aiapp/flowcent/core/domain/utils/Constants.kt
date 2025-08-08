@@ -1,5 +1,7 @@
 package com.aiapp.flowcent.core.domain.utils
 
+import kotlinx.serialization.SerialName
+
 object Constants {
     const val SIGN_IN_TYPE_GOOGLE = "google"
     const val SIGN_IN_TYPE_APPLE = "apple"
@@ -11,9 +13,16 @@ object Constants {
 
 object EnumConstants {
     enum class TransactionType {
+        @SerialName("Income")
         INCOME,
+
+        @SerialName("Expense")
         EXPENSE,
+
+        @SerialName("Lend")
         LEND,
+
+        @SerialName("Borrow")
         BORROW
     }
 }

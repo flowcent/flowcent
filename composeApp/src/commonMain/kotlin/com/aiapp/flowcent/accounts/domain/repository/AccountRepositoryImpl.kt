@@ -5,6 +5,7 @@ import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.utils.toAccounts
 import com.aiapp.flowcent.core.domain.utils.Resource
+import com.aiapp.flowcent.core.data.model.TransactionDto
 import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.github.aakira.napier.Napier
@@ -15,7 +16,7 @@ class AccountRepositoryImpl(
 
     private val accountsRef = firestore.collection("accounts")
 
-    fun getTransactionsCollection(accountId: String): CollectionReference {
+    private fun getTransactionsCollection(accountId: String): CollectionReference {
         return accountsRef.document(accountId).collection("transactions")
     }
 
@@ -55,6 +56,21 @@ class AccountRepositoryImpl(
 
         } catch (ex: Exception) {
             Napier.e("Sohan getAccounts error: ${ex.message}")
+            Resource.Error(ex.message.toString())
+        }
+    }
+
+    override suspend fun addAccountTransaction(
+        accountId: String,
+        transactionDto: TransactionDto
+    ): Resource<String> {
+        return try {
+            val accountTransactionsRef = getTransactionsCollection(accountId)
+            val addTransactionRef = accountTransactionsRef
+                .add(transactionDto)
+            Resource.Success(addTransactionRef.id)
+        } catch (ex: Exception) {
+            Napier.e("Sohan addAccountTransaction error: ${ex.message}")
             Resource.Error(ex.message.toString())
         }
     }

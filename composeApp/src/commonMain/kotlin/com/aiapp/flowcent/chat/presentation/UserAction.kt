@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.chat.presentation
 
+import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 
 sealed interface UserAction {
@@ -12,4 +13,5 @@ sealed interface UserAction {
     data class SaveExpenseItemsToDb(val expenseItems: List<ExpenseItem>) : UserAction
     data object DiscardExpenseItems : UserAction
     data object FetchUserUId : UserAction
+    data class UpdateAccountSelectionType(val selectionType: AccountSelectionType) : UserAction
 }
