@@ -38,7 +38,7 @@ class ExpenseRepositoryImpl(
                 .where {
                     "uid" equalTo uid
                 }
-                .orderBy("created_at", Direction.DESCENDING)
+                .orderBy("createdAt", Direction.DESCENDING)
                 .get()
             val expenseList = querySnapshot.documents.map { document ->
                 document.data(ExpenseItem.serializer())

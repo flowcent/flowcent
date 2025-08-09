@@ -14,7 +14,7 @@ sealed interface UserAction {
     data object DiscardExpenseItems : UserAction
     data object FetchUserUId : UserAction
     data class UpdateAccountSelectionType(val selectionType: AccountSelectionType) : UserAction
-    data class SelectAccount(val accountId: String, val accountName: String) : UserAction
+    data class SelectAccount(val accountDocumentId: String, val accountName: String) : UserAction
     data class UpdateAllCheckedItems(val expenseItems: List<ExpenseItem>) : UserAction
     data class UpdateCheckedItem(val isChecked: Boolean, val expenseItem: ExpenseItem) : UserAction
 }

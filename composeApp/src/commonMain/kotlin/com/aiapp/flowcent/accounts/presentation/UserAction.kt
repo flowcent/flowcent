@@ -16,4 +16,5 @@ sealed interface UserAction {
     data object FetchUserUId : UserAction
     data class OnAccountItemClick(val account: Account) : UserAction
     data object AddTransactionToAccount : UserAction
+    data object GetAccountTransactions : UserAction
 }

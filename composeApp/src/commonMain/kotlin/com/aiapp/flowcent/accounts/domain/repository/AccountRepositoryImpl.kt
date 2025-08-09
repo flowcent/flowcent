@@ -7,6 +7,7 @@ import com.aiapp.flowcent.accounts.domain.utils.toAccounts
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.data.model.TransactionDto
 import dev.gitlive.firebase.firestore.CollectionReference
+import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.github.aakira.napier.Napier
 
@@ -61,16 +62,33 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun addAccountTransaction(
-        accountId: String,
+        accountDocumentId: String,
         transactionDto: TransactionDto
     ): Resource<String> {
         return try {
-            val accountTransactionsRef = getTransactionsCollection(accountId)
+            val accountTransactionsRef = getTransactionsCollection(accountDocumentId)
             val addTransactionRef = accountTransactionsRef
                 .add(transactionDto)
             Resource.Success(addTransactionRef.id)
         } catch (ex: Exception) {
             Napier.e("Sohan addAccountTransaction error: ${ex.message}")
+            Resource.Error(ex.message.toString())
+        }
+    }
+
+    override suspend fun getAccountTransactions(accountDocumentId: String): Resource<List<TransactionDto>> {
+        return try {
+            val accountTransactionsRef = getTransactionsCollection(accountDocumentId)
+            val accountTransactionsQuery =
+                accountTransactionsRef
+                    .orderBy("createdAt", Direction.DESCENDING).get()
+
+            val accountTransactions = accountTransactionsQuery.documents.map { document ->
+                document.data(TransactionDto.serializer())
+            }
+            Resource.Success(accountTransactions)
+        } catch (ex: Exception) {
+            Napier.e("Sohan getAccountTransactions error: ${ex.message}")
             Resource.Error(ex.message.toString())
         }
     }

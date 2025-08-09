@@ -8,5 +8,10 @@ import com.aiapp.flowcent.core.data.model.TransactionDto
 interface AccountRepository {
     suspend fun addAccount(accountDto: AccountDto): Resource<String>
     suspend fun getAccounts(userId: String): Resource<List<Account>>
-    suspend fun addAccountTransaction(accountId: String, transactionDto: TransactionDto): Resource<String>
+    suspend fun addAccountTransaction(
+        accountDocumentId: String,
+        transactionDto: TransactionDto
+    ): Resource<String>
+
+    suspend fun getAccountTransactions(accountDocumentId: String): Resource<List<TransactionDto>>
 }

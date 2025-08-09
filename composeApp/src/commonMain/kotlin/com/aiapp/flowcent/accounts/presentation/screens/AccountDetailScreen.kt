@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
@@ -25,6 +27,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +42,8 @@ import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.domain.model.AccountMember
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
+import com.aiapp.flowcent.accounts.presentation.UserAction
+import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
@@ -47,6 +52,7 @@ import com.aiapp.flowcent.home.presentation.components.RingChart
 
 sealed class MemberTab {
     data object Latest : MemberTab()
+    data object MyTransactions : MemberTab()
     data class Member(val accountMember: AccountMember) : MemberTab()
 }
 
@@ -69,8 +75,28 @@ fun AccountDetailScreen(
     // Compute tab index (Latest is index 0)
     val selectedTabIndex = when (currentTab) {
         is MemberTab.Latest -> 0
-        is MemberTab.Member -> members.indexOf((currentTab as MemberTab.Member).accountMember) + 1
+        is MemberTab.MyTransactions -> 1
+        is MemberTab.Member -> members.indexOf((currentTab as MemberTab.Member).accountMember) + 2
     }
+
+    val allTransactions = state.latestTransactions.flatten()
+
+    fun onLatestTabClick(onTabChange: (MemberTab) -> Unit) {
+        onTabChange(MemberTab.Latest)
+    }
+
+    fun onMyTransactionsTabClick(onTabChange: (MemberTab) -> Unit) {
+        onTabChange(MemberTab.MyTransactions)
+    }
+
+    fun onMemberTabClick(member: AccountMember, onTabChange: (MemberTab) -> Unit) {
+        onTabChange(MemberTab.Member(member))
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onAction(UserAction.GetAccountTransactions)
+    }
+
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -140,7 +166,7 @@ fun AccountDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = {  }
+                    onClick = { }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -164,15 +190,21 @@ fun AccountDetailScreen(
                     // First tab: Latest
                     Tab(
                         selected = currentTab is MemberTab.Latest,
-                        onClick = { currentTab = MemberTab.Latest },
+                        onClick = { onLatestTabClick { currentTab = it } },
                         text = { Text("Latest") }
+                    )
+
+                    Tab(
+                        selected = currentTab is MemberTab.MyTransactions,
+                        onClick = { onMyTransactionsTabClick { currentTab = it } },
+                        text = { Text("My Transactions") }
                     )
 
                     // Other tabs: members
                     members.forEach { member ->
                         Tab(
                             selected = (currentTab as? MemberTab.Member)?.accountMember == member,
-                            onClick = { currentTab = MemberTab.Member(member) },
+                            onClick = { onMemberTabClick(member) { currentTab = it } },
                             text = { Text(member.memberUserName) } // Assuming AccountMembers has a 'name'
                         )
                     }
@@ -184,6 +216,18 @@ fun AccountDetailScreen(
                 color = Color.LightGray,
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            items(allTransactions, key = { it.title }) { transaction ->
+                SpendingCard(
+                    expenseItem = transaction,
+                    modifier = Modifier.animateItem()
+                )
+            }
         }
 
     }

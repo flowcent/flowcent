@@ -129,7 +129,7 @@ class ChatViewModel(
             is UserAction.SelectAccount -> {
                 _chatState.update { currentState ->
                     currentState.copy(
-                        selectedAccountId = action.accountId,
+                        selectedAccountId = action.accountDocumentId,
                         selectedAccountName = action.accountName
                     )
                 }

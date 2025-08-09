@@ -21,7 +21,7 @@ fun PromptSave(
     selectionType: AccountSelectionType = AccountSelectionType.PERSONAL,
     selectedAccountName: String = "",
     onClickSave: () -> Unit = {},
-    onClickClose: () -> Unit = {},
+    onClickDiscard: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -40,7 +40,7 @@ fun PromptSave(
         Spacer(modifier = Modifier.height(12.dp))
 
         AppButton(
-            onClick = { onClickClose() },
+            onClick = { onClickDiscard() },
             btnText = "Discard",
             bgColor = Color.Black,
             textColor = Color.White
