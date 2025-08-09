@@ -1,7 +1,9 @@
 package com.aiapp.flowcent.chat.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -32,60 +35,38 @@ fun AccountTypeSelectionToggle(
     selectionType: AccountSelectionType,
     onSelectionChanged: (AccountSelectionType) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, shape = RoundedCornerShape(12.dp)) // Light background
-    ) {
-        SelectionItem(
-            icon = Icons.Default.AccountBalanceWallet,
-            title = "Personal",
-            isToggled = selectionType == AccountSelectionType.PERSONAL,
-            onToggle = { onSelectionChanged(AccountSelectionType.PERSONAL) }
-        )
+    val options = listOf(
+        AccountSelectionType.PERSONAL to "PERSONAL",
+        AccountSelectionType.SHARED to "SHARED",
+    )
 
-        SelectionItem(
-            icon = Icons.Default.Refresh,
-            title = "Shared",
-            isToggled = selectionType == AccountSelectionType.SHARED,
-            onToggle = { onSelectionChanged(AccountSelectionType.SHARED) }
-        )
-    }
-}
-
-@Composable
-fun SelectionItem(
-    icon: ImageVector,
-    title: String,
-    isToggled: Boolean,
-    onToggle: (Boolean) -> Unit
-) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .background(Color.White),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .background(Color(0xFFE8F0FE), shape = RoundedCornerShape(50)) // Light blue background
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = Color(0xFF5F6368),
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column {
-                Text(text = title, style = MaterialTheme.typography.bodyLarge)
+        options.forEach { (type, title) ->
+            val isSelected = selectionType == type
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(50))
+                    .background(if (isSelected) Color.Black else Color.Transparent)
+                    .clickable { onSelectionChanged(type) }
+                    .padding(vertical = 10.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = title,
+                    color = if (isSelected) Color.White else Color.Black,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
-        Switch(
-            checked = isToggled,
-            onCheckedChange = { onToggle(true) },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White
-            )
-        )
     }
 }
+

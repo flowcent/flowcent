@@ -157,20 +157,15 @@ fun ChatScreen(
             .fillMaxSize()
             .padding(20.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            AccountTypeSelectionToggle(
-                selectionType = chatState.selectionType,
-                onSelectionChanged = {
-                    viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
-                }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
+        AccountTypeSelectionToggle(
+            selectionType = chatState.selectionType,
+            onSelectionChanged = {
+                viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp)
+        )
 
         LazyColumn(
             modifier = Modifier.weight(1f),
