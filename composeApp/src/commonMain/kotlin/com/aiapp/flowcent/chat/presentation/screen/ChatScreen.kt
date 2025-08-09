@@ -216,10 +216,10 @@ fun ChatScreen(
                                         )
 
                                         if (chatState.selectionType == AccountSelectionType.SHARED &&
-                                            sampleAccounts.isNotEmpty()
+                                            chatState.sharedAccounts.isNotEmpty()
                                         ) {
                                             AccountSelectorRow(
-                                                accounts = sampleAccounts,
+                                                accounts = chatState.sharedAccounts,
                                                 selectedAccountId = chatState.selectedAccountId,
                                                 onAccountSelected = { account ->
                                                     viewModel.onAction(

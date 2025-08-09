@@ -32,9 +32,12 @@ val sharedModule = module {
     }
     viewModel {
         ChatViewModel(
-            flowCentAi = get(), expenseRepository = ExpenseRepositoryImpl(
+            flowCentAi = get(),
+            expenseRepository = ExpenseRepositoryImpl(
                 firestore
-            ), prefRepository = PrefRepositoryImpl(get())
+            ),
+            prefRepository = PrefRepositoryImpl(get()),
+            accountRepository = AccountRepositoryImpl(firestore)
         )
     }
     viewModel {

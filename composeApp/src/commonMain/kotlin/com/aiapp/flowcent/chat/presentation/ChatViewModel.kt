@@ -2,6 +2,7 @@ package com.aiapp.flowcent.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
@@ -16,6 +17,7 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeIn
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.chat.domain.utils.getTransactionId
 import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +34,8 @@ import kotlin.uuid.Uuid
 class ChatViewModel(
     private val flowCentAi: FlowCentAi,
     private val expenseRepository: ExpenseRepository,
-    private val prefRepository: PrefRepository
+    private val prefRepository: PrefRepository,
+    private val accountRepository: AccountRepository,
 ) : ViewModel() {
 
     private val _chatState = MutableStateFlow(ChatState())
@@ -104,9 +107,14 @@ class ChatViewModel(
 
             UserAction.FetchUserUId -> {
                 viewModelScope.launch {
-                    prefRepository.uid.collect { uidFromDataStore ->
-                        _chatState.update { currentState ->
-                            currentState.copy(uid = uidFromDataStore ?: "")
+                    if (_chatState.value.uid.isNotEmpty()) {
+                        fetchSharedAccounts(_chatState.value.uid)
+                    } else {
+                        prefRepository.uid.collect { uidFromDataStore ->
+                            _chatState.update { currentState ->
+                                currentState.copy(uid = uidFromDataStore ?: "")
+                            }
+                            fetchSharedAccounts(uidFromDataStore)
                         }
                     }
                 }
@@ -157,8 +165,45 @@ class ChatViewModel(
         }
     }
 
+    private fun fetchSharedAccounts(uid: String?) {
+        if (uid.isNullOrEmpty()) return
+        viewModelScope.launch {
+            when (val result = accountRepository.getAccounts(uid)) {
+                is Resource.Error -> {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            sharedAccounts = emptyList()
+                        )
+                    }
+                }
+
+                Resource.Loading -> {}
+
+                is Resource.Success -> {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            sharedAccounts = result.data ?: emptyList()
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private suspend fun saveIntoSharedAccounts() {
-        TODO("Not yet implemented")
+        when (val result = accountRepository.addAccountTransaction(
+            chatState.value.selectedAccountId,
+            createTransactionPayload(chatState.value.checkedExpenseItems)
+        )) {
+            is Resource.Error -> {
+                Napier.e("Sohan Error in adding account transaction: ${result.message}")
+            }
+
+            Resource.Loading -> {}
+            is Resource.Success -> {
+                Napier.e("Sohan Success in adding account transaction: ${result.data}")
+            }
+        }
     }
 
     private suspend fun saveIntoPersonal() {
