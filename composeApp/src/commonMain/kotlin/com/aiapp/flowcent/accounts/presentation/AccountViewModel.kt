@@ -145,6 +145,12 @@ class AccountViewModel(
             is UserAction.GetAccountTransactions -> {
                 getAccountTransactions(_state.value.selectedAccount?.id)
             }
+
+            UserAction.NavigateToChat -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToChat)
+                }
+            }
         }
     }
 

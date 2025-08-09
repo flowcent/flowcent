@@ -43,6 +43,7 @@ import com.aiapp.flowcent.accounts.domain.model.AccountMember
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
+import com.aiapp.flowcent.accounts.presentation.components.Events
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
@@ -97,6 +98,11 @@ fun AccountDetailScreen(
         viewModel.onAction(UserAction.GetAccountTransactions)
     }
 
+    Events(
+        accountViewModel = viewModel,
+        globalNavController = globalNavController,
+        localNavController = localNavController
+    )
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -166,7 +172,9 @@ fun AccountDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { }
+                    onClick = {
+                        viewModel.onAction(UserAction.NavigateToChat)
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,

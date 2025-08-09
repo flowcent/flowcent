@@ -6,6 +6,8 @@ import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UiEvent
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
+import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
+import io.github.aakira.napier.Napier
 
 @Composable
 fun Events(
@@ -22,6 +24,10 @@ fun Events(
 
                 UiEvent.NavigateToAccountDetail -> {
                     localNavController.navigate(AccountsNavRoutes.AccountDetailScreen.route)
+                }
+
+                UiEvent.NavigateToChat -> {
+                    globalNavController.navigate(AppNavRoutes.Chat.route)
                 }
             }
         }
