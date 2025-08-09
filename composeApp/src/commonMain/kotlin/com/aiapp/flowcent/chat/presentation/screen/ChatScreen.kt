@@ -2,7 +2,6 @@ package com.aiapp.flowcent.chat.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,13 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,19 +29,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aiapp.flowcent.accounts.domain.model.Account
+import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
-import com.aiapp.flowcent.chat.presentation.components.AccountSelectionToggle
+import com.aiapp.flowcent.chat.presentation.components.AccountSelectorRow
+import com.aiapp.flowcent.chat.presentation.components.AccountTypeSelectionToggle
 import com.aiapp.flowcent.chat.presentation.components.BotMessage
 import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
 import com.aiapp.flowcent.chat.presentation.components.SpendingList
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
 import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
-import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
+import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import dev.icerock.moko.permissions.PermissionState
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.outline_charger
@@ -68,7 +68,21 @@ fun ChatScreen(
     var isListening by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val accounts = listOf("Flat B1", "51/L")
+    val sampleAccounts = listOf(
+        Account(
+            id = "ACC001",
+            accountId = "ACC001",
+            accountName = "Travel Fund",
+            profileImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Bitcoin.png/600px-Bitcoin.png",
+        ),
+        Account(
+            id = "ACC002",
+            accountId = "ACC002",
+            accountName = "Savings",
+            profileImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Euro_coin_1_Euro_obverse.png/600px-Euro_coin_1_Euro_obverse.png",
+        )
+    )
+
 
     LaunchedEffect(key1 = fcPermissionsState.audioPermissionState) {
         hasAudioPermission = when (fcPermissionsState.audioPermissionState) {
@@ -98,6 +112,12 @@ fun ChatScreen(
 //            println("Sohan Speech recognition is available on this device")
 //        }
 //    }
+
+    LaunchedEffect(key1 = chatState.messages) {
+        if (chatState.messages.isNotEmpty() && chatState.messages.last().isUser.not()) {
+            viewModel.onAction(UserAction.UpdateAllCheckedItems(chatState.messages.last().expenseItems))
+        }
+    }
 
 
     LaunchedEffect(key1 = rememberScaffoldState()) {
@@ -142,7 +162,7 @@ fun ChatScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            AccountSelectionToggle(
+            AccountTypeSelectionToggle(
                 selectionType = chatState.selectionType,
                 onSelectionChanged = {
                     viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
@@ -162,7 +182,7 @@ fun ChatScreen(
                     UserMessage(text = it.text)
                 } else {
                     Column {
-                        if (it.isLoading) {
+                        if (it.isBotMessageLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 color = Color.Blue
@@ -187,43 +207,48 @@ fun ChatScreen(
                                     BotMessage(text = it.text, isRich = true)
                                     if (it.expenseItems.isNotEmpty()) {
                                         SpendingList(
-                                            it.expenseItems,
+                                            expenseItems = it.expenseItems,
+                                            checkedExpenseItems = chatState.checkedExpenseItems,
+                                            onCheckedItem = { isChecked, expenseItem ->
+                                                viewModel.onAction(
+                                                    UserAction.UpdateCheckedItem(
+                                                        isChecked,
+                                                        expenseItem
+                                                    )
+                                                )
+                                            },
                                             modifier = Modifier.padding(vertical = 8.dp)
                                         )
+
+                                        if (chatState.selectionType == AccountSelectionType.SHARED &&
+                                            sampleAccounts.isNotEmpty()
+                                        ) {
+                                            AccountSelectorRow(
+                                                accounts = sampleAccounts,
+                                                selectedAccountId = chatState.selectedAccountId,
+                                                onAccountSelected = { account ->
+                                                    viewModel.onAction(
+                                                        UserAction.SelectAccount(
+                                                            account.id,
+                                                            account.accountName
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        }
+
                                         PromptSave(
+                                            selectionType = chatState.selectionType,
+                                            selectedAccountName = chatState.selectedAccountName,
                                             onClickSave = {
                                                 viewModel.onAction(
-                                                    UserAction.SaveExpenseItemsToDb(
-                                                        it.expenseItems
-                                                    )
+                                                    UserAction.SaveExpenseItemsToDb
                                                 )
                                             },
                                             onClickClose = {
                                                 viewModel.onAction(UserAction.DiscardExpenseItems)
                                             }
                                         )
-                                    }
-
-                                    if (chatState.showAccounts) {
-                                        LazyRow(
-                                            modifier = Modifier.padding(vertical = 8.dp),
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            items(accounts) {
-                                                Box(
-                                                    modifier = Modifier.size(100.dp)
-                                                        .padding(8.dp)
-                                                        .background(Color.Yellow)
-                                                ) {
-                                                    Text(
-                                                        text = it,
-                                                        color = Color.White,
-                                                        modifier = Modifier.align(Alignment.Center)
-                                                    )
-                                                }
-                                            }
-                                        }
                                     }
                                 }
                             }

@@ -93,28 +93,10 @@ class ChatViewModel(
             is UserAction.SaveExpenseItemsToDb -> {
                 viewModelScope.launch {
                     if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
-                        _chatState.update {
-                            it.copy(
-                                showAccounts = true
-                            )
-                        }
+                        saveIntoSharedAccounts()
                     } else {
                         //Personal finance
-                        when (val result = expenseRepository.saveExpenseItemsToDb(
-                            _chatState.value.uid, createTransactionPayload(action.expenseItems)
-                        )) {
-                            is Resource.Success -> {
-                                println("Sohan Expense saved successfully! ${result.data}")
-                            }
-
-                            is Resource.Error -> {
-                                println("Sohan Error saving expense: ${result.message}")
-                            }
-
-                            Resource.Loading -> {
-                                // Optionally handle loading state in UI
-                            }
-                        }
+                        saveIntoPersonal()
                     }
 
                 }
@@ -134,6 +116,65 @@ class ChatViewModel(
                 _chatState.update { currentState ->
                     currentState.copy(selectionType = action.selectionType)
                 }
+            }
+
+            is UserAction.SelectAccount -> {
+                _chatState.update { currentState ->
+                    currentState.copy(
+                        selectedAccountId = action.accountId,
+                        selectedAccountName = action.accountName
+                    )
+                }
+            }
+
+            is UserAction.UpdateAllCheckedItems -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            checkedExpenseItems = action.expenseItems
+                        )
+                    }
+                }
+            }
+
+            is UserAction.UpdateCheckedItem -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        val updatedCheckedItems = currentState.checkedExpenseItems.toMutableList()
+                        if (action.isChecked) {
+                            if (!updatedCheckedItems.contains(action.expenseItem)) {
+                                updatedCheckedItems.add(action.expenseItem)
+                            }
+                        } else {
+                            updatedCheckedItems.remove(action.expenseItem)
+                        }
+                        currentState.copy(
+                            checkedExpenseItems = updatedCheckedItems
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun saveIntoSharedAccounts() {
+        TODO("Not yet implemented")
+    }
+
+    private suspend fun saveIntoPersonal() {
+        when (val result = expenseRepository.saveExpenseItemsToDb(
+            _chatState.value.uid, createTransactionPayload(chatState.value.checkedExpenseItems)
+        )) {
+            is Resource.Success -> {
+                println("Sohan Expense saved successfully! ${result.data}")
+            }
+
+            is Resource.Error -> {
+                println("Sohan Error saving expense: ${result.message}")
+            }
+
+            Resource.Loading -> {
+                // Optionally handle loading state in UI
             }
         }
     }
@@ -160,23 +201,12 @@ class ChatViewModel(
                 val updatedPrompt = buildExpensePrompt(prompt)
                 val result = flowCentAi.generateContent(updatedPrompt)
                 result.onSuccess { chatResult ->
-                    println("Sohan sendPrompt chatResult: ${chatResult.data}")
-//                    _chatState.update {
-//                        it.copy(
-//                            messages = it.messages + ChatMessage(
-//                                chatResult.answer,
-//                                false,
-//                                expenseItems = chatResult.data,
-//                                isLoading = false
-//                            ),
-//                        )
-//                    }
                     _chatState.update { currentState ->
                         val updatedMessages = currentState.messages.map { msg ->
                             if (msg.id == botLoadingMessageId) {
                                 msg.copy(
                                     text = chatResult.answer,
-                                    isLoading = false, // Set loading to false
+                                    isBotMessageLoading = false, // Set loading to false
                                     expenseItems = chatResult.data
                                 )
                             } else {
@@ -190,24 +220,12 @@ class ChatViewModel(
                     }
 
                 }.onFailure { error ->
-//                        _chatState.update { currentState ->
-//                            currentState.copy(
-//                                error = "Error: ${error.message ?: "Unknown AI error"}",
-//                                messages = currentState.messages + ChatMessage(
-//                                    error.message ?: "Something unexpected happened",
-//                                    false,
-//                                    expenseItems = emptyList(),
-//                                    isLoading = false
-//                                ),
-//                            )
-//                        }
-
                     _chatState.update { currentState ->
                         val updatedMessages = currentState.messages.map { msg ->
                             if (msg.id == botLoadingMessageId) {
                                 msg.copy(
                                     text = error.message ?: "Something unexpected happened",
-                                    isLoading = false,
+                                    isBotMessageLoading = false,
                                     expenseItems = emptyList() // Clear any partial data on error
                                 )
                             } else {
@@ -227,7 +245,8 @@ class ChatViewModel(
                     val updatedMessages = currentState.messages.map { msg ->
                         if (msg.id == botLoadingMessageId) {
                             msg.copy(
-                                text = chatResult.answer, isLoading = false, // Set loading to false
+                                text = chatResult.answer,
+                                isBotMessageLoading = false, // Set loading to false
                                 expenseItems = chatResult.data
                             )
                         } else {
@@ -246,7 +265,7 @@ class ChatViewModel(
                     if (msg.id == botLoadingMessageId) {
                         msg.copy(
                             text = e.message ?: "Something unexpected happened",
-                            isLoading = false,
+                            isBotMessageLoading = false,
                             expenseItems = emptyList()
                         )
                     } else {
@@ -254,7 +273,8 @@ class ChatViewModel(
                     }
                 }
                 currentState.copy(
-                    messages = updatedMessages, isSendingMessage = false
+                    messages = updatedMessages,
+                    isSendingMessage = false
                 )
             }
         }
@@ -266,7 +286,10 @@ class ChatViewModel(
             val botLoadingMessageId = getUuid()
 
             val botLoadingMessage = ChatMessage(
-                id = botLoadingMessageId, text = "Thinking...", isUser = false, isLoading = true
+                id = botLoadingMessageId,
+                text = "Thinking...",
+                isUser = false,
+                isBotMessageLoading = true
             )
 
             _chatState.update { currentState ->

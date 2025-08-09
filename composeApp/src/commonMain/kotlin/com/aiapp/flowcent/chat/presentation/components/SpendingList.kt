@@ -5,12 +5,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,29 +29,25 @@ import com.aiapp.flowcent.core.presentation.components.SelectionToggle
 @Composable
 fun SpendingList(
     expenseItems: List<ExpenseItem>,
+    checkedExpenseItems: List<ExpenseItem>,
+    onCheckedItem: (Boolean, ExpenseItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isSelected = remember { mutableStateOf(false) }
-
-    fun handleSelect() {
-        isSelected.value = !isSelected.value
-    }
-
     expenseItems.map { expenseItem ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
                 .border(
                     1.dp,
                     MaterialTheme.colorScheme.background,
                     shape = RoundedCornerShape(8.dp)
-                ).padding(horizontal = 12.dp, vertical = 8.dp),
+                )
+                .padding(horizontal = 12.dp, vertical = 8.dp),
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -57,10 +58,14 @@ fun SpendingList(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        SelectionToggle(
-                            isSelected = isSelected.value,
-                            onToggle = { handleSelect() }
+
+                        Checkbox(
+                            checked = checkedExpenseItems.contains(expenseItem),
+                            onCheckedChange = { isChecked ->
+                                onCheckedItem(isChecked, expenseItem)
+                            }
                         )
+
                         Column(
                             modifier = Modifier.padding(start = 8.dp)
                         ) {
@@ -87,5 +92,7 @@ fun SpendingList(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.fillMaxWidth().height(12.dp))
     }
 }

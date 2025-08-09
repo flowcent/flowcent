@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.chat.presentation
 
+import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
@@ -8,7 +9,6 @@ data class ChatState(
     val messages: List<ChatMessage> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val expenseItems: List<ExpenseItem> = emptyList(),
     val answer: String = "",
     val userText: String = "",
     val originalVoiceText: String = "",
@@ -18,6 +18,10 @@ data class ChatState(
     val isSendingMessage: Boolean = false,
     val uid: String = "",
     val selectionType: AccountSelectionType = AccountSelectionType.PERSONAL,
-    val showAccounts: Boolean = false
+    val showAccounts: Boolean = false,
+    val sharedAccounts: List<Account> = emptyList(),
+    val selectedAccountId: String = "",
+    val selectedAccountName: String = "",
+    val checkedExpenseItems: List<ExpenseItem> = emptyList()
 )
 

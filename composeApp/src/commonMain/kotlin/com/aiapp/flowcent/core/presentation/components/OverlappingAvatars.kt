@@ -27,6 +27,7 @@ fun OverlappingAvatars() {
 
     Row(
         modifier = Modifier
+            .width(80.dp)
             .background(Color(0xFFF5F5F5), shape = CircleShape),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -53,13 +54,5 @@ fun OverlappingAvatars() {
                 }
             }
         }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
-            contentDescription = "Next",
-            tint = Color.Gray
-        )
     }
 }

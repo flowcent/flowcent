@@ -9,5 +9,5 @@ data class ChatMessage @OptIn(ExperimentalUuidApi::class) constructor(
     val text: String = "",
     val isUser: Boolean = false,
     val expenseItems: List<ExpenseItem> = emptyList(),
-    val isLoading: Boolean = true
+    val isBotMessageLoading: Boolean = true
 )
