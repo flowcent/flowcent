@@ -10,5 +10,6 @@ data class Transaction(
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
     val uid: String = "",
-    val expenses: List<ExpenseItem> = emptyList()
+    val expenses: List<ExpenseItem> = emptyList(),
+    val creatorUserName: String = ""
 )

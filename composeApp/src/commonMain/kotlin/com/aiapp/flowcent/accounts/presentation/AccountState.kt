@@ -15,6 +15,6 @@ data class AccountState(
     val selectedUsers: List<User> = emptyList(),
     val uid: String = "",
     val selectedAccount: Account? = null,
-    val latestTransactions: List<List<ExpenseItem>> = emptyList(),
+    val latestTransactions: List<Transaction> = emptyList(),
     val selectedDate: String? = null,
 )

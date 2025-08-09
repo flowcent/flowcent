@@ -19,4 +19,5 @@ sealed interface UserAction {
     data object GetDailyTransactions : UserAction
     data object NavigateToChat : UserAction
     data class SetSelectedDate(val dateString: LocalDate) : UserAction
+    data class GetUsersDailyTransaction(val uid: String) : UserAction
 }

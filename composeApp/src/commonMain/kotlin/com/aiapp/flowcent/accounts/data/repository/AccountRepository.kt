@@ -13,5 +13,14 @@ interface AccountRepository {
         transactionDto: TransactionDto
     ): Resource<String>
 
-    suspend fun getDailyAccountTransactions(accountDocumentId: String, dateString: String): Resource<List<TransactionDto>>
+    suspend fun getDailyAccountTransactions(
+        accountDocumentId: String,
+        dateString: String
+    ): Resource<List<TransactionDto>>
+
+    suspend fun getUsersDailyTransactions(
+        accountDocumentId: String,
+        uid: String,
+        dateString: String
+    ): Resource<List<TransactionDto>>
 }

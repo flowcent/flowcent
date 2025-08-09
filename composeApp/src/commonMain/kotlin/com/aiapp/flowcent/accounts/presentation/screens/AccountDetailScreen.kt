@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,12 +16,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -80,7 +83,12 @@ fun AccountDetailScreen(
         is MemberTab.Member -> members.indexOf((currentTab as MemberTab.Member).accountMember) + 2
     }
 
-    val allTransactions = state.latestTransactions.flatten()
+    val flattenedExpenseItems = state.latestTransactions.flatMap { transaction ->
+        transaction.expenses.map { expenseItem ->
+            transaction.creatorUserName to expenseItem
+        }
+    }
+
 
     fun onLatestTabClick(onTabChange: (MemberTab) -> Unit) {
         onTabChange(MemberTab.Latest)
@@ -88,10 +96,12 @@ fun AccountDetailScreen(
 
     fun onMyTransactionsTabClick(onTabChange: (MemberTab) -> Unit) {
         onTabChange(MemberTab.MyTransactions)
+        viewModel.onAction(UserAction.GetUsersDailyTransaction(state.uid))
     }
 
     fun onMemberTabClick(member: AccountMember, onTabChange: (MemberTab) -> Unit) {
         onTabChange(MemberTab.Member(member))
+        viewModel.onAction(UserAction.GetUsersDailyTransaction(member.memberId))
     }
 
     LaunchedEffect(key1 = state.selectedDate) {
@@ -112,44 +122,6 @@ fun AccountDetailScreen(
         CalendarStrip(
             selectedDate = getCurrentDate(),
             onDateSelected = { viewModel.onAction(UserAction.SetSelectedDate(it)) })
-
-        Column(modifier = Modifier.clipToBounds().padding(20.dp)) {
-            AnimatedVisibility(
-                visible = !isScrolled, enter = slideInVertically(
-                    initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
-                ), exit = slideOutVertically(
-                    targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
-                )
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
-                ) {
-                    RingChart(
-                        spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        DailyAverageSpendingCard(
-                            dailyAverage = 853.0f,
-                            previousMonthAverage = 1201.12f,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Spacer(Modifier.width(12.dp))
-
-                        BalanceHighlightBox(
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-        }
 
         Column(
             modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
@@ -207,13 +179,68 @@ fun AccountDetailScreen(
             )
         }
 
+        Column(modifier = Modifier.clipToBounds().padding(20.dp)) {
+            AnimatedVisibility(
+                visible = !isScrolled, enter = slideInVertically(
+                    initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+                ), exit = slideOutVertically(
+                    targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+                )
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
+                ) {
+                    RingChart(
+                        spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        DailyAverageSpendingCard(
+                            dailyAverage = 853.0f,
+                            previousMonthAverage = 1201.12f,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        Spacer(Modifier.width(12.dp))
+
+                        BalanceHighlightBox(
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+        }
+
+
         LazyColumn(
             modifier = Modifier.fillMaxWidth().padding(20.dp)
         ) {
-            items(allTransactions, key = { it.title }) { transaction ->
-                SpendingCard(
-                    expenseItem = transaction, modifier = Modifier.animateItem()
+            stickyHeader(key = "latest-transaction-header") {
+                Text(
+                    text = "Transactions",
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(vertical = 8.dp)
                 )
+            }
+
+            if (flattenedExpenseItems.isNotEmpty()) {
+                items(flattenedExpenseItems) { (createdBy, expenseItem) ->
+                    SpendingCard(
+                        createdBy = createdBy,
+                        expenseItem = expenseItem,
+                        modifier = Modifier.animateItem()
+                    )
+                }
             }
         }
 

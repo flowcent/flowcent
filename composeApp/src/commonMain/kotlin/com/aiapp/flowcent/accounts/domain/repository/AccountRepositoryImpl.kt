@@ -99,4 +99,29 @@ class AccountRepositoryImpl(
             Resource.Error(ex.message.toString())
         }
     }
+
+    override suspend fun getUsersDailyTransactions(
+        accountDocumentId: String,
+        uid: String,
+        dateString: String
+    ): Resource<List<TransactionDto>> {
+        return try {
+            val (start, end) = getStartAndEndTimeMillis(dateString)
+            val accountTransactionsRef = getTransactionsCollection(accountDocumentId)
+            val accountTransactionsQuery =
+                accountTransactionsRef
+                    .where { "createdBy" equalTo uid }
+                    .where { "createdAt" greaterThanOrEqualTo start }
+                    .where { "createdAt" lessThanOrEqualTo end }
+                    .orderBy("createdAt", Direction.DESCENDING).get()
+
+            val accountTransactions = accountTransactionsQuery.documents.map { document ->
+                document.data(TransactionDto.serializer())
+            }
+            Resource.Success(accountTransactions)
+        } catch (ex: Exception) {
+            Napier.e("Sohan getAccountTransactions error: ${ex.message}")
+            Resource.Error(ex.message.toString())
+        }
+    }
 }

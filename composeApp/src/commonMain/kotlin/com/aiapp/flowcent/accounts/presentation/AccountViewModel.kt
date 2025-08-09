@@ -13,7 +13,7 @@ import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.presentation.platform.ContactFetcher
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.domain.utils.Resource
-import com.aiapp.flowcent.core.domain.utils.toExpenseItem
+import com.aiapp.flowcent.core.domain.utils.toTransactions
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
@@ -169,7 +169,41 @@ class AccountViewModel(
                     }
                 }
             }
+
+            is UserAction.GetUsersDailyTransaction -> {
+                getUsersDailyTransactions(_state.value.selectedAccount?.id, action.uid)
+            }
         }
+    }
+
+    private fun getUsersDailyTransactions(accountDocumentId: String?, uid: String) {
+        if (accountDocumentId.isNullOrEmpty() || _state.value.selectedDate.isNullOrEmpty()) return
+        viewModelScope.launch {
+            when (val result = accountRepository.getUsersDailyTransactions(
+                accountDocumentId = accountDocumentId,
+                uid = uid,
+                dateString = _state.value.selectedDate.toString()
+            )) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in fetching account transactions: ${result.message}")
+                    _state.update {
+                        it.copy(
+                            latestTransactions = emptyList()
+                        )
+                    }
+                }
+
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    _state.update { it ->
+                        it.copy(
+                            latestTransactions = result.data?.toTransactions() ?: emptyList()
+                        )
+                    }
+                }
+            }
+        }
+
     }
 
     private fun getDailyTransactions(accountDocumentId: String?) {
@@ -181,16 +215,18 @@ class AccountViewModel(
             )) {
                 is Resource.Error -> {
                     Napier.e("Sohan Error in fetching account transactions: ${result.message}")
+                    _state.update {
+                        it.copy(
+                            latestTransactions = emptyList()
+                        )
+                    }
                 }
 
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     _state.update { it ->
-                        val transactions = result.data as List<TransactionDto>
-                        val expenseList =
-                            transactions.map { transaction -> transaction.expenses.map { it.toExpenseItem() } }
                         it.copy(
-                            latestTransactions = expenseList
+                            latestTransactions = result.data?.toTransactions() ?: emptyList()
                         )
                     }
                 }

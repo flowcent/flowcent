@@ -16,7 +16,8 @@ fun TransactionDto.toTransaction(): Transaction {
         updatedAt = updatedAt,
         updatedBy = updatedBy,
         uid = uid,
-        expenses = expenses.map { it.toExpenseItem() }
+        expenses = expenses.map { it.toExpenseItem() },
+        creatorUserName = creatorUserName
     )
 }
 
