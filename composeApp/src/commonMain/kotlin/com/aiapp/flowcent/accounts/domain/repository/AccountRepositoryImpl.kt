@@ -6,6 +6,7 @@ import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.utils.toAccounts
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.data.model.TransactionDto
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getStartAndEndTimeMillis
 import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
@@ -76,11 +77,17 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun getAccountTransactions(accountDocumentId: String): Resource<List<TransactionDto>> {
+    override suspend fun getDailyAccountTransactions(
+        accountDocumentId: String,
+        dateString: String
+    ): Resource<List<TransactionDto>> {
         return try {
+            val (start, end) = getStartAndEndTimeMillis(dateString)
             val accountTransactionsRef = getTransactionsCollection(accountDocumentId)
             val accountTransactionsQuery =
                 accountTransactionsRef
+                    .where { "createdAt" greaterThanOrEqualTo start }
+                    .where { "createdAt" lessThanOrEqualTo end }
                     .orderBy("createdAt", Direction.DESCENDING).get()
 
             val accountTransactions = accountTransactionsQuery.documents.map { document ->

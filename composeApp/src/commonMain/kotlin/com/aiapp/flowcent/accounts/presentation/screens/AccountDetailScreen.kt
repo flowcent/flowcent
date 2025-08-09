@@ -94,8 +94,8 @@ fun AccountDetailScreen(
         onTabChange(MemberTab.Member(member))
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.onAction(UserAction.GetAccountTransactions)
+    LaunchedEffect(key1 = state.selectedDate) {
+        viewModel.onAction(UserAction.GetDailyTransactions)
     }
 
     Events(
@@ -111,30 +111,21 @@ fun AccountDetailScreen(
 
         CalendarStrip(
             selectedDate = getCurrentDate(),
-            onDateSelected = {}
-        )
+            onDateSelected = { viewModel.onAction(UserAction.SetSelectedDate(it)) })
 
         Column(modifier = Modifier.clipToBounds().padding(20.dp)) {
             AnimatedVisibility(
-                visible = !isScrolled,
-                enter = slideInVertically(
-                    initialOffsetY = { -it },
-                    animationSpec = tween(durationMillis = 300)
-                ),
-                exit = slideOutVertically(
-                    targetOffsetY = { -it },
-                    animationSpec = tween(durationMillis = 300)
+                visible = !isScrolled, enter = slideInVertically(
+                    initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+                ), exit = slideOutVertically(
+                    targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
                 )
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
                 ) {
                     RingChart(
-                        spent = 4500f,
-                        budget = 8000f,
-                        modifier = Modifier.fillMaxWidth()
+                        spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(Modifier.height(12.dp))
@@ -161,21 +152,16 @@ fun AccountDetailScreen(
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
                     onClick = {
                         viewModel.onAction(UserAction.NavigateToChat)
-                    }
-                ) {
+                    }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add",
@@ -193,20 +179,17 @@ fun AccountDetailScreen(
                             Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
                         )
                     },
-                    divider = {}
-                ) {
+                    divider = {}) {
                     // First tab: Latest
                     Tab(
                         selected = currentTab is MemberTab.Latest,
                         onClick = { onLatestTabClick { currentTab = it } },
-                        text = { Text("Latest") }
-                    )
+                        text = { Text("Latest") })
 
                     Tab(
                         selected = currentTab is MemberTab.MyTransactions,
                         onClick = { onMyTransactionsTabClick { currentTab = it } },
-                        text = { Text("My Transactions") }
-                    )
+                        text = { Text("My Transactions") })
 
                     // Other tabs: members
                     members.forEach { member ->
@@ -220,20 +203,16 @@ fun AccountDetailScreen(
             }
 
             Divider(
-                thickness = 1.dp,
-                color = Color.LightGray,
-                modifier = Modifier.fillMaxWidth()
+                thickness = 1.dp, color = Color.LightGray, modifier = Modifier.fillMaxWidth()
             )
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth()
-                .padding(20.dp)
+            modifier = Modifier.fillMaxWidth().padding(20.dp)
         ) {
             items(allTransactions, key = { it.title }) { transaction ->
                 SpendingCard(
-                    expenseItem = transaction,
-                    modifier = Modifier.animateItem()
+                    expenseItem = transaction, modifier = Modifier.animateItem()
                 )
             }
         }

@@ -14,7 +14,7 @@ import com.aiapp.flowcent.core.presentation.platform.ContactFetcher
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItem
-import com.aiapp.flowcent.core.domain.utils.toTransactions
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +34,14 @@ class AccountViewModel(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    init {
+        _state.update {
+            it.copy(
+                selectedDate = getCurrentDate().toString()
+            )
+        }
+    }
 
     fun onAction(action: UserAction) {
         when (action) {
@@ -142,8 +150,8 @@ class AccountViewModel(
             }
 
             is UserAction.AddTransactionToAccount -> {}
-            is UserAction.GetAccountTransactions -> {
-                getAccountTransactions(_state.value.selectedAccount?.id)
+            is UserAction.GetDailyTransactions -> {
+                getDailyTransactions(_state.value.selectedAccount?.id)
             }
 
             UserAction.NavigateToChat -> {
@@ -151,13 +159,26 @@ class AccountViewModel(
                     _uiEvent.send(UiEvent.NavigateToChat)
                 }
             }
+
+            is UserAction.SetSelectedDate -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            selectedDate = action.dateString.toString()
+                        )
+                    }
+                }
+            }
         }
     }
 
-    private fun getAccountTransactions(accountDocumentId: String?) {
-        if (accountDocumentId.isNullOrEmpty()) return
+    private fun getDailyTransactions(accountDocumentId: String?) {
+        if (accountDocumentId.isNullOrEmpty() || _state.value.selectedDate.isNullOrEmpty()) return
         viewModelScope.launch {
-            when (val result = accountRepository.getAccountTransactions(accountDocumentId)) {
+            when (val result = accountRepository.getDailyAccountTransactions(
+                accountDocumentId,
+                _state.value.selectedDate.toString()
+            )) {
                 is Resource.Error -> {
                     Napier.e("Sohan Error in fetching account transactions: ${result.message}")
                 }

@@ -2,7 +2,7 @@ package com.aiapp.flowcent.accounts.presentation
 
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.auth.data.model.User
-import com.aiapp.flowcent.core.data.model.TransactionDto
+import kotlinx.datetime.LocalDate
 
 sealed interface UserAction {
     data object ClickAdd : UserAction
@@ -16,6 +16,7 @@ sealed interface UserAction {
     data object FetchUserUId : UserAction
     data class OnAccountItemClick(val account: Account) : UserAction
     data object AddTransactionToAccount : UserAction
-    data object GetAccountTransactions : UserAction
+    data object GetDailyTransactions : UserAction
     data object NavigateToChat : UserAction
+    data class SetSelectedDate(val dateString: LocalDate) : UserAction
 }
