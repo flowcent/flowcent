@@ -6,6 +6,7 @@ package com.aiapp.flowcent.home.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,10 +52,12 @@ fun DailyAverageSpendingCard(
     Column(
         modifier = modifier
             .fillMaxWidth(0.5f)
+            .height(150.dp)
             .fadeInAndScale()
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Daily Avg Spend",

@@ -6,6 +6,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,9 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.domain.model.AccountMember
@@ -114,136 +118,171 @@ fun AccountDetailScreen(
         localNavController = localNavController
     )
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
 
-        CalendarStrip(
-            selectedDate = getCurrentDate(),
-            onDateSelected = { viewModel.onAction(UserAction.SetSelectedDate(it)) })
-
         Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+
+            CalendarStrip(
+                selectedDate = getCurrentDate(),
+                onDateSelected = { viewModel.onAction(UserAction.SetSelectedDate(it)) })
+
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
             ) {
-                IconButton(
-                    onClick = {
-                        viewModel.onAction(UserAction.NavigateToChat)
-                    }) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add",
-                        tint = Color.Blue
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
+                            viewModel.onAction(UserAction.NavigateToChat)
+                        }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    ScrollableTabRow(
+                        selectedTabIndex = selectedTabIndex,
+                        modifier = Modifier.weight(1f),
+                        edgePadding = 0.dp,
+                        containerColor = Color.Transparent,
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
+                            )
+                        },
+                        divider = {}) {
+                        // First tab: Latest
+                        Tab(
+                            selected = currentTab is MemberTab.Latest,
+                            onClick = { onLatestTabClick { currentTab = it } },
+                            text = {
+                                Text(
+                                    "Latest",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                            })
+
+                        Tab(
+                            selected = currentTab is MemberTab.MyTransactions,
+                            onClick = { onMyTransactionsTabClick { currentTab = it } },
+                            text = {
+                                Text(
+                                    "My Transactions",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                            })
+
+                        // Other tabs: members
+                        members.forEach { member ->
+                            Tab(
+                                selected = (currentTab as? MemberTab.Member)?.accountMember == member,
+                                onClick = { onMemberTabClick(member) { currentTab = it } },
+                                text = {
+                                    Text(
+                                        member.memberUserName,
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                } // Assuming AccountMembers has a 'name'
+                            )
+                        }
+                    }
+                }
+
+                Divider(
+                    thickness = 1.dp, color = Color.LightGray, modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Column(modifier = Modifier.clipToBounds().padding(20.dp)) {
+                AnimatedVisibility(
+                    visible = !isScrolled, enter = slideInVertically(
+                        initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+                    ), exit = slideOutVertically(
+                        targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
+                    ) {
+                        RingChart(
+                            spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            DailyAverageSpendingCard(
+                                dailyAverage = 853.0f,
+                                previousMonthAverage = 1201.12f,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            Spacer(Modifier.width(12.dp))
+
+                            BalanceHighlightBox(
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+            }
+
+
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().padding(20.dp)
+            ) {
+                stickyHeader(key = "latest-transaction-header") {
+                    Text(
+                        text = "Transactions",
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+                        color = MaterialTheme.colorScheme.inverseSurface,
+                        modifier = Modifier.fillMaxWidth()
+                            .background(color = MaterialTheme.colorScheme.background)
+                            .padding(vertical = 8.dp)
                     )
                 }
 
-                ScrollableTabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    modifier = Modifier.weight(1f),
-                    edgePadding = 0.dp,
-                    containerColor = Color.Transparent,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
-                        )
-                    },
-                    divider = {}) {
-                    // First tab: Latest
-                    Tab(
-                        selected = currentTab is MemberTab.Latest,
-                        onClick = { onLatestTabClick { currentTab = it } },
-                        text = { Text("Latest") })
-
-                    Tab(
-                        selected = currentTab is MemberTab.MyTransactions,
-                        onClick = { onMyTransactionsTabClick { currentTab = it } },
-                        text = { Text("My Transactions") })
-
-                    // Other tabs: members
-                    members.forEach { member ->
-                        Tab(
-                            selected = (currentTab as? MemberTab.Member)?.accountMember == member,
-                            onClick = { onMemberTabClick(member) { currentTab = it } },
-                            text = { Text(member.memberUserName) } // Assuming AccountMembers has a 'name'
+                if (flattenedExpenseItems.isNotEmpty()) {
+                    items(flattenedExpenseItems) { (createdBy, expenseItem) ->
+                        SpendingCard(
+                            createdBy = createdBy,
+                            expenseItem = expenseItem,
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
             }
 
-            Divider(
-                thickness = 1.dp, color = Color.LightGray, modifier = Modifier.fillMaxWidth()
+
+        }
+
+        FloatingActionButton(
+            onClick = { viewModel.onAction(UserAction.NavigateToChat) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primary,
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add Account",
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
-
-        Column(modifier = Modifier.clipToBounds().padding(20.dp)) {
-            AnimatedVisibility(
-                visible = !isScrolled, enter = slideInVertically(
-                    initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
-                ), exit = slideOutVertically(
-                    targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
-                )
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
-                ) {
-                    RingChart(
-                        spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        DailyAverageSpendingCard(
-                            dailyAverage = 853.0f,
-                            previousMonthAverage = 1201.12f,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Spacer(Modifier.width(12.dp))
-
-                        BalanceHighlightBox(
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-        }
-
-
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(20.dp)
-        ) {
-            stickyHeader(key = "latest-transaction-header") {
-                Text(
-                    text = "Transactions",
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
-                    color = MaterialTheme.colorScheme.inverseSurface,
-                    modifier = Modifier.fillMaxWidth()
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .padding(vertical = 8.dp)
-                )
-            }
-
-            if (flattenedExpenseItems.isNotEmpty()) {
-                items(flattenedExpenseItems) { (createdBy, expenseItem) ->
-                    SpendingCard(
-                        createdBy = createdBy,
-                        expenseItem = expenseItem,
-                        modifier = Modifier.animateItem()
-                    )
-                }
-            }
-        }
-
     }
-
 }

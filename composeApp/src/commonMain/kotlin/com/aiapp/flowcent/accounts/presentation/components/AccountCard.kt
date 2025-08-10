@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.core.presentation.components.OverlappingAvatars
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
 @Composable
 fun AccountCard(account: Account, onClickItem: () -> Unit) {
@@ -52,15 +54,15 @@ fun AccountCard(account: Account, onClickItem: () -> Unit) {
             Column{
                 Text(
                     "|28000",
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyLarge,
+                    color = Colors.ExpenseColor,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
 
                 Text(
                     "|18000",
-                    color = Color.Green,
-                    style = MaterialTheme.typography.bodyLarge,
+                    color = Colors.IncomeColor,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
             }

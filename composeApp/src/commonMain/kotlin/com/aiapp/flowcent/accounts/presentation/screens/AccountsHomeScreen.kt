@@ -4,6 +4,7 @@
 
 package com.aiapp.flowcent.accounts.presentation.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,32 +78,22 @@ fun AccountsHomeScreen(
                         onClick = { viewModel.onAction(UserAction.ClickAdd) }
                     )
                 } else {
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Your Accounts",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = MaterialTheme.typography.titleSmall
-                        )
-
-                        AppButton(
-                            btnText = "Add More +",
-                            textColor = Color.White,
-                            bgColor = Color.Black,
-                            style = ButtonStyle.PRIMARY,
-                            modifier = Modifier.width(180.dp),
-                            onClick = { viewModel.onAction(UserAction.ClickAdd) }
-                        )
-                    }
-
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth()
                             .padding(vertical = 16.dp)
                     ) {
+                        stickyHeader(key = "my-accounts-header") {
+                            Text(
+                                text = "My Accounts",
+                                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                                fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+                                color = MaterialTheme.colorScheme.inverseSurface,
+                                modifier = Modifier.fillMaxWidth()
+                                    .background(color = MaterialTheme.colorScheme.background)
+                                    .padding(vertical = 8.dp)
+                            )
+                        }
+
                         items(state.accounts) { account ->
                             AccountCard(
                                 account = account,
@@ -113,6 +109,21 @@ fun AccountsHomeScreen(
                     }
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = { viewModel.onAction(UserAction.ClickAdd) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primary,
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add Account",
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 

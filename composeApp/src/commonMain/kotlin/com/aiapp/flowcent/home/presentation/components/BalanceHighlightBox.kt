@@ -29,6 +29,7 @@ import com.aiapp.flowcent.core.presentation.animation.fadeInAndScale
 fun BalanceHighlightBox(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
+            .height(150.dp)
             .fadeInAndScale(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)

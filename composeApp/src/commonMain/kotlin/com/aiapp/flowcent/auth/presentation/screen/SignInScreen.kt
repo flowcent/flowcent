@@ -85,7 +85,7 @@ fun SignInScreen(
             } else {
                 if (result.exceptionOrNull() is CancellationException) {
                     Napier.e("Sohan Google Sign-In was cancelled by the user.")
-                } else {
+                }  else {
                     Napier.e("Sohan onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
                 }
             }
