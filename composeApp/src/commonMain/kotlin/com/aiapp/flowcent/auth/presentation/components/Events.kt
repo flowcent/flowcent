@@ -28,6 +28,10 @@ fun Events(
                 UiEvent.NavigateToSignIn -> {
                     localNavController.navigate(AuthNavRoutes.SignInScreen.route)
                 }
+
+                UiEvent.NavigateToSignUp -> {
+                    localNavController.navigate(AuthNavRoutes.SignUpScreen.route)
+                }
             }
         }
     }

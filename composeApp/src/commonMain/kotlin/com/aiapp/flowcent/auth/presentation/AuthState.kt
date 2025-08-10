@@ -11,5 +11,6 @@ data class AuthState(
     val signInType: String = "",
     val phoneNumber: String = "",
     val countryDetails: CountryDetails? = null,
-    val registeredPhoneNumbersCache: Set<String>? = null
+    val registeredPhoneNumbersCache: Set<String>? = null,
+    val username: String = ""
 )

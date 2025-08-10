@@ -133,6 +133,27 @@ class AuthViewModel(
                     }
                 }
             }
+
+            is UserAction.UpdateUsername -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            username = action.username
+                        )
+                    }
+                }
+            }
+
+            UserAction.NavigateToSignIn -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToSignIn)
+                }
+            }
+            UserAction.NavigateToSignUp ->{
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToSignUp)
+                }
+            }
         }
     }
 

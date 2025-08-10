@@ -20,6 +20,7 @@ import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.auth.presentation.components.Events
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppCountryPickerPhoneField
+import com.aiapp.flowcent.core.presentation.components.AppTextField
 import com.aiapp.flowcent.core.presentation.components.NumericInputField
 import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
@@ -52,6 +53,16 @@ fun CongratsScreen(
 
             Spacer(modifier = modifier.padding(12.dp))
 
+            AppTextField(
+                value = authState.username,
+                onValueChange = { newValue ->
+                    authViewModel.onAction(UserAction.UpdateUsername(newValue))
+                },
+                placeholder = "What should we call you?",
+            )
+
+            Spacer(modifier = modifier.padding(12.dp))
+
             AppCountryPickerPhoneField(
                 mobileNumber = authState.phoneNumber,
                 defaultCountryCode = "ad",
@@ -79,7 +90,7 @@ fun CongratsScreen(
                 onValueChange = { newValue ->
                     authViewModel.onAction(UserAction.UpdateInitialBalance(newValue.toDouble()))
                 },
-                placeholder = "Initial Balancee"
+                placeholder = "Initial Balance"
             )
         }
 

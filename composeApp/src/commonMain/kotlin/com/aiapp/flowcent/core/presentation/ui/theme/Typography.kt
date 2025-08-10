@@ -13,18 +13,26 @@ import flowcent.composeapp.generated.resources.OpenSans_Medium
 import flowcent.composeapp.generated.resources.OpenSans_Regular
 import flowcent.composeapp.generated.resources.OpenSans_SemiBold
 import flowcent.composeapp.generated.resources.Res
+import flowcent.composeapp.generated.resources.SFPRODISPLAYBOLD
+import flowcent.composeapp.generated.resources.SFPRODISPLAYHEAVY
+import flowcent.composeapp.generated.resources.SFPRODISPLAYLIGHT
+import flowcent.composeapp.generated.resources.SFPRODISPLAYLIGHTITALIC
+import flowcent.composeapp.generated.resources.SFPRODISPLAYMEDIUM
+import flowcent.composeapp.generated.resources.SFPRODISPLAYREGULAR
+import flowcent.composeapp.generated.resources.SFPRODISPLAYSEMIBOLD
+import flowcent.composeapp.generated.resources.SFPRODISPLAYSEMIBOLDITALIC
 import org.jetbrains.compose.resources.Font
 
 
 @Composable
 fun appTypography(): Typography {
     val AppFontFamily = FontFamily(
-        Font(Res.font.OpenSans_Bold, FontWeight.Bold),
-        Font(Res.font.OpenSans_Regular, FontWeight.Normal),
-        Font(Res.font.OpenSans_ExtraBold, FontWeight.ExtraBold),
-        Font(Res.font.OpenSans_Medium, FontWeight.Medium),
-        Font(Res.font.OpenSans_SemiBold, FontWeight.SemiBold),
-        Font(Res.font.OpenSans_Light, FontWeight.Light),
+        Font(Res.font.SFPRODISPLAYBOLD, FontWeight.Bold),
+        Font(Res.font.SFPRODISPLAYREGULAR, FontWeight.Normal),
+        Font(Res.font.SFPRODISPLAYHEAVY, FontWeight.ExtraBold),
+        Font(Res.font.SFPRODISPLAYMEDIUM, FontWeight.Medium),
+        Font(Res.font.SFPRODISPLAYSEMIBOLD, FontWeight.SemiBold),
+        Font(Res.font.SFPRODISPLAYLIGHT, FontWeight.Light),
     )
 
     return Typography(

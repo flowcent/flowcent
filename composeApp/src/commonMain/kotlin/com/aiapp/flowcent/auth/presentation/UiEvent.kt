@@ -4,4 +4,5 @@ sealed interface UiEvent {
     data object NavigateToHome : UiEvent
     data object NavigateToCongratulations : UiEvent
     data object NavigateToSignIn : UiEvent
+    data object NavigateToSignUp : UiEvent
 }
