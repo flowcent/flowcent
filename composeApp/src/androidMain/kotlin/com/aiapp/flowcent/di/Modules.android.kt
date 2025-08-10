@@ -4,7 +4,7 @@
 
 package com.aiapp.flowcent.di
 
-import com.aiapp.flowcent.core.data.datastore.createDataStore
+import com.aiapp.flowcent.core.data.local.datastore.createDataStore
 import com.aiapp.flowcent.core.presentation.platform.ContactFetcher
 import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import org.koin.android.ext.koin.androidContext

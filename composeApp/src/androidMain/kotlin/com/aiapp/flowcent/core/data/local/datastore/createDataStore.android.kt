@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.data.datastore
+package com.aiapp.flowcent.core.data.local.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

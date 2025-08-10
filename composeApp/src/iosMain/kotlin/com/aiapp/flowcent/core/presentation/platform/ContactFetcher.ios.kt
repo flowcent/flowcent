@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.platform
+package com.aiapp.flowcent.core.presentation.platform
 
 import com.aiapp.flowcent.core.presentation.platform.DeviceContact
 import kotlinx.cinterop.ExperimentalForeignApi

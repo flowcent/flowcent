@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.core.platform
+package com.aiapp.flowcent.core.presentation.platform
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.Dispatchers
@@ -7,6 +7,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import platform.AVFAudio.AVAudioEngine
 import platform.AVFAudio.AVAudioSession
 import platform.AVFAudio.AVAudioSessionCategoryRecord
 import platform.AVFAudio.AVAudioSessionModeMeasurement
@@ -23,7 +24,7 @@ actual class SpeechRecognizer {
     private var speechRecognizer: SFSpeechRecognizer? = null
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest? = null
     private var recognitionTask: SFSpeechRecognitionTask? = null
-    private val audioEngine = platform.AVFAudio.AVAudioEngine()
+    private val audioEngine = AVAudioEngine()
 
     actual fun isRecognitionAvailable(): Boolean {
         return speechRecognizer?.isAvailable() ?: false
