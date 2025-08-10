@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -105,11 +106,20 @@ fun SignUpScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFF5F5F5), Color(0xFFEAEAEA))
-                )
-            )
+            .drawWithCache {
+                onDrawBehind {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFFECE8FD),
+                                Color(0xFFFFFFFF),
+                                Color(0xFFEBF9FE),
+                                Color(0xFFF9E8FA),
+                            )
+                        )
+                    )
+                }
+            }
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         Column(
@@ -192,7 +202,7 @@ fun SignUpScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                // Remember Me and Forgot Password
+                //Terms and condition
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start,
@@ -206,7 +216,7 @@ fun SignUpScreen(
                     Text("I agree with the terms and condition")
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(16.dp))
 
                 // Sign In Button
                 Button(
@@ -275,7 +285,7 @@ fun SignUpScreen(
             // Sign Up Text
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text("Already have an account? ")

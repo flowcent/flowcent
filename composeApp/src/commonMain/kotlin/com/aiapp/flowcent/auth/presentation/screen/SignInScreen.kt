@@ -33,8 +33,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -103,11 +106,20 @@ fun SignInScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFF5F5F5), Color(0xFFEAEAEA))
-                )
-            )
+            .drawWithCache {
+                onDrawBehind {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFFECE8FD),
+                                Color(0xFFFFFFFF),
+                                Color(0xFFEBF9FE),
+                                Color(0xFFF9E8FA),
+                            )
+                        )
+                    )
+                }
+            }
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         Column(
@@ -256,7 +268,7 @@ fun SignInScreen(
             // Sign Up Text
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text("Don’t have an account? ")

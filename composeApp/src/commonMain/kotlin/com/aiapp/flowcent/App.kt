@@ -58,7 +58,6 @@ fun App(
     AppTheme {
         Scaffold(
             containerColor = Color.Transparent,
-            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             bottomBar = {
                 if (shouldNotShowBottomNavs.not()) {
                     BottomNavigationBar(
