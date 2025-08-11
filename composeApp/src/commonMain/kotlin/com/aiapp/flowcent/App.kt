@@ -41,7 +41,7 @@ fun App(
     val navItems = listOf(
         NavItem("Home", Res.drawable.ic_home, Res.drawable.ic_home_selected, AppNavRoutes.Home.route),
         NavItem("Chat", Res.drawable.ic_chat, Res.drawable.ic_chat_selected, AppNavRoutes.Chat.route),
-        NavItem("Accounts", Res.drawable.ic_share_accounts, Res.drawable.ic_share_accounts_selected, AppNavRoutes.Accounts.route)
+        NavItem("Shared", Res.drawable.ic_share_accounts, Res.drawable.ic_share_accounts_selected, AppNavRoutes.Accounts.route)
     )
 
     val currentDestination by globalNavController.currentBackStackEntryAsState()

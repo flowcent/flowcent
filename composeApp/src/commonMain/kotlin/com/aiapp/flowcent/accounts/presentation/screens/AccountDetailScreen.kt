@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.TabRowDefaults.Divider
@@ -50,7 +49,6 @@ import com.aiapp.flowcent.accounts.domain.model.AccountMember
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
-import com.aiapp.flowcent.accounts.presentation.components.Events
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
@@ -68,9 +66,7 @@ sealed class MemberTab {
 fun AccountDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel,
-    state: AccountState,
-    localNavController: NavController,
-    globalNavController: NavController
+    state: AccountState
 ) {
     val listState = rememberLazyListState()
     val isScrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 } }
@@ -111,12 +107,6 @@ fun AccountDetailScreen(
     LaunchedEffect(key1 = state.selectedDate) {
         viewModel.onAction(UserAction.GetDailyTransactions)
     }
-
-    Events(
-        accountViewModel = viewModel,
-        globalNavController = globalNavController,
-        localNavController = localNavController
-    )
 
     Box(
         modifier = modifier.fillMaxSize()

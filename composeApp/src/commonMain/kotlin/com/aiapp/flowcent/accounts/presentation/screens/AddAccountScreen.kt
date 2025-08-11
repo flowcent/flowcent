@@ -21,18 +21,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
-import com.aiapp.flowcent.accounts.presentation.components.Events
-import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
-import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppTextField
 import com.aiapp.flowcent.core.presentation.components.IconCard
 import com.aiapp.flowcent.core.presentation.components.NumericInputField
+import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
+import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -43,18 +41,9 @@ fun AddAccountScreen(
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel,
     state: AccountState,
-    localNavController: NavController,
-    globalNavController: NavController,
     permissionVm: PermissionsViewModel,
     fcPermissionState: FCPermissionState
 ) {
-    Events(
-        accountViewModel = viewModel,
-        globalNavController = globalNavController,
-        localNavController = localNavController
-    )
-
-
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
