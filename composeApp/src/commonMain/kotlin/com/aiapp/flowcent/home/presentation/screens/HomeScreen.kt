@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -31,8 +32,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.aiapp.flowcent.core.presentation.components.ShimmerBox
 import com.aiapp.flowcent.core.presentation.components.ShimmerSpendingCard
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
@@ -127,32 +130,65 @@ fun HomeScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth().animateEnterExit()
+                    .fillMaxWidth()
             ) {
-                RingChart(
-                    spent = 4500f,
-                    budget = 8000f,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    DailyAverageSpendingCard(
-                        dailyAverage = 853.0f,
-                        previousMonthAverage = 1201.12f,
-                        modifier = Modifier.weight(1f)
+                if (homeState.isLoading) {
+                    ShimmerBox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .clip(RoundedCornerShape(16.dp))
                     )
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ShimmerBox(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(132.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        ShimmerBox(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(132.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().animateEnterExit()
+                    ) {
+                        RingChart(
+                            spent = 4500f,
+                            budget = 8000f,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                    Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.height(12.dp))
 
-                    BalanceHighlightBox(
-                        modifier = Modifier.weight(1f)
-                    )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            DailyAverageSpendingCard(
+                                dailyAverage = 853.0f,
+                                previousMonthAverage = 1201.12f,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            Spacer(Modifier.width(12.dp))
+
+                            BalanceHighlightBox(
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -174,7 +210,7 @@ fun HomeScreen(
             }
 
             if (homeState.isLoading) {
-                items(5) { 
+                items(5) {
                     ShimmerSpendingCard(modifier = Modifier.animateItem())
                 }
             } else {

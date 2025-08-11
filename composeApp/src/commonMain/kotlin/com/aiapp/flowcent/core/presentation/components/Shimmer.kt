@@ -93,3 +93,11 @@ fun ShimmerSpendingCard(modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Composable
+fun ShimmerBox(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .shimmerEffect()
+    )
+}
