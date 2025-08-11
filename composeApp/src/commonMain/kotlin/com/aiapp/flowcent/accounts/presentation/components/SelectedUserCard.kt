@@ -1,7 +1,6 @@
 package com.aiapp.flowcent.accounts.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -71,7 +70,7 @@ fun SelectedUserCard(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = user.name,
+                text = user.fullName,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

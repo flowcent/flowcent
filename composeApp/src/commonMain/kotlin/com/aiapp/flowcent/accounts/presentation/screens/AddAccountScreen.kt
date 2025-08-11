@@ -128,24 +128,6 @@ fun AddAccountScreen(
                 modifier = Modifier.padding(top = 12.dp)
             )
 
-            Text(
-                text = "Want to open a group account?",
-                style = androidx.compose.material3.MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp)
-            )
-
-            Text(
-                text = "Why not adding some friends to your account?",
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
-            )
-
-            Text(
-                text = "This will be fun!!",
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
-            )
-
             IconCard(
                 icon = Icons.Default.PersonAdd,
                 text = "Add some members",

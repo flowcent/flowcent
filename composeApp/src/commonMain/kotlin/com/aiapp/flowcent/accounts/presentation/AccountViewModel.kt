@@ -313,15 +313,15 @@ class AccountViewModel(
 
     private fun fetchRegisteredPhoneNumbers() {
         viewModelScope.launch {
-            if (_state.value.matchingUsers != null) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showSheet = true
-                    )
-                }
-                return@launch
-            }
+//            if (_state.value.matchingUsers != null) {
+//                _state.update {
+//                    it.copy(
+//                        isLoading = false,
+//                        showSheet = true
+//                    )
+//                }
+//                return@launch
+//            }
             when (val result = authRepository.fetchAllUsersPhoneNumbers()) {
                 is Resource.Error -> {
                     Napier.e("Sohan Error in fetching registered phone numbers: ${result.message}")
@@ -330,13 +330,17 @@ class AccountViewModel(
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     val deviceContacts = contactFetcher.fetchContacts()
-                    Napier.e("Sohan deviceContacts: $deviceContacts")
+
+                    _state.update {
+                        it.copy(
+                            deviceContacts = deviceContacts
+                        )
+                    }
+
                     val matchedPhoneNumbers = deviceContacts
                         .map { it.phoneNumber }
                         .filter { result.data?.contains(it) == true }
                         .distinct()
-
-                    Napier.e("Sohan matchedPhoneNumbers: $matchedPhoneNumbers")
 
                     fetchMatchingUsers(matchedPhoneNumbers)
                 }
@@ -354,10 +358,9 @@ class AccountViewModel(
 
             Resource.Loading -> {}
             is Resource.Success -> {
-                Napier.e("Sohan Success in fetching matching users: ${result.data}")
                 _state.update {
                     it.copy(
-                        matchingUsers = result.data?.toSet(),
+                        matchingUsers = result.data.orEmpty(),
                         showSheet = true
                     )
                 }

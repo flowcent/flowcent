@@ -12,5 +12,6 @@ data class AuthState(
     val phoneNumber: String = "",
     val countryDetails: CountryDetails? = null,
     val registeredPhoneNumbersCache: Set<String>? = null,
-    val username: String = ""
+    val username: String = "",
+    val savingTarget: Double = 0.0
 )

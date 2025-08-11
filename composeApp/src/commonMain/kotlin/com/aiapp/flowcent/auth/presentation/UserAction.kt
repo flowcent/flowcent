@@ -16,4 +16,5 @@ sealed interface UserAction {
     data class UpdateUsername(val username: String) : UserAction
     data object NavigateToSignIn : UserAction
     data object NavigateToSignUp : UserAction
+    data class UpdateSavingTarget(val amount: Double) : UserAction
 }

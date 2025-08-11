@@ -44,7 +44,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.domain.model.AccountMember
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
@@ -173,16 +172,20 @@ fun AccountDetailScreen(
 
                         // Other tabs: members
                         members.forEach { member ->
-                            Tab(
-                                selected = (currentTab as? MemberTab.Member)?.accountMember == member,
-                                onClick = { onMemberTabClick(member) { currentTab = it } },
-                                text = {
-                                    Text(
-                                        member.memberUserName,
-                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
-                                    )
-                                } // Assuming AccountMembers has a 'name'
-                            )
+                            if (member.memberId != state.uid) {
+                                Tab(
+                                    selected = (currentTab as? MemberTab.Member)?.accountMember == member,
+                                    onClick = { onMemberTabClick(member) { currentTab = it } },
+                                    text = {
+                                        Text(
+                                            member.memberLocalUserName,
+                                            style = MaterialTheme.typography.labelMedium.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }

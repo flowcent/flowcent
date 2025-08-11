@@ -10,7 +10,8 @@ import com.aiapp.flowcent.auth.data.model.User
 fun AccountMemberDto.toAccountMember(): AccountMember {
     return AccountMember(
         memberId = memberId,
-        memberUserName = memberUserName,
+        memberFullName = memberFullName,
+        memberLocalUserName = memberLocalUserName,
         memberProfileImage = memberProfileImage,
         totalContribution = totalContribution,
         totalExpense = totalExpense
@@ -20,7 +21,8 @@ fun AccountMemberDto.toAccountMember(): AccountMember {
 fun AccountMember.toAccountMemberDto(): AccountMemberDto {
     return AccountMemberDto(
         memberId = memberId,
-        memberUserName = memberUserName,
+        memberFullName = memberFullName,
+        memberLocalUserName = memberLocalUserName,
         memberProfileImage = memberProfileImage,
         totalContribution = totalContribution,
         totalExpense = totalExpense
@@ -66,7 +68,8 @@ fun Account.toAccountDto(): AccountDto {
 fun User.toAcMemberDto(): AccountMemberDto {
     return AccountMemberDto(
         memberId = uid,
-        memberUserName = name,
+        memberFullName = fullName,
+        memberLocalUserName = localUserName,
         memberProfileImage = imageUrl,
     )
 }
@@ -85,5 +88,5 @@ fun List<User>.toAcMemberDtos(): List<AccountMemberDto> {
 }
 
 fun List<User>.toMemberIds(): List<String> {
-    return map { it.toAcMemberDto().memberId.toString() }
+    return map { it.toAcMemberDto().memberId }
 }

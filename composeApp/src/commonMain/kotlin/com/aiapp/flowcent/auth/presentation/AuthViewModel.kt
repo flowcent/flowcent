@@ -46,7 +46,7 @@ class AuthViewModel(
                 createNewUserToDb(
                     User(
                         uid = _state.value.firebaseUser?.uid ?: "",
-                        name = _state.value.firebaseUser?.displayName ?: "",
+                        fullName = _state.value.firebaseUser?.displayName ?: "",
                         email = _state.value.firebaseUser?.email ?: "",
                         phoneNumber = _state.value.countryDetails?.countryPhoneNumberCode + _state.value.phoneNumber,
                         imageUrl = _state.value.firebaseUser?.photoURL ?: "",
@@ -56,7 +56,9 @@ class AuthViewModel(
                         createdBy = _state.value.firebaseUser?.uid ?: "",
                         createdAt = DateTimeUtils.getCurrentTimeInMilli(),
                         updatedAt = DateTimeUtils.getCurrentTimeInMilli(),
-                        updatedBy = _state.value.firebaseUser?.uid ?: ""
+                        updatedBy = _state.value.firebaseUser?.uid ?: "",
+                        localUserName = _state.value.username,
+                        savingTarget = _state.value.savingTarget
                     )
                 )
             }
@@ -85,7 +87,7 @@ class AuthViewModel(
                             if (result.data == true) {
                                 _uiEvent.send(UiEvent.NavigateToHome)
                             } else {
-                                _uiEvent.send(UiEvent.NavigateToCongratulations)
+                                _uiEvent.send(UiEvent.NavigateToBasicIntro)
                             }
                         }
                     }
@@ -149,9 +151,20 @@ class AuthViewModel(
                     _uiEvent.send(UiEvent.NavigateToSignIn)
                 }
             }
-            UserAction.NavigateToSignUp ->{
+
+            UserAction.NavigateToSignUp -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.NavigateToSignUp)
+                }
+            }
+
+            is UserAction.UpdateSavingTarget -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            savingTarget = action.amount
+                        )
+                    }
                 }
             }
         }

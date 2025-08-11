@@ -46,7 +46,7 @@ fun ContactUserRow(
                     Row(modifier = Modifier.weight(1f)) {
                         Column(modifier = Modifier.width(300.dp)) {
                             Text(
-                                text = user.name,
+                                text = user.fullName,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = Color.Black,
                             )

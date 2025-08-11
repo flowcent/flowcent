@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UiEvent
-import com.aiapp.flowcent.auth.presentation.screen.CongratsScreen
+import com.aiapp.flowcent.auth.presentation.screen.BasicIntroScreen
 import com.aiapp.flowcent.auth.presentation.screen.ProfileScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignInScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignUpScreen
@@ -35,8 +35,8 @@ fun AuthNavGraph(
                     globalNavController.navigate(AppNavRoutes.Home.route)
                 }
 
-                UiEvent.NavigateToCongratulations -> {
-                    localNavController.navigate(AuthNavRoutes.CongratsScreen.route)
+                UiEvent.NavigateToBasicIntro -> {
+                    localNavController.navigate(AuthNavRoutes.BasicIntroScreen.route)
                 }
 
                 UiEvent.NavigateToSignIn -> {
@@ -71,8 +71,8 @@ fun AuthNavGraph(
         }
 
 
-        addAnimatedComposable(route = AuthNavRoutes.CongratsScreen.route) {
-            CongratsScreen(
+        addAnimatedComposable(route = AuthNavRoutes.BasicIntroScreen.route) {
+            BasicIntroScreen(
                 modifier = modifier,
                 authViewModel = viewModel,
                 authState = state

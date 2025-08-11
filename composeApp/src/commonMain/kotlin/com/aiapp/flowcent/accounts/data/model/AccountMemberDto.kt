@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AccountMemberDto(
     val memberId: String = "",
-    val memberUserName: String = "",
+    val memberFullName: String = "",
+    val memberLocalUserName: String = "",
     val memberProfileImage: String = "",
     val totalContribution: Double = 0.0,
     val totalExpense: Double = 0.0,
