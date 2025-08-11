@@ -41,11 +41,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
-import com.aiapp.flowcent.auth.presentation.components.Events
 import com.aiapp.flowcent.core.domain.utils.Constants
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
@@ -58,9 +56,7 @@ import kotlin.coroutines.cancellation.CancellationException
 fun SignInScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
-    authState: AuthState,
-    localNavController: NavController,
-    globalNavController: NavController
+    authState: AuthState
 ) {
 
     var email by remember { mutableStateOf("") }
@@ -83,7 +79,7 @@ fun SignInScreen(
             } else {
                 if (result.exceptionOrNull() is CancellationException) {
                     Napier.e("Sohan Google Sign-In was cancelled by the user.")
-                }  else {
+                } else {
                     Napier.e("Sohan onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
                 }
             }
@@ -93,16 +89,8 @@ fun SignInScreen(
 
     }
 
-
-    Events(
-        authViewModel = authViewModel,
-        globalNavController = globalNavController,
-        localNavController = localNavController
-    )
-
-
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .drawWithCache {
                 onDrawBehind {
