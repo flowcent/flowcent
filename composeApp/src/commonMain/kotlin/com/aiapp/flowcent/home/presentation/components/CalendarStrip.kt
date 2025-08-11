@@ -161,6 +161,7 @@ fun CalendarStrip(
                         shape = RoundedCornerShape(12.dp),
                         color = if (isSelected) MaterialTheme.colorScheme.surface else Color.Transparent,
                         modifier = Modifier
+                            .size(width = 52.dp, height = 60.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
                                 onDateSelected(date)

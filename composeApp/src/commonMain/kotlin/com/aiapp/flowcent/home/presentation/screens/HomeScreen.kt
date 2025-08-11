@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.aiapp.flowcent.core.presentation.components.ShimmerSpendingCard
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
@@ -116,7 +117,8 @@ fun HomeScreen(
             onDateSelected = {
                 println("Sohan selected date: $it")
                 homeViewModel.onAction(UserAction.SetSelectedDate(it))
-            }
+            },
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         AnimatedVisibility(
@@ -171,11 +173,17 @@ fun HomeScreen(
                 )
             }
 
-            items(allTransactions, key = { it.title }) { transaction ->
-                SpendingCard(
-                    expenseItem = transaction,
-                    modifier = Modifier.animateItem()
-                )
+            if (homeState.isLoading) {
+                items(5) { 
+                    ShimmerSpendingCard(modifier = Modifier.animateItem())
+                }
+            } else {
+                items(allTransactions, key = { it.title }) { transaction ->
+                    SpendingCard(
+                        expenseItem = transaction,
+                        modifier = Modifier.animateItem()
+                    )
+                }
             }
         }
     }

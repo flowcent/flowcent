@@ -66,6 +66,7 @@ class HomeViewModel(
             }
 
             UserAction.FetchUserUId -> {
+                _state.update { it.copy(isLoading = true) }
                 viewModelScope.launch {
                     if (_state.value.uid.isNotEmpty()) {
                         fetchLatestTransactions(_state.value.uid)
@@ -133,6 +134,7 @@ class HomeViewModel(
                     )) {
                     is Resource.Error -> {
                         println("Sohan Error in fetching expenses: ${result.message}")
+                        _state.update { it.copy(isLoading = false) }
                     }
 
                     Resource.Loading -> {}
@@ -141,7 +143,8 @@ class HomeViewModel(
                         val expenseList = transactions.map { transaction -> transaction.expenses.map { it.toExpenseItem() } }
                         _state.update {
                             it.copy(
-                                latestTransactions = expenseList
+                                latestTransactions = expenseList,
+                                isLoading = false
                             )
                         }
                         println("Sohan Success in fetching expenses: $expenseList")
@@ -151,6 +154,7 @@ class HomeViewModel(
                 }
             } catch (error: Exception) {
                 println("Sohan Exception  in fetching expenses: ${error.message}")
+                _state.update { it.copy(isLoading = false) }
             }
         }
     }
