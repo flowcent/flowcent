@@ -63,6 +63,16 @@ fun HomeScreen(
     val listState = rememberLazyListState()
     val isScrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 } }
 
+    fun dailyExpenseBudget(): Double {
+        try {
+            val totalMonthlyBudget =
+                homeState.userInitialBalance.toFloat() - homeState.userSavingTarget.toFloat()
+            return totalMonthlyBudget / 30.0
+        } catch (ex: Exception) {
+            return 0.0
+        }
+    }
+
     LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchUserUId)
     }
@@ -164,8 +174,8 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxWidth().animateEnterExit()
                     ) {
                         RingChart(
-                            spent = 4500f,
-                            budget = 8000f,
+                            spent = homeState.userTotalSpent.toFloat(),
+                            budget = dailyExpenseBudget().toFloat(),
                             modifier = Modifier.fillMaxWidth()
                         )
 

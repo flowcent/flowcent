@@ -27,7 +27,8 @@ val sharedModule = module {
     viewModel {
         HomeViewModel(
             expenseRepository = ExpenseRepositoryImpl(firestore),
-            prefRepository = PrefRepositoryImpl(get())
+            prefRepository = PrefRepositoryImpl(get()),
+            authRepository = AuthRepositoryImpl(firestore)
         )
     }
     viewModel {
