@@ -6,4 +6,6 @@ interface PrefRepository {
     val uid: Flow<String?>
 
     suspend fun saveUid(uid: String)
+
+    suspend fun deleteUid()
 }

@@ -13,10 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,9 +29,10 @@ fun NoAccountCard(
     onClick: () -> Unit
 ) {
     val features = listOf(
-        "Track expenses in real time",
-        "Create a custom budget & categories",
-        "Manage recurring transactions"
+        "Invite and add members to shared accounts",
+        "Track group expenses in real time",
+        "Plan budgets together",
+        "Log and split contributions easily"
     )
 
     Card(
@@ -42,7 +41,6 @@ fun NoAccountCard(
             .padding(16.dp)
             .fillMaxWidth()
             .wrapContentHeight(),
-        elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Column {
             // Top Testimonial Section
@@ -71,15 +69,13 @@ fun NoAccountCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "“I created a personalized budget with custom categories, and it’s totally changed how I manage my money.”",
-                    fontSize = 14.sp,
-                    color = Color.Black
+                    text = "“I set up a shared account with my flatmates, and it’s made managing our group expenses so much easier.”",
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
                     text = "Sonia H.",
-                    fontSize = 12.sp,
-                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
@@ -92,9 +88,8 @@ fun NoAccountCard(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Manage your spending.",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "Manage your group spending:",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -102,15 +97,15 @@ fun NoAccountCard(
                 features.forEach {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("•", fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
-                        Text(it, fontSize = 14.sp)
+                        Text(it, style = MaterialTheme.typography.bodyMedium)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AppButton(
-                    btnText = "CONNECT YOUR ACCOUNTS",
+                AppCustomButton(
+                    btnText = "Get Started Now",
                     textColor = Color.White,
                     onClick = { onClick() },
                     style = ButtonStyle.PRIMARY,

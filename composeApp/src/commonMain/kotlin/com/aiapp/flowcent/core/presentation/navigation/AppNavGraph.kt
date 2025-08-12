@@ -18,6 +18,8 @@ import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavGraph
 import com.aiapp.flowcent.home.presentation.navigation.HomeNavRoutes
+import com.aiapp.flowcent.splash.navigation.SplashNavGraph
+import com.aiapp.flowcent.splash.navigation.SplashNavRoutes
 
 @Composable
 fun AppNavGraph(
@@ -30,6 +32,14 @@ fun AppNavGraph(
         navController = globalNavController,
         startDestination = startDestination.route
     ) {
+        composable(route = AppNavRoutes.Splash.route) {
+            SplashNavGraph(
+                modifier = modifier,
+                globalNavController = globalNavController,
+                startDestination = SplashNavRoutes.SplashScreen,
+            )
+        }
+
         composable(route = AppNavRoutes.Auth.route) {
             AuthNavGraph(
                 modifier = modifier,

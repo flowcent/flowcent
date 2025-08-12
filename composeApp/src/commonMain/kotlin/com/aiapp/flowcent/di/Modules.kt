@@ -12,6 +12,7 @@ import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
+import com.aiapp.flowcent.splash.SplashViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
@@ -24,6 +25,12 @@ private val firestore: FirebaseFirestore = Firebase.firestore
 
 val sharedModule = module {
     //ViewModels
+    viewModel {
+        SplashViewModel(
+            prefRepository = PrefRepositoryImpl(get()),
+        )
+    }
+
     viewModel {
         HomeViewModel(
             expenseRepository = ExpenseRepositoryImpl(firestore),

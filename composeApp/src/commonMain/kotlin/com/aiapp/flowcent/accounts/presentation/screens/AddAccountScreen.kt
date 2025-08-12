@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +24,7 @@ import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
-import com.aiapp.flowcent.core.presentation.components.AppButton
+import com.aiapp.flowcent.core.presentation.components.AppCustomButton
 import com.aiapp.flowcent.core.presentation.components.AppTextField
 import com.aiapp.flowcent.core.presentation.components.IconCard
 import com.aiapp.flowcent.core.presentation.components.NumericInputField
@@ -139,7 +138,7 @@ fun AddAccountScreen(
         }
 
         Column {
-            AppButton(
+            AppCustomButton(
                 btnText = "Create Your Account",
                 onClick = {
                     viewModel.onAction(UserAction.CreateAccount)

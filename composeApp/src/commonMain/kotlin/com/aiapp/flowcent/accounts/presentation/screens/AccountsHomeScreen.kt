@@ -96,19 +96,21 @@ fun AccountsHomeScreen(
             }
         }
 
-        FloatingActionButton(
-            onClick = { viewModel.onAction(UserAction.ClickAdd) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            containerColor = MaterialTheme.colorScheme.primary,
-            shape = CircleShape
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add Account",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+        if (state.accounts.isNotEmpty()) {
+            FloatingActionButton(
+                onClick = { viewModel.onAction(UserAction.ClickAdd) },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Account",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     }
 

@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -25,7 +23,6 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,13 +41,11 @@ import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
-import com.aiapp.flowcent.core.domain.utils.Constants
+import com.aiapp.flowcent.core.presentation.components.AppButton
+import com.aiapp.flowcent.core.presentation.components.AppTextField
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
-import dev.gitlive.firebase.auth.FirebaseUser
-import io.github.aakira.napier.Napier
-import kotlin.coroutines.cancellation.CancellationException
 
 @Composable
 fun SignInScreen(
@@ -63,31 +58,6 @@ fun SignInScreen(
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
-
-    val onGoogleSignInResult: (Result<FirebaseUser?>) -> Unit = { result ->
-        try {
-            if (result.isSuccess) {
-                val firebaseUser = result.getOrNull()
-                if (firebaseUser != null) {
-                    authViewModel.onAction(
-                        UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
-                    )
-
-                    authViewModel.onAction(UserAction.SaveUserUid(firebaseUser.uid))
-                }
-
-            } else {
-                if (result.exceptionOrNull() is CancellationException) {
-                    Napier.e("Sohan Google Sign-In was cancelled by the user.")
-                } else {
-                    Napier.e("Sohan onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
-                }
-            }
-        } catch (ex: Exception) {
-            Napier.e("Sohan onFirebaseResult Exception: ${ex.message}")
-        }
-
-    }
 
     Box(
         modifier = modifier
@@ -134,10 +104,10 @@ fun SignInScreen(
                 // Email Field
                 Text(text = "Email ID", fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(6.dp))
-                OutlinedTextField(
+                AppTextField(
                     value = email,
                     onValueChange = { email = it },
-                    placeholder = { Text("Enter Email ID") },
+                    placeholder = "Enter Email ID",
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -148,20 +118,19 @@ fun SignInScreen(
                 Text(text = "Password", fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(6.dp))
 
-                OutlinedTextField(
+                AppTextField(
                     value = password,
                     onValueChange = { password = it },
-                    placeholder = { Text("Enter Password") },
+                    placeholder = "Enter password",
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         val icon =
                             if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(icon, contentDescription = null)
                         }
-                    },
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+                    }
                 )
 
                 Spacer(Modifier.height(16.dp))
@@ -188,20 +157,18 @@ fun SignInScreen(
                 Spacer(Modifier.height(24.dp))
 
                 // Sign In Button
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0E0E0E))
-                ) {
-                    Text(
-                        text = "Sign In",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                    )
-                }
+                AppButton(
+                    onClick = {
+                        authViewModel.onAction(
+                            UserAction.SignInWithEmailPass(
+                                email, password
+                            )
+                        )
+                    },
+                    text = "Sign In",
+                    backgroundColor = Color(0xFF0E0E0E),
+                    isLoading = authState.isEmailSignInProcessing
+                )
 
                 Spacer(Modifier.height(24.dp))
 
@@ -220,7 +187,13 @@ fun SignInScreen(
                 GoogleButtonUiContainerFirebase(
                     linkAccount = false,
                     filterByAuthorizedAccounts = false,
-                    onResult = onGoogleSignInResult,
+                    onResult = { result ->
+                        authViewModel.onAction(
+                            UserAction.OnGoogleSignInResult(
+                                result
+                            )
+                        )
+                    },
                 ) {
                     GoogleSignInButton(
                         modifier = Modifier.fillMaxWidth()
@@ -235,20 +208,11 @@ fun SignInScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0E0E0E))
-                ) {
-                    Text(
-                        text = "Continue With Apple",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White,
-                    )
-                }
+                AppButton(
+                    onClick = { /* Handle click */ },
+                    text = "Continue With Apple",
+                    backgroundColor = Color(0xFF0E0E0E),
+                )
             }
 
             // Sign Up Text

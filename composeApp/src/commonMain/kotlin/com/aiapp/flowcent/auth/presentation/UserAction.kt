@@ -4,7 +4,6 @@ import dev.gitlive.firebase.auth.FirebaseUser
 import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.CountryDetails
 
 sealed interface UserAction {
-    data object NavigateToHome : UserAction
     data object FirebaseSignOut : UserAction
     data class IsUserExist(val firebaseUser: FirebaseUser, val signInType: String) : UserAction
     data object IsLoggedIn : UserAction
@@ -17,4 +16,10 @@ sealed interface UserAction {
     data object NavigateToSignIn : UserAction
     data object NavigateToSignUp : UserAction
     data class UpdateSavingTarget(val amount: Double) : UserAction
+    data class OnGoogleSignInResult(val result: Result<FirebaseUser?>) : UserAction
+    data class SignInWithEmailPass(
+        val email: String,
+        val password: String
+    ) : UserAction
+    data object FetchUserId : UserAction
 }

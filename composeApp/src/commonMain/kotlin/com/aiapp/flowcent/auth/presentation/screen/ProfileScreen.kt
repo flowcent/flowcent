@@ -7,14 +7,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
-import com.aiapp.flowcent.core.presentation.components.ButtonStyle
 
 @Composable
 fun ProfileScreen(
@@ -22,6 +23,10 @@ fun ProfileScreen(
     authViewModel: AuthViewModel,
     authState: AuthState
 ) {
+    LaunchedEffect(Unit) {
+        authViewModel.onAction(UserAction.FetchUserId)
+    }
+
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -29,7 +34,7 @@ fun ProfileScreen(
     ) {
         Column {
             Text(
-                text = "Hello ${authState.firebaseUser?.displayName}, this is your profile",
+                text = "Hello ${authState.user?.localUserName}, this is your profile",
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(12.dp),
                 style = MaterialTheme.typography.bodyLarge
@@ -38,9 +43,12 @@ fun ProfileScreen(
 
         Column {
             AppButton(
-                btnText = "Sign Out",
-                onClick = { authViewModel.onAction(UserAction.FirebaseSignOut) },
-                style = ButtonStyle.PRIMARY
+                onClick = {
+                    authViewModel.onAction(UserAction.FirebaseSignOut)
+                },
+                text = "Sign Out",
+                backgroundColor = Color(0xFF0E0E0E),
+                isLoading = authState.isEmailSignInProcessing
             )
         }
     }

@@ -5,10 +5,10 @@
 package com.aiapp.flowcent.core.presentation.navigation
 
 sealed class AppNavRoutes(val route: String) {
+    data object Splash : AppNavRoutes("splash")
     data object Auth : AppNavRoutes("auth")
     data object Accounts : AppNavRoutes("accounts")
     data object Home : AppNavRoutes("home")
-    data object Reflect : AppNavRoutes("reflect")
     data object Chat : AppNavRoutes("chat")
     data object Profile : AppNavRoutes("profile_screen")
 }

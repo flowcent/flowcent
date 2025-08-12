@@ -79,7 +79,7 @@ class HomeViewModel(
                             _state.update { currentState ->
                                 currentState.copy(uid = uidFromDataStore ?: "")
                             }
-                            fetchUserProfile(state.value.uid)
+                            fetchUserProfile(uid = uidFromDataStore)
                             fetchLatestTransactions(uid = uidFromDataStore)
                             fetchTotalAmount(uid = uidFromDataStore)
                         }
@@ -95,7 +95,11 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun fetchUserProfile(uid: String) {
+    private suspend fun fetchUserProfile(uid: String?) {
+        if (uid.isNullOrEmpty()) {
+            Napier.e("Sohan 404 No User Found")
+            return
+        }
         when (val result = authRepository.fetchUserProfile(uid)) {
             is Resource.Error -> {
                 println("Sohan Error in fetching user profile: ${result.message}")

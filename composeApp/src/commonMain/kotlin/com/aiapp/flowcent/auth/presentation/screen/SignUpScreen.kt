@@ -43,13 +43,9 @@ import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
-import com.aiapp.flowcent.core.domain.utils.Constants
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
-import dev.gitlive.firebase.auth.FirebaseUser
-import io.github.aakira.napier.Napier
-import kotlin.coroutines.cancellation.CancellationException
 
 @Composable
 fun SignUpScreen(
@@ -64,31 +60,6 @@ fun SignUpScreen(
     var rememberMe by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-
-    val onGoogleSignInResult: (Result<FirebaseUser?>) -> Unit = { result ->
-        try {
-            if (result.isSuccess) {
-                val firebaseUser = result.getOrNull()
-                if (firebaseUser != null) {
-                    authViewModel.onAction(
-                        UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
-                    )
-
-                    authViewModel.onAction(UserAction.SaveUserUid(firebaseUser.uid))
-                }
-
-            } else {
-                if (result.exceptionOrNull() is CancellationException) {
-                    Napier.e("Sohan Google Sign-In was cancelled by the user.")
-                } else {
-                    Napier.e("Sohan onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
-                }
-            }
-        } catch (ex: Exception) {
-            Napier.e("Sohan onFirebaseResult Exception: ${ex.message}")
-        }
-
-    }
 
     Box(
         modifier = modifier
@@ -238,7 +209,13 @@ fun SignUpScreen(
                 GoogleButtonUiContainerFirebase(
                     linkAccount = false,
                     filterByAuthorizedAccounts = false,
-                    onResult = onGoogleSignInResult,
+                    onResult = { result ->
+                        authViewModel.onAction(
+                            UserAction.OnGoogleSignInResult(
+                                result
+                            )
+                        )
+                    },
                 ) {
                     GoogleSignInButton(
                         modifier = Modifier.fillMaxWidth()

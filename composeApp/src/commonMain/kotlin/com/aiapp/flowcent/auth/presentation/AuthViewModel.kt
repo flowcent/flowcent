@@ -2,20 +2,25 @@ package com.aiapp.flowcent.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
+import com.aiapp.flowcent.core.domain.utils.Constants
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.domain.utils.Resource
 import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class AuthViewModel(
     private val authRepository: AuthRepository,
@@ -30,15 +35,13 @@ class AuthViewModel(
 
     fun onAction(action: UserAction) {
         when (action) {
-            UserAction.NavigateToHome -> {
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.NavigateToHome)
-                }
-            }
-
             UserAction.FirebaseSignOut -> {
                 viewModelScope.launch {
-                    googleSignOut()
+                    if (Firebase.auth.currentUser != null) {
+                        Firebase.auth.signOut()
+                    }
+                    prefRepository.deleteUid()
+                    _uiEvent.send(UiEvent.NavigateToSignIn)
                 }
             }
 
@@ -66,18 +69,15 @@ class AuthViewModel(
             UserAction.IsLoggedIn -> {}
             is UserAction.IsUserExist -> {
                 viewModelScope.launch {
+                    setLoaderOn(action.signInType)
                     when (val result = authRepository.isUserExist(action.firebaseUser.uid)) {
                         is Resource.Error -> {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false
-                                )
-                            }
-                            println("Sohan ${result.message}")
+
                         }
 
                         is Resource.Loading -> {}
                         is Resource.Success -> {
+                            setLoaderOff(action.signInType)
                             _state.update {
                                 it.copy(
                                     firebaseUser = action.firebaseUser,
@@ -85,6 +85,7 @@ class AuthViewModel(
                                 )
                             }
                             if (result.data == true) {
+                                setUserSignedIn(true)
                                 _uiEvent.send(UiEvent.NavigateToHome)
                             } else {
                                 _uiEvent.send(UiEvent.NavigateToBasicIntro)
@@ -167,6 +168,132 @@ class AuthViewModel(
                     }
                 }
             }
+
+            is UserAction.OnGoogleSignInResult -> onGoogleSignInResult(action.result)
+            is UserAction.SignInWithEmailPass -> signInWithEmailPass(
+                action.email,
+                action.password,
+                Constants.SIGN_IN_TYPE_EMAIL
+            )
+
+            UserAction.FetchUserId -> {
+                viewModelScope.launch {
+                    prefRepository.uid.collect { uidFromDataStore ->
+                        _state.update { currentState ->
+                            currentState.copy(uid = uidFromDataStore ?: "")
+                        }
+                        fetchUserProfile(uid = uidFromDataStore)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setUserSignedIn(hasSignedIn: Boolean) {
+        _state.update {
+            it.copy(
+                hasUserSignedIn = hasSignedIn
+            )
+
+        }
+    }
+
+    private fun fetchUserProfile(uid: String?) {
+        println("Sohan fetchUserProfile _state.value.uid ${_state.value.uid}")
+        if (uid.isNullOrEmpty()) {
+            Napier.e("Sohan 404 No User Found")
+            return
+        }
+        viewModelScope.launch {
+            when (val result = authRepository.fetchUserProfile(uid)) {
+                is Resource.Error -> {
+                    println("Sohan Error in fetching user profile: ${result.message}")
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    println("Sohan Success in fetching user profile: ${result.data?.localUserName}")
+                    _state.update {
+                        it.copy(
+                            user = result.data
+                        )
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun setLoaderOn(signInType: String) {
+        _state.update {
+            it.copy(
+                isEmailSignInProcessing = when (signInType) {
+                    Constants.SIGN_IN_TYPE_EMAIL -> true
+                    else -> it.isEmailSignInProcessing
+                },
+                isGoogleSignInProcessing = when (signInType) {
+                    Constants.SIGN_IN_TYPE_GOOGLE -> true
+                    else -> it.isGoogleSignInProcessing
+                },
+                isAppleSignInProcessing = when (signInType) {
+                    Constants.SIGN_IN_TYPE_APPLE -> true
+                    else -> it.isAppleSignInProcessing
+                },
+            )
+        }
+    }
+
+
+    private fun setLoaderOff(signInType: String) {
+        _state.update {
+            it.copy(
+                isEmailSignInProcessing = when (signInType) {
+                    Constants.SIGN_IN_TYPE_EMAIL -> false
+                    else -> it.isEmailSignInProcessing
+                },
+                isGoogleSignInProcessing = when (signInType) {
+                    Constants.SIGN_IN_TYPE_GOOGLE -> false
+                    else -> it.isGoogleSignInProcessing
+                },
+                isAppleSignInProcessing = when (signInType) {
+                    Constants.SIGN_IN_TYPE_APPLE -> false
+                    else -> it.isAppleSignInProcessing
+                },
+            )
+        }
+    }
+
+
+    private fun signInWithEmailPass(email: String, password: String, signInType: String) {
+        viewModelScope.launch {
+            setLoaderOn(signInType)
+            delay(5000)
+            setLoaderOff(signInType)
+        }
+    }
+
+
+    private fun onGoogleSignInResult(result: Result<FirebaseUser?>) {
+        viewModelScope.launch {
+            try {
+                if (result.isSuccess) {
+                    val firebaseUser = result.getOrNull()
+                    if (firebaseUser != null) {
+                        onAction(
+                            UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
+                        )
+                        onAction(UserAction.SaveUserUid(firebaseUser.uid))
+                    }
+                } else {
+                    if (result.exceptionOrNull() is CancellationException) {
+                        Napier.e("Google Sign-In was cancelled by the user.")
+                    } else {
+                        Napier.e("onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
+                    }
+                }
+            } catch (ex: Exception) {
+                Napier.e("onFirebaseResult Exception: ${ex.message}")
+            }
         }
     }
 
@@ -177,26 +304,15 @@ class AuthViewModel(
 
                 is Resource.Success -> {
                     println("Sohan createNewUserToDb success ${result.data}")
+                    setUserSignedIn(true)
                     _uiEvent.send(UiEvent.NavigateToHome)
                 }
 
                 is Resource.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false
-                        )
-                    }
+                    setUserSignedIn(false)
                     println("Sohan createNewUserToDb ${result.message}")
                 }
             }
-        }
-    }
-
-    private suspend fun googleSignOut() {
-        println("Sohan Firebase.auth.currentUser ${Firebase.auth.currentUser}")
-        if (Firebase.auth.currentUser != null) {
-            Firebase.auth.signOut()
-            _uiEvent.send(UiEvent.NavigateToSignIn)
         }
     }
 }

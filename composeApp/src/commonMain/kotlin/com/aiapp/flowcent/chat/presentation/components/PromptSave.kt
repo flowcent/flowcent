@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
-import com.aiapp.flowcent.core.presentation.components.AppButton
+import com.aiapp.flowcent.core.presentation.components.AppCustomButton
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -30,7 +30,7 @@ fun PromptSave(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AppButton(
+        AppCustomButton(
             onClick = { onClickSave() },
             btnText = if (selectionType == AccountSelectionType.SHARED) "Update $selectedAccountName" else "Save Into Personal",
             bgColor = Color.Black,
@@ -39,7 +39,7 @@ fun PromptSave(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        AppButton(
+        AppCustomButton(
             onClick = { onClickDiscard() },
             btnText = "Discard",
             bgColor = Color.Black,
