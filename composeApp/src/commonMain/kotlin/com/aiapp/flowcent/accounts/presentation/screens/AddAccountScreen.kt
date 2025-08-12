@@ -2,12 +2,16 @@ package com.aiapp.flowcent.accounts.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -19,11 +23,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
+import com.aiapp.flowcent.accounts.presentation.components.SelectedUserCard
+import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppCustomButton
 import com.aiapp.flowcent.core.presentation.components.AppTextField
 import com.aiapp.flowcent.core.presentation.components.IconCard
@@ -108,7 +115,7 @@ fun AddAccountScreen(
                     viewModel.onAction(UserAction.UpdateAccountName(newValue))
                 },
                 placeholder = "Enter a name to identify this account easily.",
-                modifier = Modifier.padding(top = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
             )
 
 
@@ -128,21 +135,37 @@ fun AddAccountScreen(
             )
 
             IconCard(
-                icon = Icons.Default.PersonAdd,
-                text = "Add some members",
-                onClick = {
+                icon = Icons.Default.PersonAdd, text = "Add some members", onClick = {
                     handleAddMembers()
-                },
-                modifier = Modifier.padding(top = 8.dp)
+                }, modifier = Modifier.padding(top = 8.dp)
             )
+
+            Spacer(modifier = Modifier.padding(12.dp))
+
+            LazyRow {
+                if (state.selectedUsers.isNotEmpty()) {
+                    items(state.selectedUsers) { user ->
+                        SelectedUserCard(
+                            user = user,
+                            onRemoveClick = { viewModel.onAction(UserAction.OnRemoveUser(user)) }
+                        )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.padding(12.dp))
+                    }
+                }
+            }
         }
 
         Column {
-            AppCustomButton(
-                btnText = "Create Your Account",
+            AppButton(
+                text = "Next",
+                textColor = Color.White,
+                backgroundColor = Color.Black,
                 onClick = {
                     viewModel.onAction(UserAction.CreateAccount)
                 },
+                isLoading = state.isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -154,15 +177,15 @@ fun AddAccountScreen(
                 handleHideBottomSheet()
             },
             sheetState = bottomSheetState,
-            modifier = Modifier.padding(top = 200.dp)
+            modifier = Modifier.padding(top = 200.dp),
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             AddMembersSheetContent(
                 state = state,
                 viewModel = viewModel,
                 onDoneClick = {
                     handleHideBottomSheet()
-                }
-            )
+                })
         }
     }
 }

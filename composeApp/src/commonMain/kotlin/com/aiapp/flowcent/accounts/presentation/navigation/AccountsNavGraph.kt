@@ -62,6 +62,10 @@ fun AccountsNavGraph(
                 UiEvent.NavigateToChat -> {
                     globalNavController.navigate(AppNavRoutes.Chat.route)
                 }
+
+                UiEvent.NavigateToAccountHome -> {
+                    localNavController.navigate(AccountsNavRoutes.AccountsHomeScreen.route)
+                }
             }
         }
     }

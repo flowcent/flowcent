@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.accounts.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,14 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.auth.data.model.User
+import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.SelectionToggle
 import com.aiapp.flowcent.core.presentation.components.UserProfileImage
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
 @Composable
 fun ContactUserRow(
-    user: User, // Replace with your actual data class
-    isSelected: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    fullName: String = "",
+    phoneNumber: String = "",
+    imageUrl: String = "",
+    showSelection: Boolean = false,
+    isSelected: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -33,53 +41,47 @@ fun ContactUserRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
-            Row {
-                UserProfileImage(imageUrl = user.imageUrl)
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        Column(modifier = Modifier.width(300.dp)) {
-                            Text(
-                                text = user.fullName,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.Black,
-                            )
-                            Text(
-                                text = user.phoneNumber,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black,
-                                modifier = Modifier.padding(top = 5.dp)
-                            )
-                        }
-                    }
-
-                    Row {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 10.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            SelectionToggle(
-                                isSelected = isSelected,
-                                onToggle = onCheckedChange
-                            )
-                        }
-                    }
-                }
+        Row(
+            modifier = modifier.weight(1f)
+        ) {
+            if (imageUrl.isNotEmpty()) {
+                UserProfileImage(imageUrl = imageUrl)
+            } else {
+                NameInitial(fullName)
             }
 
-            HorizontalDivider(
-                color = Color.Gray,
-                thickness = 1.dp,
-                modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp)
-            )
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.width(300.dp)) {
+                Text(
+                    text = fullName,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black,
+                )
+                Text(
+                    text = phoneNumber,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 5.dp)
+                )
+            }
+        }
+
+        Row {
+            if (showSelection) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = { onCheckedChange(it) },
+                    colors = CheckboxDefaults.colors(checkedColor = Colors.IncomeColor)
+                )
+            } else {
+                Text(
+                    text = "Invite",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Colors.IncomeColor,
+                    modifier = Modifier.clickable { }
+                )
+            }
         }
 
     }

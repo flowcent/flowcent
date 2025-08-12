@@ -44,9 +44,8 @@ fun SelectedUserCard(
             // Profile image with cross icon
             Box(
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(55.dp)
                     .clip(CircleShape)
-                    .background(Color.LightGray)
                     .align(Alignment.CenterHorizontally)
             ) {
                 UserProfileImage(
@@ -59,9 +58,8 @@ fun SelectedUserCard(
                     contentDescription = "Remove",
                     tint = Color.Red,
                     modifier = Modifier
-                        .size(18.dp)
+                        .size(24.dp)
                         .align(Alignment.TopEnd)
-                        .offset(x = (-6).dp, y = (-6).dp)
                         .clickable { onRemoveClick(user) }
                         .background(Color.White, CircleShape)
                 )
@@ -70,7 +68,7 @@ fun SelectedUserCard(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = user.fullName,
+                text = user.localUserName,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

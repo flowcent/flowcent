@@ -66,21 +66,6 @@ fun ChatScreen(
     var isListening by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val sampleAccounts = listOf(
-        Account(
-            id = "ACC001",
-            accountId = "ACC001",
-            accountName = "Travel Fund",
-            profileImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Bitcoin.png/600px-Bitcoin.png",
-        ),
-        Account(
-            id = "ACC002",
-            accountId = "ACC002",
-            accountName = "Savings",
-            profileImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Euro_coin_1_Euro_obverse.png/600px-Euro_coin_1_Euro_obverse.png",
-        )
-    )
-
 
     LaunchedEffect(key1 = fcPermissionsState.audioPermissionState) {
         hasAudioPermission = when (fcPermissionsState.audioPermissionState) {

@@ -21,10 +21,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
+import com.aiapp.flowcent.core.presentation.components.AppTextField
 
 @Composable
 fun AddMembersSheetContent(
@@ -36,12 +39,13 @@ fun AddMembersSheetContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .padding(20.dp, vertical = 12.dp)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(bottom = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -63,14 +67,13 @@ fun AddMembersSheetContent(
             )
         }
 
-        OutlinedTextField(
+        AppTextField(
             value = "", // You can pass this as a parameter if needed
             onValueChange = { /* Handle search */ },
-            placeholder = { Text("Search name or number") },
+            placeholder = "Search name or number",
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
         )
 
         LazyRow {
@@ -87,21 +90,50 @@ fun AddMembersSheetContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
                 .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
         ) {
-            state.matchingUsers?.let { matchingUsers ->
-                items(matchingUsers.toList()) { user ->
-                    ContactUserRow(
-                        user = user,
-                        isSelected = state.selectedUsers.contains(user),
-                        onCheckedChange = { isChecked ->
-                            viewModel.onAction(
-                                UserAction.OnUserCheckedChange(user, isChecked)
-                            )
-                        }
+
+
+            item() {
+                if (state.matchingUsers.isNotEmpty()) {
+                    Text(
+                        "Your potential group members",
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp)
                     )
                 }
+
+            }
+
+            items(state.matchingUsers.toList()) { user ->
+                ContactUserRow(
+                    fullName = user.localUserName,
+                    phoneNumber = user.phoneNumber,
+                    imageUrl = user.imageUrl,
+                    showSelection = true,
+                    isSelected = state.selectedUsers.contains(user),
+                    onCheckedChange = { isChecked ->
+                        viewModel.onAction(
+                            UserAction.OnUserCheckedChange(user, isChecked)
+                        )
+                    }
+                )
+            }
+
+            item {
+                Text(
+                    "Invite Others",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp)
+                )
+            }
+
+
+            items(state.deviceContacts.toList()) { contact ->
+                ContactUserRow(
+                    fullName = contact.name ?: "",
+                    phoneNumber = contact.phoneNumber,
+                )
             }
         }
     }

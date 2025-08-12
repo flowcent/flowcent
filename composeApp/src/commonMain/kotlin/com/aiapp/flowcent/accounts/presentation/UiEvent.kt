@@ -4,4 +4,5 @@ sealed interface UiEvent {
     data object ClickAdd : UiEvent
     data object NavigateToAccountDetail : UiEvent
     data object NavigateToChat : UiEvent
+    data object NavigateToAccountHome : UiEvent
 }

@@ -62,20 +62,21 @@ fun SignInScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .drawWithCache {
-                onDrawBehind {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFFECE8FD),
-                                Color(0xFFFFFFFF),
-                                Color(0xFFEBF9FE),
-                                Color(0xFFF9E8FA),
-                            )
-                        )
-                    )
-                }
-            }
+//            .drawWithCache {
+//                onDrawBehind {
+//                    drawRect(
+//                        brush = Brush.verticalGradient(
+//                            colors = listOf(
+//                                Color(0xFFECE8FD),
+//                                Color(0xFFFFFFFF),
+//                                Color(0xFFEBF9FE),
+//                                Color(0xFFF9E8FA),
+//                            )
+//                        )
+//                    )
+//                }
+//            }
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         Column(

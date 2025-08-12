@@ -57,7 +57,6 @@ import com.aiapp.flowcent.home.presentation.components.RingChart
 
 sealed class MemberTab {
     data object Latest : MemberTab()
-    data object MyTransactions : MemberTab()
     data class Member(val accountMember: AccountMember) : MemberTab()
 }
 
@@ -72,14 +71,16 @@ fun AccountDetailScreen(
 
     val members = state.selectedAccount?.members.orEmpty()
 
+    val reorderedMembers = members
+        .sortedWith(compareByDescending { it.memberId == state.uid })
+
     // Track current tab
     var currentTab by remember { mutableStateOf<MemberTab>(MemberTab.Latest) }
 
     // Compute tab index (Latest is index 0)
     val selectedTabIndex = when (currentTab) {
         is MemberTab.Latest -> 0
-        is MemberTab.MyTransactions -> 1
-        is MemberTab.Member -> members.indexOf((currentTab as MemberTab.Member).accountMember) + 2
+        is MemberTab.Member -> reorderedMembers.indexOf((currentTab as MemberTab.Member).accountMember) + 1
     }
 
     val flattenedExpenseItems = state.latestTransactions.flatMap { transaction ->
@@ -91,11 +92,6 @@ fun AccountDetailScreen(
 
     fun onLatestTabClick(onTabChange: (MemberTab) -> Unit) {
         onTabChange(MemberTab.Latest)
-    }
-
-    fun onMyTransactionsTabClick(onTabChange: (MemberTab) -> Unit) {
-        onTabChange(MemberTab.MyTransactions)
-        viewModel.onAction(UserAction.GetUsersDailyTransaction(state.uid))
     }
 
     fun onMemberTabClick(member: AccountMember, onTabChange: (MemberTab) -> Unit) {
@@ -110,18 +106,18 @@ fun AccountDetailScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-
         Column(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
         ) {
 
             CalendarStrip(
                 selectedDate = getCurrentDate(),
-                onDateSelected = { viewModel.onAction(UserAction.SetSelectedDate(it)) })
+                onDateSelected = { viewModel.onAction(UserAction.SetSelectedDate(it)) },
+                modifier = Modifier.padding(16.dp)
+            )
 
             Column(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
@@ -160,32 +156,20 @@ fun AccountDetailScreen(
                                 )
                             })
 
-                        Tab(
-                            selected = currentTab is MemberTab.MyTransactions,
-                            onClick = { onMyTransactionsTabClick { currentTab = it } },
-                            text = {
-                                Text(
-                                    "My Transactions",
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
-                                )
-                            })
-
                         // Other tabs: members
-                        members.forEach { member ->
-                            if (member.memberId != state.uid) {
-                                Tab(
-                                    selected = (currentTab as? MemberTab.Member)?.accountMember == member,
-                                    onClick = { onMemberTabClick(member) { currentTab = it } },
-                                    text = {
-                                        Text(
-                                            member.memberLocalUserName,
-                                            style = MaterialTheme.typography.labelMedium.copy(
-                                                fontWeight = FontWeight.Bold
-                                            )
+                        reorderedMembers.forEach { member ->
+                            Tab(
+                                selected = (currentTab as? MemberTab.Member)?.accountMember == member,
+                                onClick = { onMemberTabClick(member) { currentTab = it } },
+                                text = {
+                                    Text(
+                                        text = if (member.memberId == state.uid) "My Transaction" else member.memberLocalUserName,
+                                        style = MaterialTheme.typography.labelMedium.copy(
+                                            fontWeight = FontWeight.Bold
                                         )
-                                    }
-                                )
-                            }
+                                    )
+                                }
+                            )
                         }
                     }
                 }
@@ -195,7 +179,7 @@ fun AccountDetailScreen(
                 )
             }
 
-            Column(modifier = Modifier.clipToBounds().padding(20.dp)) {
+            Column(modifier = Modifier.clipToBounds().padding(vertical = 12.dp, horizontal = 16.dp)) {
                 AnimatedVisibility(
                     visible = !isScrolled, enter = slideInVertically(
                         initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
@@ -235,7 +219,7 @@ fun AccountDetailScreen(
 
 
             LazyColumn(
-                modifier = Modifier.fillMaxWidth().padding(20.dp)
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
             ) {
                 stickyHeader(key = "latest-transaction-header") {
                     Text(

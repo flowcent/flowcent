@@ -126,12 +126,14 @@ class AccountViewModel(
                         )
                     }
                     if (_state.value.uid.isNotEmpty()) {
+                        fetchUserProfile(_state.value.uid)
                         fetchAccounts(_state.value.uid)
                     } else {
                         prefRepository.uid.collect { uidFromDataStore ->
                             _state.update { currentState ->
                                 currentState.copy(uid = uidFromDataStore ?: "")
                             }
+                            fetchUserProfile(uidFromDataStore)
                             fetchAccounts(uidFromDataStore)
                         }
                     }
@@ -172,6 +174,24 @@ class AccountViewModel(
 
             is UserAction.GetUsersDailyTransaction -> {
                 getUsersDailyTransactions(_state.value.selectedAccount?.id, action.uid)
+            }
+        }
+    }
+
+    private suspend fun fetchUserProfile(uid: String?) {
+        if (uid == null) return
+        when (val result = authRepository.fetchUserProfile(uid)) {
+            is Resource.Error -> {
+                println("Sohan Error in fetching user profile: ${result.message}")
+            }
+
+            Resource.Loading -> {}
+            is Resource.Success -> {
+                _state.update {
+                    it.copy(
+                        currentUserProfile = result.data
+                    )
+                }
             }
         }
     }
@@ -280,6 +300,16 @@ class AccountViewModel(
 
     private fun createAccount() {
         viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    selectedUsers = it.selectedUsers.toMutableList().apply {
+                        it.currentUserProfile?.let { profile ->
+                            add(profile)
+                        }
+                    }
+                )
+            }
+
             when (val result = accountRepository.addAccount(
                 AccountDto(
                     accountName = _state.value.accountName,
@@ -297,14 +327,28 @@ class AccountViewModel(
                 )
             )) {
                 is Resource.Error -> {
-                    Napier.e("Sohan Error in creating account: ${result.message}")
+                    _state.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
                 }
 
-                Resource.Loading -> {}
+                Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
                 is Resource.Success -> {
-                    Napier.e("Sohan Success in creating account: ${result.data}")
+                    _state.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
+                    _uiEvent.send(UiEvent.NavigateToAccountHome)
                 }
-
             }
 
         }
