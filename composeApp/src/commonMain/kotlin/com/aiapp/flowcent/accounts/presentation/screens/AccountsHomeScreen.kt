@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
@@ -69,9 +70,8 @@ fun AccountsHomeScreen(
                     ) {
                         stickyHeader(key = "my-accounts-header") {
                             Text(
-                                text = "My Accounts",
-                                fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+                                text = "Groups",
+                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.inverseSurface,
                                 modifier = Modifier.fillMaxWidth()
                                     .background(color = MaterialTheme.colorScheme.background)
