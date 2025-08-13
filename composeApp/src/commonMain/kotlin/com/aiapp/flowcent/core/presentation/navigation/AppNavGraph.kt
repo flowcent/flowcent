@@ -6,7 +6,6 @@ package com.aiapp.flowcent.core.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavGraph
@@ -24,18 +23,16 @@ import com.aiapp.flowcent.splash.navigation.SplashNavRoutes
 @Composable
 fun AppNavGraph(
     modifier: Modifier = Modifier,
-    globalNavController: NavHostController,
     startDestination: AppNavRoutes = AppNavRoutes.Auth,
     speechRecognizer: SpeechRecognizer
 ) {
     NavHost(
-        navController = globalNavController,
+        navController = LocalNavController.current,
         startDestination = startDestination.route
     ) {
         composable(route = AppNavRoutes.Splash.route) {
             SplashNavGraph(
                 modifier = modifier,
-                globalNavController = globalNavController,
                 startDestination = SplashNavRoutes.SplashScreen,
             )
         }
@@ -43,7 +40,6 @@ fun AppNavGraph(
         composable(route = AppNavRoutes.Auth.route) {
             AuthNavGraph(
                 modifier = modifier,
-                globalNavController = globalNavController,
                 startDestination = AuthNavRoutes.SignInScreen,
             )
         }
@@ -51,7 +47,6 @@ fun AppNavGraph(
         composable(route = AppNavRoutes.Accounts.route) {
             AccountsNavGraph(
                 modifier = modifier,
-                globalNavController = globalNavController,
                 startDestination = AccountsNavRoutes.AccountsHomeScreen
             )
         }
@@ -59,7 +54,6 @@ fun AppNavGraph(
         composable(route = AppNavRoutes.Home.route) {
             HomeNavGraph(
                 modifier = modifier,
-                globalNavController = globalNavController,
                 startDestination = HomeNavRoutes.HomeScreen
             )
         }
@@ -67,7 +61,6 @@ fun AppNavGraph(
         composable(route = AppNavRoutes.Chat.route) {
             ChatNavGraph(
                 modifier = modifier,
-                globalNavController = globalNavController,
                 startDestination = ChatNavRoutes.ChatScreen,
                 speechRecognizer = speechRecognizer
             )
@@ -76,7 +69,6 @@ fun AppNavGraph(
         composable(route = AppNavRoutes.Profile.route) {
             AuthNavGraph(
                 modifier = modifier,
-                globalNavController = globalNavController,
                 startDestination = AuthNavRoutes.ProfileScreen,
             )
         }

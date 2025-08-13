@@ -117,7 +117,6 @@ fun App(
                 }
             ) { innerPadding ->
                 AppNavGraph(
-                    globalNavController = globalNavController,
                     modifier = Modifier.padding(innerPadding),
                     speechRecognizer = speechRecognizer,
                     startDestination = AppNavRoutes.Splash

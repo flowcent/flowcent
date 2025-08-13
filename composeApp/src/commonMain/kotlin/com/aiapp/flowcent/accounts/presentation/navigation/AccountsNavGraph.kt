@@ -11,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
@@ -30,7 +29,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AccountsNavGraph(
     modifier: Modifier = Modifier,
-    globalNavController: NavHostController,
     startDestination: AccountsNavRoutes
 ) {
     val localNavController = rememberNavController()
@@ -41,6 +39,7 @@ fun AccountsNavGraph(
     val controller = remember(factory) {
         factory.createPermissionsController()
     }
+    val globalNavController = LocalNavController.current
 
     BindEffect(controller)
 
