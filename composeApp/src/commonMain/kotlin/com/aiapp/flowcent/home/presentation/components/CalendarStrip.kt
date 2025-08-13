@@ -47,10 +47,13 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.daysInMonth
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_arrow_left
 import flowcent.composeapp.generated.resources.ic_arrow_right
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -60,6 +63,7 @@ fun CalendarStrip(
     modifier: Modifier = Modifier
 ) {
     var selectedDateState by remember { mutableStateOf(selectedDate) }
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     var currentMonthStart by remember {
         mutableStateOf(
@@ -106,14 +110,21 @@ fun CalendarStrip(
                 )
             }
 
+            val canGoToNextMonth = currentMonthStart.year < today.year ||
+                    (currentMonthStart.year == today.year && currentMonthStart.month < today.month)
+
             IconButton(
                 onClick = {
                     currentMonthStart = currentMonthStart.plus(1, DateTimeUnit.MONTH)
-                }) {
+                },
+                enabled = canGoToNextMonth
+            ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_arrow_right),
                     contentDescription = "Next Month",
-                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    tint = if (canGoToNextMonth) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.inverseSurface.copy(
+                        alpha = 0.38f
+                    ),
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -157,6 +168,7 @@ fun CalendarStrip(
             ) {
                 items(dates) { date ->
                     val isSelected = date == selectedDateState
+                    val isFutureDate = date > today
 
                     Surface(
                         shape = RoundedCornerShape(12.dp),
@@ -164,7 +176,7 @@ fun CalendarStrip(
                         modifier = Modifier
                             .size(width = 52.dp, height = 60.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .clickable {
+                            .clickable(enabled = !isFutureDate) {
                                 onDateSelected(date)
                                 selectedDateState = date
                             }
@@ -176,6 +188,8 @@ fun CalendarStrip(
                         ) {
                             val textColor = if (isSelected) {
                                 if (isDarkTheme) Color.White else Color.Black
+                            } else if (isFutureDate) {
+                                MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.3f)
                             } else {
                                 MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.6f)
                             }
