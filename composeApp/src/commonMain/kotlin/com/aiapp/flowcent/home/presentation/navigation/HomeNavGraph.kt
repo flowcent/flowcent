@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
@@ -24,12 +23,12 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeNavGraph(
     modifier: Modifier = Modifier,
-    globalNavController: NavHostController,
     startDestination: HomeNavRoutes
 ) {
     val localNavController = rememberNavController()
     val viewModel = koinViewModel<HomeViewModel>()
     val state by viewModel.state.collectAsState()
+    val globalNavController = LocalNavController.current
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {

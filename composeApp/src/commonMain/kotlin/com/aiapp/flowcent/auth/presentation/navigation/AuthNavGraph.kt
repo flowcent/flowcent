@@ -6,7 +6,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
@@ -23,12 +22,12 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AuthNavGraph(
     modifier: Modifier = Modifier,
-    globalNavController: NavHostController,
-    startDestination: AuthNavRoutes,
+    startDestination: AuthNavRoutes
 ) {
     val localNavController = rememberNavController()
     val viewModel = koinViewModel<AuthViewModel>()
     val state by viewModel.state.collectAsState()
+    val globalNavController = LocalNavController.current
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
