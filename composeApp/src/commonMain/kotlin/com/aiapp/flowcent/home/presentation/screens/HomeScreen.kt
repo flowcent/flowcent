@@ -134,6 +134,8 @@ fun HomeScreen(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
+        Spacer(Modifier.height(12.dp))
+
         AnimatedVisibility(
             visible = !isScrolled,
             modifier = Modifier.padding(horizontal = 16.dp)

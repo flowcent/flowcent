@@ -74,24 +74,11 @@ fun CalendarStrip(
     val lazyListState = rememberLazyListState()
 
 
-    Column(modifier = modifier.padding(8.dp)) {
+    Column(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(
-                onClick = {
-                    currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
-                }) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_left),
-                    contentDescription = "Previous Month",
-                    tint = MaterialTheme.colorScheme.inverseSurface,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
             AnimatedContent(
                 targetState = currentMonthStart,
                 transitionSpec = { fadeIn() togetherWith fadeOut() }
@@ -102,6 +89,20 @@ fun CalendarStrip(
                     } ${targetDate.year}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.inverseSurface,
+                )
+            }
+
+            Spacer(Modifier.weight(1f))
+
+            IconButton(
+                onClick = {
+                    currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
+                }) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_arrow_left),
+                    contentDescription = "Previous Month",
+                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.size(24.dp)
                 )
             }
 
