@@ -1,7 +1,10 @@
 package com.aiapp.flowcent
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +34,7 @@ import flowcent.composeapp.generated.resources.ic_share_accounts_selected
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App(
@@ -84,6 +88,11 @@ fun App(
     AppTheme {
         Scaffold(
             containerColor = Color.Transparent,
+            topBar = {
+                if (currentRoute == AppNavRoutes.Chat.route) {
+                    TopAppBar(title = { Text(text = "Chat") })
+                }
+            },
             bottomBar = {
                 if (showBottomNav) {
                     BottomNavigationBar(

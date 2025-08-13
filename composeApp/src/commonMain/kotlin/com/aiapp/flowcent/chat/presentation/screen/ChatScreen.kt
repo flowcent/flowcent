@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -26,8 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
@@ -57,9 +55,7 @@ fun ChatScreen(
     viewModel: ChatViewModel,
     speechRecognizer: SpeechRecognizer,
     permissionsVM: PermissionsViewModel,
-    fcPermissionsState: FCPermissionState,
-    localNavController: NavController,
-    globalNavController: NavController
+    fcPermissionsState: FCPermissionState
 ) {
 
     var hasAudioPermission: Boolean by remember { mutableStateOf(false) }

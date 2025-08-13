@@ -53,9 +53,7 @@ fun ChatNavGraph(
                 viewModel = viewModel,
                 speechRecognizer = speechRecognizer,
                 permissionsVM = permissionVM,
-                fcPermissionsState = fcPermissionsState,
-                localNavController = localNavController,
-                globalNavController = globalNavController,
+                fcPermissionsState = fcPermissionsState
             )
         }
     }
