@@ -15,7 +15,7 @@ import com.aiapp.flowcent.auth.presentation.screen.ProfileScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignInScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignUpScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.presentation.navigation.LocalNavController
+import com.aiapp.flowcent.core.presentation.navigation.AppNavController
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -27,7 +27,7 @@ fun AuthNavGraph(
     val localNavController = rememberNavController()
     val viewModel = koinViewModel<AuthViewModel>()
     val state by viewModel.state.collectAsState()
-    val globalNavController = LocalNavController.current
+    val globalNavController = AppNavController.current
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
@@ -51,7 +51,7 @@ fun AuthNavGraph(
         }
     }
 
-    CompositionLocalProvider(LocalNavController provides localNavController) {
+    CompositionLocalProvider(AppNavController provides localNavController) {
         NavHost(
             navController = localNavController,
             startDestination = startDestination.route

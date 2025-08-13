@@ -22,7 +22,7 @@ import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.GetTopBarForRoute
-import com.aiapp.flowcent.core.presentation.navigation.LocalNavController
+import com.aiapp.flowcent.core.presentation.navigation.AppNavController
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import flowcent.composeapp.generated.resources.Res
@@ -87,7 +87,7 @@ fun App(
     val selectedIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
 
     AppTheme {
-        CompositionLocalProvider(LocalNavController provides globalNavController) {
+        CompositionLocalProvider(AppNavController provides globalNavController) {
             Scaffold(
                 containerColor = Color.Transparent,
                 topBar = {
