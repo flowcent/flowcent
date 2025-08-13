@@ -23,28 +23,8 @@ import com.aiapp.flowcent.splash.UserAction
 fun SplashScreen(
     modifier: Modifier = Modifier,
     state: SplashState,
-    viewModel: SplashViewModel,
-    globalNavController: NavHostController
+    viewModel: SplashViewModel
 ) {
-
-    LaunchedEffect(Unit) {
-        viewModel.onAction(UserAction.FetchUidFromStore)
-    }
-
-    LaunchedEffect(key1 = state.isUiLoaded) {
-        if (state.isUiLoaded) {
-            if (state.uid.isNotEmpty()) {
-                globalNavController.navigate(AppNavRoutes.Home.route) {
-                    popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
-                }
-            } else {
-                globalNavController.navigate(AppNavRoutes.Auth.route) {
-                    popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
-                }
-            }
-        }
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()

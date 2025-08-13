@@ -9,17 +9,17 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 
 @Composable
-fun GetTopBarForRoute(route: String, navController: NavController) {
+fun GetTopBarForRoute(route: String) {
     when (route) {
-        AppNavRoutes.Accounts.route -> AppBar(title = "Shared", navController = navController)
+        AppNavRoutes.Accounts.route -> AppBar(title = "Shared")
         AppNavRoutes.Auth.route -> null
-        AppNavRoutes.Chat.route -> AppBar(title = "Chat", navController = navController)
+        AppNavRoutes.Chat.route -> AppBar(title = "Chat")
 
         AppNavRoutes.Home.route -> null
         AppNavRoutes.Profile.route -> null
@@ -31,18 +31,26 @@ fun GetTopBarForRoute(route: String, navController: NavController) {
 @Composable
 private fun AppBar(
     title: String,
-    navController: NavController,
     showBackButton: Boolean = true,
     actions: @Composable (() -> Unit)? = null
 ) {
+    val navController = LocalNavController.current
+
     TopAppBar(
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.inverseSurface
+            )
+        },
         navigationIcon = {
             if (showBackButton) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
             } else null
