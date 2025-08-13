@@ -27,7 +27,7 @@ fun AppNavGraph(
     speechRecognizer: SpeechRecognizer
 ) {
     NavHost(
-        navController = LocalNavController.current,
+        navController = AppNavController.current,
         startDestination = startDestination.route
     ) {
         composable(route = AppNavRoutes.Splash.route) {

@@ -34,7 +34,7 @@ private fun AppBar(
     showBackButton: Boolean = true,
     actions: @Composable (() -> Unit)? = null
 ) {
-    val navController = LocalNavController.current
+    val navController = AppNavController.current
 
     TopAppBar(
         title = {

@@ -19,7 +19,7 @@ import com.aiapp.flowcent.accounts.presentation.screens.AccountDetailScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AddAccountScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.presentation.navigation.LocalNavController
+import com.aiapp.flowcent.core.presentation.navigation.AppNavController
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -39,7 +39,7 @@ fun AccountsNavGraph(
     val controller = remember(factory) {
         factory.createPermissionsController()
     }
-    val globalNavController = LocalNavController.current
+    val globalNavController = AppNavController.current
 
     BindEffect(controller)
 
@@ -71,7 +71,7 @@ fun AccountsNavGraph(
         }
     }
 
-    CompositionLocalProvider(LocalNavController provides localNavController) {
+    CompositionLocalProvider(AppNavController provides localNavController) {
         NavHost(
             navController = localNavController,
             startDestination = startDestination.route
