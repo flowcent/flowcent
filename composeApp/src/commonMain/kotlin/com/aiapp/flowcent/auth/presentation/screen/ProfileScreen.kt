@@ -17,10 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,8 +33,7 @@ import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.NameInitial
-import flowcent.composeapp.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
+import com.aiapp.flowcent.core.presentation.components.SubscriptionBadge
 
 @Composable
 fun ProfileScreen(
@@ -96,10 +90,7 @@ fun ProfileScreen(
 
 
             item {
-                ProBadgeButton(
-                    onClick = {
-                    }
-                )
+                SubscriptionBadge { }
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -231,66 +222,5 @@ fun SettingItem(
         trailingContent?.invoke()
     }
 
-}
-
-
-@Composable
-fun ProBadgeButton(
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        Color(0xFF0F2027),
-                        Color(0xFF203A43),
-                        Color(0xFF2C5364)
-                    )
-                )
-            )
-            .clickable { onClick() }
-            .padding(horizontal = 24.dp, vertical = 16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Star, // Replace with your icon
-                        contentDescription = null,
-                        tint = Color(0xFFFFD700),
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Become a Flowcent Pro",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFFD700)
-                    )
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Upgrade to use unlimited transactions recording with AI voice and chat",
-                    fontSize = 13.sp,
-                    color = Color.White.copy(alpha = 0.9f)
-                )
-            }
-            Text(
-                text = "See how",
-                fontSize = 13.sp,
-                color = Color.White.copy(alpha = 0.9f),
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
 }
 
