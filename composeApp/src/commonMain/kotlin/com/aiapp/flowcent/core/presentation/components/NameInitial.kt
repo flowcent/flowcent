@@ -11,14 +11,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.aakira.napier.Napier
 import kotlin.random.Random
 
 @Composable
 fun NameInitial(
     text: String,
-    bgColor: Color = randomColor()
+    textSize: TextUnit = 24.sp,
+    bgColor: Color = randomColor(),
+    size: Dp = 40.dp,
+    modifier: Modifier = Modifier
 ) {
     Napier.e("Sohan NameInitial text $text")
     val initials = text
@@ -29,7 +35,7 @@ fun NameInitial(
 
     Box(
         modifier = Modifier
-            .size(40.dp)
+            .size(size)
             .background(color = bgColor, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
@@ -37,7 +43,8 @@ fun NameInitial(
             text = initials,
             style = MaterialTheme.typography.titleMedium,
             color = Color.White,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            fontSize = textSize
         )
     }
 }
