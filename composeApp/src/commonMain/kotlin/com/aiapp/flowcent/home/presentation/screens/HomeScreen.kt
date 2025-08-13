@@ -56,8 +56,7 @@ import org.jetbrains.compose.resources.painterResource
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
-    homeState: HomeState,
-    globalNavController: NavHostController
+    homeState: HomeState
 ) {
     val allTransactions = homeState.latestTransactions.flatten()
     val listState = rememberLazyListState()
@@ -75,16 +74,6 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchUserUId)
-    }
-
-    LaunchedEffect(Unit) {
-        homeViewModel.uiEvent.collect {
-            when (it) {
-                UiEvent.NavigateToAuth -> globalNavController.navigate(AppNavRoutes.Auth.route)
-                is UiEvent.ShowSnackbar -> {}
-                UiEvent.NavigateToProfile -> globalNavController.navigate(AppNavRoutes.Profile.route)
-            }
-        }
     }
 
 

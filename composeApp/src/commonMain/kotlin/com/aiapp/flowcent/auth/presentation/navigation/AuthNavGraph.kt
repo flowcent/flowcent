@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.auth.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,6 +16,7 @@ import com.aiapp.flowcent.auth.presentation.screen.ProfileScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignInScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignUpScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
+import com.aiapp.flowcent.core.presentation.navigation.LocalNavController
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -50,41 +52,43 @@ fun AuthNavGraph(
         }
     }
 
-    NavHost(
-        navController = localNavController,
-        startDestination = startDestination.route
-    ) {
-        addAnimatedComposable(route = AuthNavRoutes.SignInScreen.route) {
-            SignInScreen(
-                modifier = modifier,
-                authViewModel = viewModel,
-                authState = state
-            )
-        }
+    CompositionLocalProvider(LocalNavController provides localNavController) {
+        NavHost(
+            navController = localNavController,
+            startDestination = startDestination.route
+        ) {
+            addAnimatedComposable(route = AuthNavRoutes.SignInScreen.route) {
+                SignInScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state
+                )
+            }
 
-        addAnimatedComposable(route = AuthNavRoutes.SignUpScreen.route) {
-            SignUpScreen(
-                modifier = modifier,
-                authViewModel = viewModel,
-                authState = state
-            )
-        }
+            addAnimatedComposable(route = AuthNavRoutes.SignUpScreen.route) {
+                SignUpScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state
+                )
+            }
 
 
-        addAnimatedComposable(route = AuthNavRoutes.BasicIntroScreen.route) {
-            BasicIntroScreen(
-                modifier = modifier,
-                authViewModel = viewModel,
-                authState = state
-            )
-        }
+            addAnimatedComposable(route = AuthNavRoutes.BasicIntroScreen.route) {
+                BasicIntroScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state
+                )
+            }
 
-        addAnimatedComposable(route = AuthNavRoutes.ProfileScreen.route) {
-            ProfileScreen(
-                modifier = modifier,
-                authViewModel = viewModel,
-                authState = state
-            )
+            addAnimatedComposable(route = AuthNavRoutes.ProfileScreen.route) {
+                ProfileScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state
+                )
+            }
         }
     }
 }

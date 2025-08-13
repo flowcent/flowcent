@@ -3,9 +3,8 @@ package com.aiapp.flowcent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +22,7 @@ import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.GetTopBarForRoute
-import com.aiapp.flowcent.core.presentation.navigation.getCurrentRoute
+import com.aiapp.flowcent.core.presentation.navigation.LocalNavController
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
 import flowcent.composeapp.generated.resources.Res
@@ -88,41 +87,42 @@ fun App(
     val selectedIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
 
     AppTheme {
-        Scaffold(
-            containerColor = Color.Transparent,
-            topBar = {
-                GetTopBarForRoute(
-                    route = currentRoute.orEmpty(),
-                    navController = globalNavController
-                )
-            },
-            bottomBar = {
-                if (showBottomNav) {
-                    BottomNavigationBar(
-                        items = navItems,
-                        selectedIndex = selectedIndex,
-                        onItemSelected = { index ->
-                            val route = navItems[index].route
-                            if (currentRoute != route) {
-                                globalNavController.navigate(route) {
-                                    popUpTo(globalNavController.graph.startDestinationId) {
-                                        saveState = true
+        CompositionLocalProvider(LocalNavController provides globalNavController) {
+            Scaffold(
+                containerColor = Color.Transparent,
+                topBar = {
+                    GetTopBarForRoute(
+                        route = currentRoute.orEmpty()
+                    )
+                },
+                bottomBar = {
+                    if (showBottomNav) {
+                        BottomNavigationBar(
+                            items = navItems,
+                            selectedIndex = selectedIndex,
+                            onItemSelected = { index ->
+                                val route = navItems[index].route
+                                if (currentRoute != route) {
+                                    globalNavController.navigate(route) {
+                                        popUpTo(globalNavController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
+            ) { innerPadding ->
+                AppNavGraph(
+                    globalNavController = globalNavController,
+                    modifier = Modifier.padding(innerPadding),
+                    speechRecognizer = speechRecognizer,
+                    startDestination = AppNavRoutes.Splash
+                )
             }
-        ) { innerPadding ->
-            AppNavGraph(
-                globalNavController = globalNavController,
-                modifier = Modifier.padding(innerPadding),
-                speechRecognizer = speechRecognizer,
-                startDestination = AppNavRoutes.Splash
-            )
         }
     }
 }
