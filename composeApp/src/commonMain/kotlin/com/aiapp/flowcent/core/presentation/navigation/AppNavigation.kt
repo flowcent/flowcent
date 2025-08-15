@@ -4,9 +4,4 @@
 
 package com.aiapp.flowcent.core.presentation.navigation
 
-import androidx.compose.runtime.compositionLocalOf
 import androidx.navigation.NavHostController
-
-val AppNavController = compositionLocalOf<NavHostController> {
-    error("No NavController provided")
-}

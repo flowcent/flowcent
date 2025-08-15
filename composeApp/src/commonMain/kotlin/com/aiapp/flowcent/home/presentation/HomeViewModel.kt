@@ -14,6 +14,7 @@ import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItem
+import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import io.github.aakira.napier.Napier
@@ -57,7 +58,7 @@ class HomeViewModel(
 
             UserAction.NavigateToAuth -> {
                 viewModelScope.launch {
-                    _uiEvent.send(UiEvent.NavigateToAuth)
+                    _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Auth.route))
                 }
             }
 
@@ -89,7 +90,7 @@ class HomeViewModel(
 
             UserAction.NavigateToProfile -> {
                 viewModelScope.launch {
-                    _uiEvent.send(UiEvent.NavigateToProfile)
+                    _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Profile.route))
                 }
             }
         }

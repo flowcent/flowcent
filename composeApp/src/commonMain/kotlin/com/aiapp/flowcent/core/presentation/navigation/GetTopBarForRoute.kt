@@ -13,13 +13,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 
 @Composable
-fun GetTopBarForRoute(route: String) {
+fun GetTopBarForRoute(navController: NavHostController, route: String) {
     when (route) {
-        AppNavRoutes.Accounts.route -> AppBar(title = "Shared")
+        AppNavRoutes.Accounts.route -> AppBar(navController = navController, title = "Shared")
         AppNavRoutes.Auth.route -> null
-        AppNavRoutes.Chat.route -> AppBar(title = "Chat")
+        AppNavRoutes.Chat.route -> AppBar(navController = navController, title = "Chat")
 
         AppNavRoutes.Home.route -> null
         AppNavRoutes.Profile.route -> null
@@ -30,12 +31,11 @@ fun GetTopBarForRoute(route: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppBar(
+    navController: NavHostController,
     title: String,
     showBackButton: Boolean = true,
     actions: @Composable (() -> Unit)? = null
 ) {
-    val navController = AppNavController.current
-
     TopAppBar(
         title = {
             Text(
