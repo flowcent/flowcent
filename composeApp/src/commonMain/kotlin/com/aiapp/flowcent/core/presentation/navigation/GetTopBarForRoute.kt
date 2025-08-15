@@ -14,17 +14,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
+import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 
+
+//TODO: NEEDS REFACTORING HERE
 @Composable
 fun GetTopBarForRoute(navController: NavHostController, route: String) {
     when (route) {
         AppNavRoutes.Accounts.route -> AppBar(navController = navController, title = "Shared")
         AppNavRoutes.Auth.route -> null
         AppNavRoutes.Chat.route -> AppBar(navController = navController, title = "Chat")
-
+        AuthNavRoutes.ProfileScreen.route -> AppBar(navController = navController, title = "Profile")
+        AccountsNavRoutes.AccountsHomeScreen.route -> AppBar(navController = navController, title = "Accounts")
+        AccountsNavRoutes.AddAccountScreen.route -> AppBar(navController = navController, title = "Add Account")
+        AccountsNavRoutes.AccountDetailScreen.route -> AppBar(navController = navController, title = "Account Details")
         AppNavRoutes.Home.route -> null
         AppNavRoutes.Profile.route -> null
         AppNavRoutes.Splash.route -> null
+        else -> null
     }
 }
 
