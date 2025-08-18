@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -63,100 +64,118 @@ fun BasicIntroScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Spacer(Modifier.height(72.dp))
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                item {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(Modifier.height(72.dp))
 
-                Text(
-                    text = "We need some basics to start with you",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp
-                    )
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = "No worries! It's just a formality",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
-                )
+                        Text(
+                            text = "We need some basics to start with you",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 32.sp
+                            )
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = "No worries! It's just a formality",
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
+                        )
 
-                Spacer(Modifier.height(48.dp))
+                        Spacer(Modifier.height(48.dp))
 
-                // Username
-                Text(text = "What should we call you?", fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(6.dp))
+                        // Username
+                        Text(text = "What should we call you?", fontWeight = FontWeight.SemiBold)
+                        Spacer(Modifier.height(6.dp))
 
-                OutlinedTextField(
-                    value = authState.username,
-                    onValueChange = { authViewModel.onAction(UserAction.UpdateUsername(it)) },
-                    placeholder = { Text("Type Your Usual Name") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
+                        OutlinedTextField(
+                            value = authState.username,
+                            onValueChange = { authViewModel.onAction(UserAction.UpdateUsername(it)) },
+                            placeholder = { Text("Type Your Usual Name") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
 
-                Spacer(Modifier.height(24.dp))
+                        Spacer(Modifier.height(24.dp))
 
-                // Opening Balance
-                Text(
-                    text = "Your balance to begin with?",
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(Modifier.height(6.dp))
+                        // Opening Balance
+                        Text(
+                            text = "Your balance to begin with?",
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(6.dp))
 
-                OutlinedTextField(
-                    value = if (authState.initialBalance > 0.0) {
-                        if (authState.initialBalance % 1.0 == 0.0) {
-                            authState.initialBalance.toInt()
-                                .toString() // Remove .0 for whole numbers
-                        } else {
-                            authState.initialBalance.toString()
-                        }
-                    } else "",
-                    onValueChange = { authViewModel.onAction(UserAction.UpdateInitialBalance(it.toDouble())) },
-                    placeholder = { androidx.compose.material.Text("Opening Balance") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
+                        OutlinedTextField(
+                            value = if (authState.initialBalance > 0.0) {
+                                if (authState.initialBalance % 1.0 == 0.0) {
+                                    authState.initialBalance.toInt()
+                                        .toString() // Remove .0 for whole numbers
+                                } else {
+                                    authState.initialBalance.toString()
+                                }
+                            } else "",
+                            onValueChange = {
+                                authViewModel.onAction(
+                                    UserAction.UpdateInitialBalance(
+                                        it.toDouble()
+                                    )
+                                )
+                            },
+                            placeholder = { androidx.compose.material.Text("Opening Balance") },
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true
+                        )
 
-                Spacer(Modifier.height(24.dp))
+                        Spacer(Modifier.height(24.dp))
 
-                // Saving Goals
-                Text(
-                    text = "How much do you want to save of it monthly?",
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(Modifier.height(6.dp))
+                        // Saving Goals
+                        Text(
+                            text = "How much do you want to save of it monthly?",
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(6.dp))
 
 
-                CustomBalanceSlider(
-                    openingBalance = authState.initialBalance,
-                    onSliderValueChange = { amount ->
-                        authViewModel.onAction(UserAction.UpdateSavingTarget(amount))
+                        CustomBalanceSlider(
+                            openingBalance = authState.initialBalance,
+                            onSliderValueChange = { amount ->
+                                authViewModel.onAction(UserAction.UpdateSavingTarget(amount))
+                            }
+                        )
+
+                        Spacer(Modifier.height(24.dp))
+
+
+                        // Phone number
+                        Text(
+                            text = "Please provide us your phone number",
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(6.dp))
+
+                        AppCountryPickerPhoneField(
+                            mobileNumber = authState.phoneNumber,
+                            defaultCountryCode = "us",
+                            onMobileNumberChange = { newValue ->
+                                authViewModel.onAction(UserAction.UpdatePhoneNumber(newValue))
+                            },
+                            onCountrySelected = { country ->
+                                authViewModel.onAction(UserAction.UpdateCountry(country))
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                                .background(Color.White, shape = RoundedCornerShape(8.dp))
+                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
+                            label = {
+                                Text(
+                                    "Mobile Number",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        )
+
                     }
-                )
-
-                Spacer(Modifier.height(24.dp))
-
-
-                // Phone number
-                Text(text = "Please provide us your phone number", fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(6.dp))
-
-                AppCountryPickerPhoneField(
-                    mobileNumber = authState.phoneNumber,
-                    defaultCountryCode = "us",
-                    onMobileNumberChange = { newValue ->
-                        authViewModel.onAction(UserAction.UpdatePhoneNumber(newValue))
-                    },
-                    onCountrySelected = { country ->
-                        authViewModel.onAction(UserAction.UpdateCountry(country))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                        .background(Color.White, shape = RoundedCornerShape(8.dp))
-                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                    label = { Text("Mobile Number", style = MaterialTheme.typography.bodyMedium) }
-                )
-
+                }
             }
 
             // Next Button

@@ -71,3 +71,11 @@
 # Replace 'com.yourcompany.project.shared.data' with the actual package name
 # where your data models are located in your shared module.
 -keep class com.yourcompany.project.shared.data.** { *; }
+
+
+# Keep attribute classes for Firebase/Google services
+-keepattributes Signature,RuntimeVisibleAnnotations,Annotation
+
+# Keep the classes required for Google Sign-In
+-keep class com.google.android.gms.auth.** { *; }
+-keep class com.google.android.gms.common.** { *; }

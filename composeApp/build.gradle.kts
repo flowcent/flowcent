@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
-    id("com.github.gmazzo.buildconfig") version "5.6.7"
+//    id("com.github.gmazzo.buildconfig") version "5.6.7"
 }
 
 //@Sohan
@@ -104,14 +104,6 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
     }
-
-    buildConfig {
-        val firebaseAiApiKeyIos: String =
-            gradleLocalProperties(rootDir, providers).getProperty("FIREBASE_AI_API_KEY_IOS")
-
-        buildConfigField("FIREBASE_AI_API_KEY_IOS", firebaseAiApiKeyIos)
-        buildConfigField("APP_VERSION", "1.0")
-    }
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -140,7 +132,7 @@ android {
     }
 
     signingConfigs {
-        create("fcdebug") {
+        getByName("debug") {
             keyAlias = "fcdebug"
             keyPassword = "fcdebug"
             storeFile = file("../keys/flowcent.debug.keystore")
@@ -160,10 +152,12 @@ android {
         getByName("debug") {
             isMinifyEnabled = false
             versionNameSuffix = "-DEBUG"
-            signingConfig = signingConfigs.getByName("fcdebug")
+            signingConfig = signingConfigs.getByName("debug")
+
         }
         getByName("release") {
             isMinifyEnabled = true
+            versionNameSuffix = "-RELEASE"
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -171,6 +165,11 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
 
     applicationVariants.all {
         val variant = this
@@ -183,20 +182,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
+
 
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-
-
-
-
-
-
-
-
-

@@ -33,7 +33,6 @@ import flowcent.composeapp.generated.resources.ic_share_accounts_selected
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App(
@@ -50,7 +49,8 @@ fun App(
     LaunchedEffect(key1 = currentRoute) {
         if (currentRoute == AppNavRoutes.Splash.route ||
             currentRoute == AppNavRoutes.Auth.route ||
-            currentRoute == AuthNavRoutes.ProfileScreen.route
+            currentRoute == AuthNavRoutes.ProfileScreen.route ||
+            currentRoute == AuthNavRoutes.BasicIntroScreen.route
         ) {
             showBottomNav = false
         } else {

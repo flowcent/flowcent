@@ -1,6 +1,5 @@
 package com.aiapp.flowcent.core.presentation.platform
 
-import FlowCent.composeApp.BuildConfig
 import com.aiapp.flowcent.core.data.ContentBlock
 import com.aiapp.flowcent.core.data.ContentPart
 import com.aiapp.flowcent.core.data.GeminiContentRequest
@@ -45,7 +44,7 @@ actual class FlowCentAi {
         }
     }
 
-    private val apiKey = BuildConfig.FIREBASE_AI_API_KEY_IOS
+    private val apiKey = "AIzaSyDgyl1Ir3VxoXid_cdP57EF67-troYy7oI"
 
     private val json = Json {
         ignoreUnknownKeys = true
