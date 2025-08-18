@@ -50,7 +50,9 @@ fun App(
         if (currentRoute == AppNavRoutes.Splash.route ||
             currentRoute == AppNavRoutes.Auth.route ||
             currentRoute == AuthNavRoutes.ProfileScreen.route ||
-            currentRoute == AuthNavRoutes.BasicIntroScreen.route
+            currentRoute == AuthNavRoutes.BasicIntroScreen.route ||
+            currentRoute == AuthNavRoutes.SignInScreen.route ||
+            currentRoute == AuthNavRoutes.SignUpScreen.route
         ) {
             showBottomNav = false
         } else {
