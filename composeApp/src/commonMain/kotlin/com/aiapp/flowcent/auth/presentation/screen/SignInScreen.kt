@@ -32,8 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -54,10 +52,6 @@ import com.aiapp.flowcent.core.utils.DialogType
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
-import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.compose_multiplatform
-import io.github.aakira.napier.Napier
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SignInScreen(
@@ -104,7 +98,7 @@ fun SignInScreen(
 //                }
 //            }
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .padding(horizontal = 24.dp)
     ) {
         showDialog?.let {
             Dialog(

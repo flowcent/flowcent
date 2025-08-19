@@ -26,6 +26,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +45,8 @@ import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
+import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
@@ -61,24 +65,38 @@ fun SignUpScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
+    val connectivityObserver = rememberConnectivityObserver()
+
+    // Observe general connectivity
+    val status by connectivityObserver.observe()
+        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
+
+    // Observe mobile data status
+    val isMobileData by connectivityObserver.isMobileDataEnabled()
+        .collectAsState(initial = false)
+
+    LaunchedEffect(key1 = status) {
+        authViewModel.onAction(UserAction.CheckInternet(status = status))
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .drawWithCache {
-                onDrawBehind {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFFECE8FD),
-                                Color(0xFFFFFFFF),
-                                Color(0xFFEBF9FE),
-                                Color(0xFFF9E8FA),
-                            )
-                        )
-                    )
-                }
-            }
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+//            .drawWithCache {
+//                onDrawBehind {
+//                    drawRect(
+//                        brush = Brush.verticalGradient(
+//                            colors = listOf(
+//                                Color(0xFFECE8FD),
+//                                Color(0xFFFFFFFF),
+//                                Color(0xFFEBF9FE),
+//                                Color(0xFFF9E8FA),
+//                            )
+//                        )
+//                    )
+//                }
+//            }
+            .padding(horizontal = 24.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
