@@ -9,6 +9,8 @@ import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.utils.Constants
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.domain.utils.Resource
+import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import com.aiapp.flowcent.core.utils.DialogType
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
@@ -86,6 +88,7 @@ class AuthViewModel(
                             }
                             if (result.data == true) {
                                 setUserSignedIn(true)
+                                saveUserUid(action.firebaseUser.uid)
                                 _uiEvent.send(UiEvent.NavigateToHome)
                             } else {
                                 _uiEvent.send(UiEvent.NavigateToBasicIntro)
@@ -95,12 +98,7 @@ class AuthViewModel(
                 }
             }
 
-            is UserAction.SaveUserUid -> {
-                viewModelScope.launch {
-                    prefRepository.saveUid(action.uid)
-                }
-            }
-
+            is UserAction.SaveUserUid -> saveUserUid(action.uid)
             is UserAction.UpdateInitialBalance -> {
                 if (!action.initialBalance.toString().matches(Regex("^\\d*\\.?\\d*\$"))) return
                 if (action.initialBalance < 0) return
@@ -186,6 +184,21 @@ class AuthViewModel(
                     }
                 }
             }
+
+            is UserAction.CheckInternet -> {
+                Napier.e("Sohan action.status ${action.status}")
+                viewModelScope.launch {
+                    if (action.status == ConnectivityObserver.Status.Unavailable) {
+                        _uiEvent.send(UiEvent.ShowDialog(dialogType = DialogType.NO_INTERNET))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun saveUserUid(uid: String) {
+        viewModelScope.launch {
+            prefRepository.saveUid(uid)
         }
     }
 
@@ -282,13 +295,19 @@ class AuthViewModel(
                         onAction(
                             UserAction.IsUserExist(firebaseUser, Constants.SIGN_IN_TYPE_GOOGLE)
                         )
-                        onAction(UserAction.SaveUserUid(firebaseUser.uid))
                     }
                 } else {
                     if (result.exceptionOrNull() is CancellationException) {
                         Napier.e("Google Sign-In was cancelled by the user.")
                     } else {
                         Napier.e("onFirebaseResult Error: ${result.exceptionOrNull()?.message}")
+                        if (result.exceptionOrNull()?.message?.contains("Idtoken is null") == true) {
+                            _uiEvent.send(
+                                UiEvent.ShowDialog(
+                                    dialogType = DialogType.NO_INTERNET,
+                                )
+                            )
+                        }
                     }
                 }
             } catch (ex: Exception) {
@@ -305,6 +324,7 @@ class AuthViewModel(
                 is Resource.Success -> {
                     println("Sohan createNewUserToDb success ${result.data}")
                     setUserSignedIn(true)
+                    saveUserUid(user.uid)
                     _uiEvent.send(UiEvent.NavigateToHome)
                 }
 

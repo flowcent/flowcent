@@ -24,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,20 +40,32 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
+import com.aiapp.flowcent.auth.presentation.UiEvent
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppTextField
+import com.aiapp.flowcent.core.presentation.components.NoInternet
+import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
+import com.aiapp.flowcent.core.utils.DialogType
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
+import flowcent.composeapp.generated.resources.Res
+import flowcent.composeapp.generated.resources.compose_multiplatform
+import io.github.aakira.napier.Napier
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
-    authState: AuthState
+    authState: AuthState,
+    showDialog: UiEvent.ShowDialog? = null,
+    onDismissDialog: () -> Unit
 ) {
 
     var email by remember { mutableStateOf("") }
@@ -59,9 +73,22 @@ fun SignInScreen(
     var rememberMe by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val connectivityObserver = rememberConnectivityObserver()
+
+    // Observe general connectivity
+    val status by connectivityObserver.observe()
+        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
+
+    // Observe mobile data status
+    val isMobileData by connectivityObserver.isMobileDataEnabled()
+        .collectAsState(initial = false)
+
+    LaunchedEffect(key1 = status) {
+        authViewModel.onAction(UserAction.CheckInternet(status = status))
+    }
+
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
 //            .drawWithCache {
 //                onDrawBehind {
 //                    drawRect(
@@ -79,6 +106,25 @@ fun SignInScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
+        showDialog?.let {
+            Dialog(
+                onDismissRequest = onDismissDialog,
+            ) {
+                if (it.dialogType == DialogType.NO_INTERNET) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                            .height(300.dp)
+                            .background(Color.White, shape = RoundedCornerShape(12.dp))
+                            .align(Alignment.Center).padding(12.dp)
+                    ) {
+                        NoInternet(
+                            imageSize = 100.dp,
+                            onButtonClick = onDismissDialog
+                        )
+                    }
+                }
+            }
+        }
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,10 +134,8 @@ fun SignInScreen(
                 Spacer(Modifier.height(72.dp))
 
                 Text(
-                    text = "Sign In",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp
+                    text = "Sign In", style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold, fontSize = 32.sp
                     )
                 )
                 Spacer(Modifier.height(8.dp))
@@ -131,8 +175,7 @@ fun SignInScreen(
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(icon, contentDescription = null)
                         }
-                    }
-                )
+                    })
 
                 Spacer(Modifier.height(16.dp))
 
@@ -228,8 +271,7 @@ fun SignInScreen(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable(
-                            onClick = { authViewModel.onAction(UserAction.NavigateToSignUp) }
-                        )
+                            onClick = { authViewModel.onAction(UserAction.NavigateToSignUp) })
                     )
                 }
             }
