@@ -44,6 +44,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ChatInput(
+    modifier: Modifier = Modifier,
     state: ChatState,
     isListening: Boolean = false,
     onUpdateText: (text: String) -> Unit = {},
@@ -82,7 +83,7 @@ fun ChatInput(
 
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
@@ -30,6 +31,7 @@ import flowcent.composeapp.generated.resources.ic_home
 import flowcent.composeapp.generated.resources.ic_home_selected
 import flowcent.composeapp.generated.resources.ic_share_accounts
 import flowcent.composeapp.generated.resources.ic_share_accounts_selected
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -44,11 +46,23 @@ fun App(
     val currentDestination by navController.currentBackStackEntryAsState()
     val currentRoute = currentDestination?.destination?.route
 
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val currentTopLevelRoute = currentBackStackEntry
+        ?.destination
+        ?.hierarchy
+        ?.firstOrNull { destination ->
+            listOf(AppNavRoutes.Chat, AppNavRoutes.Home, AppNavRoutes.Accounts)
+                .any { it.route == destination.route }
+        }
+        ?.route
+
+
     var showBottomNav by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = currentRoute) {
-        if (currentRoute == AppNavRoutes.Splash.route ||
-            currentRoute == AppNavRoutes.Auth.route ||
+        if (currentTopLevelRoute == AppNavRoutes.Splash.route ||
+            currentTopLevelRoute == AppNavRoutes.Auth.route ||
             currentRoute == AuthNavRoutes.ProfileScreen.route ||
             currentRoute == AuthNavRoutes.BasicIntroScreen.route ||
             currentRoute == AuthNavRoutes.SignInScreen.route ||
@@ -84,7 +98,7 @@ fun App(
     )
 
 
-    val selectedIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
+    val selectedIndex = navItems.indexOfFirst { it.route == currentTopLevelRoute }.coerceAtLeast(0)
 
     AppTheme {
         Scaffold(
@@ -102,7 +116,8 @@ fun App(
                         selectedIndex = selectedIndex,
                         onItemSelected = { index ->
                             val route = navItems[index].route
-                            if (currentRoute != route) {
+                            Napier.e("Sohan BottomNavigationBar route $route")
+                            if (currentTopLevelRoute != route) {
                                 navController.navigate(route) {
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true

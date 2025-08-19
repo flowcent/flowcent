@@ -1,11 +1,14 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -14,6 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -53,98 +58,122 @@ fun ChatScreen(
         }
     }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        AccountTypeSelectionToggle(
-            selectionType = chatState.selectionType,
-            onSelectionChanged = {
-                viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
-            },
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp)
-        )
-
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            reverseLayout = true
+                .fillMaxSize()
+                .padding(20.dp)
         ) {
-            println("Sohan messages: ${chatState.messages}")
-            items(chatState.messages.reversed()) {
-                if (it.isUser) {
-                    UserMessage(text = it.text)
-                } else {
-                    Column {
-                        if (it.isBotMessageLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                color = Color.Blue
-                            )
+            AccountTypeSelectionToggle(
+                selectionType = chatState.selectionType,
+                onSelectionChanged = {
+                    viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+            )
+
+            if (chatState.messages.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Start chatting to manage your expenses!",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    reverseLayout = true
+                ) {
+                    println("Sohan messages: ${chatState.messages}")
+                    items(chatState.messages.reversed()) {
+                        if (it.isUser) {
+                            UserMessage(text = it.text)
                         } else {
-                            Row(
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.outline_charger),
-                                    contentDescription = null,
-                                    tint = Color.Black,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Column(
-                                    modifier = Modifier
-                                        .background(Color.White, shape = RoundedCornerShape(8.dp))
-                                        .padding(16.dp)
-                                ) {
-                                    BotMessage(text = it.text, isRich = true)
-                                    if (it.expenseItems.isNotEmpty()) {
-                                        SpendingList(
-                                            expenseItems = it.expenseItems,
-                                            checkedExpenseItems = chatState.checkedExpenseItems,
-                                            onCheckedItem = { isChecked, expenseItem ->
-                                                viewModel.onAction(
-                                                    UserAction.UpdateCheckedItem(
-                                                        isChecked,
-                                                        expenseItem
-                                                    )
-                                                )
-                                            },
-                                            modifier = Modifier.padding(vertical = 8.dp)
+                            Column {
+                                if (it.isBotMessageLoading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                                        color = Color.Blue
+                                    )
+                                } else {
+                                    Row(
+                                        modifier = Modifier.padding(8.dp)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(Res.drawable.outline_charger),
+                                            contentDescription = null,
+                                            tint = Color.Black,
+                                            modifier = Modifier.size(32.dp)
                                         )
+                                        Spacer(modifier = Modifier.width(8.dp))
 
-                                        if (chatState.selectionType == AccountSelectionType.SHARED &&
-                                            chatState.sharedAccounts.isNotEmpty()
+                                        Column(
+                                            modifier = Modifier
+                                                .background(
+                                                    Color.White,
+                                                    shape = RoundedCornerShape(8.dp)
+                                                )
+                                                .padding(16.dp)
                                         ) {
-                                            AccountSelectorRow(
-                                                accounts = chatState.sharedAccounts,
-                                                selectedAccountId = chatState.selectedAccountId,
-                                                onAccountSelected = { account ->
-                                                    viewModel.onAction(
-                                                        UserAction.SelectAccount(
-                                                            account.id,
-                                                            account.accountName
+                                            BotMessage(text = it.text, isRich = true)
+                                            if (it.expenseItems.isNotEmpty()) {
+                                                SpendingList(
+                                                    expenseItems = it.expenseItems,
+                                                    checkedExpenseItems = chatState.checkedExpenseItems,
+                                                    onCheckedItem = { isChecked, expenseItem ->
+                                                        viewModel.onAction(
+                                                            UserAction.UpdateCheckedItem(
+                                                                isChecked,
+                                                                expenseItem
+                                                            )
                                                         )
+                                                    },
+                                                    modifier = Modifier.padding(vertical = 8.dp)
+                                                )
+
+                                                if (chatState.selectionType == AccountSelectionType.SHARED &&
+                                                    chatState.sharedAccounts.isNotEmpty()
+                                                ) {
+                                                    AccountSelectorRow(
+                                                        accounts = chatState.sharedAccounts,
+                                                        selectedAccountId = chatState.selectedAccountId,
+                                                        onAccountSelected = { account ->
+                                                            viewModel.onAction(
+                                                                UserAction.SelectAccount(
+                                                                    account.id,
+                                                                    account.accountName
+                                                                )
+                                                            )
+                                                        }
                                                     )
                                                 }
-                                            )
-                                        }
 
-                                        PromptSave(
-                                            selectionType = chatState.selectionType,
-                                            selectedAccountName = chatState.selectedAccountName,
-                                            onClickSave = {
-                                                viewModel.onAction(
-                                                    UserAction.SaveExpenseItemsToDb
+                                                PromptSave(
+                                                    selectionType = chatState.selectionType,
+                                                    selectedAccountName = chatState.selectedAccountName,
+                                                    onClickSave = {
+                                                        viewModel.onAction(
+                                                            UserAction.SaveExpenseItemsToDb
+                                                        )
+                                                    },
+                                                    onClickDiscard = {
+                                                        viewModel.onAction(UserAction.DiscardExpenseItems)
+                                                    }
                                                 )
-                                            },
-                                            onClickDiscard = {
-                                                viewModel.onAction(UserAction.DiscardExpenseItems)
                                             }
-                                        )
+                                        }
                                     }
                                 }
                             }
@@ -155,6 +184,10 @@ fun ChatScreen(
         }
 
         ChatInput(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(20.dp),
             state = chatState,
             isListening = chatState.isListening,
             onUpdateText = {

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.domain.model.NavItem
+import io.github.aakira.napier.Napier
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -24,6 +25,7 @@ fun BottomNavigationBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit
 ) {
+    Napier.e("Sohan selectedIndex $selectedIndex")
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface
