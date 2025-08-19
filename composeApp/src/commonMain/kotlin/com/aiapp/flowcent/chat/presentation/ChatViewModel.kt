@@ -17,6 +17,8 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeIn
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.chat.domain.utils.getTransactionId
 import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
+import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import com.aiapp.flowcent.core.utils.DialogType
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -158,6 +160,28 @@ class ChatViewModel(
                         }
                         currentState.copy(
                             checkedExpenseItems = updatedCheckedItems
+                        )
+                    }
+                }
+            }
+
+            is UserAction.UpdateListening -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            isListening = action.isListening
+                        )
+                    }
+                }
+            }
+
+            is UserAction.CheckInternet -> {
+                viewModelScope.launch {
+                    if (action.status == ConnectivityObserver.Status.Unavailable) {
+                        _uiEvent.send(
+                            UiEvent.ShowDialog(
+                                dialogType = DialogType.NO_INTERNET
+                            )
                         )
                     }
                 }
