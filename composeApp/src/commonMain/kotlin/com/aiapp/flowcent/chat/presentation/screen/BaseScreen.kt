@@ -23,6 +23,7 @@ import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
 import com.aiapp.flowcent.chat.presentation.event.EventHandler
+import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
@@ -98,7 +99,7 @@ fun BaseScreen(
                 if (hasAudioPermission) {
                     coroutineScope.launch {
                         speechRecognizer.startListening().collect { text ->
-                            viewModel.onAction(UserAction.UpdateText(text))
+                            viewModel.onAction(UserAction.UpdateVoiceText(text, text))
                         }
                         viewModel.onAction(UserAction.UpdateListening(false))
                     }
@@ -114,6 +115,10 @@ fun BaseScreen(
                     viewModel.onAction(UserAction.UpdateListening(false))
                 }
             }
+
+            UiEvent.NavigateToVoice -> navController.navigate(ChatNavRoutes.VoiceAssistantScreen.route)
+            UiEvent.NavigateToChat -> navController.navigate(ChatNavRoutes.ChatScreen.route)
+            UiEvent.NavigateToBack -> navController.popBackStack()
         }
     }
 

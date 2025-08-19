@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -66,7 +64,7 @@ fun ChatScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(16.dp)
         ) {
             AccountTypeSelectionToggle(
                 selectionType = chatState.selectionType,
@@ -93,7 +91,7 @@ fun ChatScreen(
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().padding(vertical = 24.dp),
                     reverseLayout = true
                 ) {
                     println("Sohan messages: ${chatState.messages}")
@@ -194,11 +192,7 @@ fun ChatScreen(
                 viewModel.onAction(UserAction.UpdateText(it))
             },
             onClickMic = {
-                if (chatState.isListening) {
-                    viewModel.onAction(UserAction.StopAudioPlayer)
-                } else {
-                    viewModel.onAction(UserAction.StartAudioPlayer)
-                }
+                viewModel.onAction(UserAction.NavigateToVoiceScreen)
             }
         ) {
             viewModel.onAction(UserAction.SendMessage(chatState.userText))

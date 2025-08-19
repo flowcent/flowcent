@@ -186,6 +186,36 @@ class ChatViewModel(
                     }
                 }
             }
+
+            UserAction.NavigateToVoiceScreen -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToVoice)
+                }
+            }
+
+            is UserAction.NavigateToChatScreen -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToChat)
+                }
+            }
+
+            is UserAction.SendVoiceToChat -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            userText = action.message
+                        )
+                    }
+                    _uiEvent.send(UiEvent.NavigateToChat)
+                    onAction(UserAction.SendMessage(action.message))
+                }
+            }
+
+            UserAction.NavigateToBack -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToBack)
+                }
+            }
         }
     }
 

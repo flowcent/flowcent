@@ -11,6 +11,7 @@ import androidx.navigation.navigation
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.screen.BaseScreen
 import com.aiapp.flowcent.chat.presentation.screen.ChatScreen
+import com.aiapp.flowcent.chat.presentation.screen.VoiceAssistantScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
@@ -58,6 +59,43 @@ fun NavGraphBuilder.addChatGraph(
                 fcPermissionsState = fcPermissionsState,
             ) { modifier, chatViewModel, chatState ->
                 ChatScreen(
+                    modifier = modifier,
+                    chatState = chatState,
+                    viewModel = chatViewModel,
+                )
+            }
+        }
+
+        addAnimatedComposable(route = ChatNavRoutes.VoiceAssistantScreen.route) { navBackStackEntry ->
+            val chatNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Chat.route)
+            }
+            val viewModel = koinViewModel<ChatViewModel>(
+                viewModelStoreOwner = chatNavGraphEntry
+            )
+
+            val factory = rememberPermissionsControllerFactory()
+            val controller = remember(factory) {
+                factory.createPermissionsController()
+            }
+
+            BindEffect(controller)
+
+            val permissionVM = viewModel {
+                PermissionsViewModel(controller)
+            }
+
+            val fcPermissionsState by permissionVM.state.collectAsState()
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+                speechRecognizer = speechRecognizer,
+                permissionsVM = permissionVM,
+                fcPermissionsState = fcPermissionsState,
+            ) { modifier, chatViewModel, chatState ->
+                VoiceAssistantScreen(
                     modifier = modifier,
                     chatState = chatState,
                     viewModel = chatViewModel,

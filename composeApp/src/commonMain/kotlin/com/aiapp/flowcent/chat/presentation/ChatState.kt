@@ -22,6 +22,6 @@ data class ChatState(
     val sharedAccounts: List<Account> = emptyList(),
     val selectedAccountId: String = "",
     val selectedAccountName: String = "",
-    val checkedExpenseItems: List<ExpenseItem> = emptyList()
+    val checkedExpenseItems: List<ExpenseItem> = emptyList(),
 )
 

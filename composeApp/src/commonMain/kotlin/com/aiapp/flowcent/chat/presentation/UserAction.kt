@@ -20,4 +20,8 @@ sealed interface UserAction {
     data class UpdateCheckedItem(val isChecked: Boolean, val expenseItem: ExpenseItem) : UserAction
     data class UpdateListening(val isListening: Boolean) : UserAction
     data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
+    data object NavigateToVoiceScreen : UserAction
+    data object NavigateToChatScreen : UserAction
+    data object NavigateToBack : UserAction
+    data class SendVoiceToChat(val message: String) : UserAction
 }
