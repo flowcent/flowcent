@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.auth.presentation.screen
+package com.aiapp.flowcent.accounts.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,12 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
-import com.aiapp.flowcent.auth.presentation.AuthState
-import com.aiapp.flowcent.auth.presentation.AuthViewModel
-import com.aiapp.flowcent.auth.presentation.UiEvent
-import com.aiapp.flowcent.auth.presentation.UserAction
+import com.aiapp.flowcent.accounts.presentation.AccountState
+import com.aiapp.flowcent.accounts.presentation.AccountViewModel
+import com.aiapp.flowcent.accounts.presentation.UiEvent
+import com.aiapp.flowcent.accounts.presentation.UserAction
+import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
 import com.aiapp.flowcent.auth.presentation.event.EventHandler
-import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
@@ -32,17 +32,15 @@ import com.aiapp.flowcent.core.utils.DialogType
 @Composable
 fun BaseScreen(
     navController: NavController,
-    viewModel: AuthViewModel,
+    viewModel: AccountViewModel,
     modifier: Modifier = Modifier,
-    content: @Composable (modifier: Modifier, viewModel: AuthViewModel, state: AuthState) -> Unit
+    content: @Composable (modifier: Modifier, viewModel: AccountViewModel, state: AccountState) -> Unit
 ) {
     val connectivityObserver = rememberConnectivityObserver()
 
-    // Observe general connectivity
     val status by connectivityObserver.observe()
         .collectAsState(initial = ConnectivityObserver.Status.Initializing)
 
-    // Observe mobile data status
     val isMobileData by connectivityObserver.isMobileDataEnabled()
         .collectAsState(initial = false)
 
@@ -50,10 +48,8 @@ fun BaseScreen(
         viewModel.onAction(UserAction.CheckInternet(status = status))
     }
 
-    // You can manage other shared states here, like a global dialog
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
 
-    // The EventHandler is now centralized in this single location
     EventHandler(eventFlow = viewModel.uiEvent) { event ->
         handleEvent(event, navController) { dialogEvent ->
             showDialog = dialogEvent
@@ -62,8 +58,6 @@ fun BaseScreen(
 
     val state by viewModel.state.collectAsState()
 
-
-    // Handle showing the dialog here
     showDialog?.let {
         Dialog(
             onDismissRequest = { showDialog = null },
@@ -84,21 +78,19 @@ fun BaseScreen(
         }
     }
 
-    // Pass the state and event handler down to the specific screen content
     content(modifier, viewModel, state)
 }
 
-// Helper function to keep the 'when' statement clean
 private fun handleEvent(
     event: UiEvent,
     navController: NavController,
     onShowDialog: (UiEvent.ShowDialog) -> Unit
 ) {
     when (event) {
-        UiEvent.NavigateToHome -> navController.navigate(AppNavRoutes.Home.route)
-        UiEvent.NavigateToBasicIntro -> navController.navigate(AuthNavRoutes.BasicIntroScreen.route)
-        UiEvent.NavigateToSignIn -> navController.navigate(AuthNavRoutes.SignInScreen.route)
-        UiEvent.NavigateToSignUp -> navController.navigate(AuthNavRoutes.SignUpScreen.route)
+        UiEvent.ClickAdd -> navController.navigate(AccountsNavRoutes.AddAccountScreen.route)
+        UiEvent.NavigateToAccountDetail -> navController.navigate(AccountsNavRoutes.AccountDetailScreen.route)
+        UiEvent.NavigateToAccountHome -> navController.navigate(AccountsNavRoutes.AccountsHomeScreen.route)
+        UiEvent.NavigateToChat -> navController.navigate(AppNavRoutes.Chat.route)
         is UiEvent.ShowDialog -> onShowDialog(event)
     }
 }

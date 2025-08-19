@@ -4,21 +4,21 @@
 
 package com.aiapp.flowcent.accounts.presentation.navigation
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.navigation
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
-import com.aiapp.flowcent.accounts.presentation.UiEvent
 import com.aiapp.flowcent.accounts.presentation.screens.AccountDetailScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AccountsHomeScreen
 import com.aiapp.flowcent.accounts.presentation.screens.AddAccountScreen
+import com.aiapp.flowcent.accounts.presentation.screens.BaseScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
+import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.compose.viewmodel.koinViewModel
@@ -27,84 +27,87 @@ fun NavGraphBuilder.addAccountsGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    addAnimatedComposable(route = AppNavRoutes.Accounts.route) {
-        val viewModel = koinViewModel<AccountViewModel>()
-        val state by viewModel.state.collectAsState()
+    navigation(
+        route = AppNavRoutes.Accounts.route,
+        startDestination = AccountsNavRoutes.AccountsHomeScreen.route
+    ) {
+        addAnimatedComposable(route = AccountsNavRoutes.AccountsHomeScreen.route) { navBackStackEntry ->
+            val accountNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Accounts.route)
+            }
+            val viewModel = koinViewModel<AccountViewModel>(
+                viewModelStoreOwner = accountNavGraphEntry
+            )
 
-        val factory = rememberPermissionsControllerFactory()
-        val controller = remember(factory) {
-            factory.createPermissionsController()
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, acViewModel, state ->
+                AccountsHomeScreen(
+                    modifier = modifier,
+                    viewModel = acViewModel,
+                    state = state
+                )
+            }
+
         }
 
-        BindEffect(controller)
+        addAnimatedComposable(route = AccountsNavRoutes.AddAccountScreen.route) { navBackStackEntry ->
+            val accountNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Accounts.route)
+            }
+            val viewModel = koinViewModel<AccountViewModel>(
+                viewModelStoreOwner = accountNavGraphEntry
+            )
 
-        val permissionVM = androidx.lifecycle.viewmodel.compose.viewModel {
-            PermissionsViewModel(controller)
-        }
+            val factory = rememberPermissionsControllerFactory()
+            val controller = remember(factory) {
+                factory.createPermissionsController()
+            }
 
-        val fcPermissionState by permissionVM.state.collectAsState()
+            BindEffect(controller)
 
-        LaunchedEffect(Unit) {
-            viewModel.uiEvent.collect { event ->
-                when (event) {
-                    UiEvent.ClickAdd -> {
-                        navController.navigate(AccountsNavRoutes.AddAccountScreen.route)
-                    }
+            val permissionVM = androidx.lifecycle.viewmodel.compose.viewModel {
+                PermissionsViewModel(controller)
+            }
 
-                    UiEvent.NavigateToAccountDetail -> {
-                        navController.navigate(AccountsNavRoutes.AccountDetailScreen.route)
-                    }
+            val fcPermissionState by permissionVM.state.collectAsState()
 
-                    UiEvent.NavigateToChat -> {
-                        navController.navigate(AppNavRoutes.Chat.route)
-                    }
-
-                    UiEvent.NavigateToAccountHome -> {
-                        navController.navigate(AccountsNavRoutes.AccountsHomeScreen.route)
-                    }
-                }
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, acViewModel, state ->
+                AddAccountScreen(
+                    modifier = modifier,
+                    viewModel = acViewModel,
+                    state = state,
+                    permissionVm = permissionVM,
+                    fcPermissionState = fcPermissionState
+                )
             }
         }
 
-        AccountsHomeScreen(
-            modifier = modifier,
-            viewModel = viewModel,
-            state = state
-        )
-    }
+        addAnimatedComposable(route = AccountsNavRoutes.AccountDetailScreen.route) { navBackStackEntry ->
+            val accountNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Accounts.route)
+            }
+            val viewModel = koinViewModel<AccountViewModel>(
+                viewModelStoreOwner = accountNavGraphEntry
+            )
 
-    addAnimatedComposable(route = AccountsNavRoutes.AddAccountScreen.route) {
-        val viewModel = koinViewModel<AccountViewModel>()
-        val state by viewModel.state.collectAsState()
-        val factory = rememberPermissionsControllerFactory()
-        val controller = remember(factory) {
-            factory.createPermissionsController()
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, acViewModel, state ->
+                AccountDetailScreen(
+                    modifier = modifier,
+                    viewModel = acViewModel,
+                    state = state
+                )
+            }
         }
-
-        BindEffect(controller)
-
-        val permissionVM = androidx.lifecycle.viewmodel.compose.viewModel {
-            PermissionsViewModel(controller)
-        }
-
-        val fcPermissionState by permissionVM.state.collectAsState()
-
-        AddAccountScreen(
-            modifier = modifier,
-            viewModel = viewModel,
-            state = state,
-            permissionVm = permissionVM,
-            fcPermissionState = fcPermissionState
-        )
-    }
-
-    addAnimatedComposable(route = AccountsNavRoutes.AccountDetailScreen.route) {
-        val viewModel = koinViewModel<AccountViewModel>()
-        val state by viewModel.state.collectAsState()
-        AccountDetailScreen(
-            modifier = modifier,
-            viewModel = viewModel,
-            state = state
-        )
     }
 }

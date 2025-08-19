@@ -186,7 +186,6 @@ class AuthViewModel(
             }
 
             is UserAction.CheckInternet -> {
-                Napier.e("Sohan action.status ${action.status}")
                 viewModelScope.launch {
                     if (action.status == ConnectivityObserver.Status.Unavailable) {
                         _uiEvent.send(UiEvent.ShowDialog(dialogType = DialogType.NO_INTERNET))
