@@ -33,6 +33,7 @@ import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppCountryPickerPhoneField
 import com.aiapp.flowcent.core.presentation.components.CustomBalanceSlider
+import io.github.aakira.napier.Napier
 
 @Composable
 fun BasicIntroScreen(
@@ -41,23 +42,23 @@ fun BasicIntroScreen(
     authState: AuthState
 ) {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .drawWithCache {
-                onDrawBehind {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFFECE8FD),
-                                Color(0xFFFFFFFF),
-                                Color(0xFFEBF9FE),
-                                Color(0xFFF9E8FA),
-                            )
-                        )
-                    )
-                }
-            }
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+//            .drawWithCache {
+//                onDrawBehind {
+//                    drawRect(
+//                        brush = Brush.verticalGradient(
+//                            colors = listOf(
+//                                Color(0xFFECE8FD),
+//                                Color(0xFFFFFFFF),
+//                                Color(0xFFEBF9FE),
+//                                Color(0xFFF9E8FA),
+//                            )
+//                        )
+//                    )
+//                }
+//            }
+            .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

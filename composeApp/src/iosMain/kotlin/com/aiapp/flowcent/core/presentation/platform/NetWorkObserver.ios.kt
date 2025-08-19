@@ -1,15 +1,15 @@
-package com.aiapp.flowcent.core.presentation.platform
-
 // in src/iosMain/kotlin/your/package/ConnectivityObserver.kt
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import platform.Network.NWPathMonitor
 import platform.Network.NWPath
+import platform.NetworkExtension.NWPath
 import platform.darwin.dispatch_get_main_queue
 
 actual class NetWorkObserver : ConnectivityObserver {

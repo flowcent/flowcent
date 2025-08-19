@@ -80,7 +80,7 @@ fun SignUpScreen(
     }
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
 //            .drawWithCache {
 //                onDrawBehind {
@@ -96,7 +96,7 @@ fun SignUpScreen(
 //                    )
 //                }
 //            }
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

@@ -58,31 +58,16 @@ fun SignInScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     authState: AuthState,
-    showDialog: UiEvent.ShowDialog? = null,
-    onDismissDialog: () -> Unit
 ) {
+
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val connectivityObserver = rememberConnectivityObserver()
-
-    // Observe general connectivity
-    val status by connectivityObserver.observe()
-        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
-
-    // Observe mobile data status
-    val isMobileData by connectivityObserver.isMobileDataEnabled()
-        .collectAsState(initial = false)
-
-    LaunchedEffect(key1 = status) {
-        authViewModel.onAction(UserAction.CheckInternet(status = status))
-    }
-
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
 //            .drawWithCache {
 //                onDrawBehind {
 //                    drawRect(
@@ -98,27 +83,27 @@ fun SignInScreen(
 //                }
 //            }
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
-        showDialog?.let {
-            Dialog(
-                onDismissRequest = onDismissDialog,
-            ) {
-                if (it.dialogType == DialogType.NO_INTERNET) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                            .height(300.dp)
-                            .background(Color.White, shape = RoundedCornerShape(12.dp))
-                            .align(Alignment.Center).padding(12.dp)
-                    ) {
-                        NoInternet(
-                            imageSize = 100.dp,
-                            onButtonClick = onDismissDialog
-                        )
-                    }
-                }
-            }
-        }
+//        showDialog?.let {
+//            Dialog(
+//                onDismissRequest = onDismissDialog,
+//            ) {
+//                if (it.dialogType == DialogType.NO_INTERNET) {
+//                    Box(
+//                        modifier = Modifier.fillMaxWidth()
+//                            .height(300.dp)
+//                            .background(Color.White, shape = RoundedCornerShape(12.dp))
+//                            .align(Alignment.Center).padding(12.dp)
+//                    ) {
+//                        NoInternet(
+//                            imageSize = 100.dp,
+//                            onButtonClick = onDismissDialog
+//                        )
+//                    }
+//                }
+//            }
+//        }
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

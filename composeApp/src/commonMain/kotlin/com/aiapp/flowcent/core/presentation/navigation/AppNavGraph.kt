@@ -19,7 +19,7 @@ import com.aiapp.flowcent.splash.navigation.addSplashGraph
 fun AppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: AppNavRoutes = AppNavRoutes.Auth,
+    startDestination: AppNavRoutes = AppNavRoutes.Splash,
     speechRecognizer: SpeechRecognizer
 ) {
     NavHost(

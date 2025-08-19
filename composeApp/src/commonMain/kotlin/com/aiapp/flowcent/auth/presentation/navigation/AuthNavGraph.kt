@@ -1,101 +1,112 @@
 package com.aiapp.flowcent.auth.presentation.navigation
 
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.navigation
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
-import com.aiapp.flowcent.auth.presentation.UiEvent
+import com.aiapp.flowcent.auth.presentation.screen.BaseScreen
 import com.aiapp.flowcent.auth.presentation.screen.BasicIntroScreen
 import com.aiapp.flowcent.auth.presentation.screen.ProfileScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignInScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignUpScreen
-import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
-import com.aiapp.flowcent.core.utils.DialogType
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.addAuthGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    addAnimatedComposable(route = AppNavRoutes.Auth.route) {
-        val viewModel = koinViewModel<AuthViewModel>()
-        val state by viewModel.state.collectAsState()
+    navigation(
+        route = AppNavRoutes.Auth.route,
+        startDestination = AuthNavRoutes.SignInScreen.route
+    ) {
+        addAnimatedComposable(route = AuthNavRoutes.SignInScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
 
-        var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
-
-
-        LaunchedEffect(Unit) {
-            viewModel.uiEvent.collect { event ->
-                when (event) {
-                    UiEvent.NavigateToHome -> {
-                        navController.navigate(AppNavRoutes.Home.route)
-                    }
-
-                    UiEvent.NavigateToBasicIntro -> {
-                        navController.navigate(AuthNavRoutes.BasicIntroScreen.route)
-                    }
-
-                    UiEvent.NavigateToSignIn -> {
-                        navController.navigate(AuthNavRoutes.SignInScreen.route)
-                    }
-
-                    UiEvent.NavigateToSignUp -> {
-                        navController.navigate(AuthNavRoutes.SignUpScreen.route)
-                    }
-
-                    is UiEvent.ShowDialog -> {
-                        showDialog = event
-                    }
-                }
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, viewModel, state ->
+                SignInScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state,
+                )
             }
         }
 
+        addAnimatedComposable(route = AuthNavRoutes.SignUpScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
 
-        SignInScreen(
-            modifier = modifier,
-            authViewModel = viewModel,
-            authState = state,
-            showDialog = showDialog,
-            onDismissDialog = { showDialog = null }
-        )
-    }
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, viewModel, state ->
+                SignUpScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state,
+                )
+            }
+        }
 
-    addAnimatedComposable(route = AuthNavRoutes.SignUpScreen.route) {
-        val viewModel = koinViewModel<AuthViewModel>()
-        val state by viewModel.state.collectAsState()
-        SignUpScreen(
-            modifier = modifier,
-            authViewModel = viewModel,
-            authState = state
-        )
-    }
+        addAnimatedComposable(route = AuthNavRoutes.BasicIntroScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
 
-    addAnimatedComposable(route = AuthNavRoutes.BasicIntroScreen.route) {
-        val viewModel = koinViewModel<AuthViewModel>()
-        val state by viewModel.state.collectAsState()
-        BasicIntroScreen(
-            modifier = modifier,
-            authViewModel = viewModel,
-            authState = state
-        )
-    }
 
-    addAnimatedComposable(route = AuthNavRoutes.ProfileScreen.route) {
-        val viewModel = koinViewModel<AuthViewModel>()
-        val state by viewModel.state.collectAsState()
-        ProfileScreen(
-            modifier = modifier,
-            authViewModel = viewModel,
-            authState = state
-        )
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, viewModel, state ->
+                BasicIntroScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state
+                )
+            }
+
+        }
+
+        addAnimatedComposable(route = AuthNavRoutes.ProfileScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Home.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, viewModel, state ->
+                ProfileScreen(
+                    modifier = modifier,
+                    authViewModel = viewModel,
+                    authState = state
+                )
+            }
+        }
     }
 }
