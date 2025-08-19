@@ -56,11 +56,11 @@ fun NavGraphBuilder.addChatGraph(
                 speechRecognizer = speechRecognizer,
                 permissionsVM = permissionVM,
                 fcPermissionsState = fcPermissionsState,
-            ) { modifier, viewModel, chatState ->
+            ) { modifier, chatViewModel, chatState ->
                 ChatScreen(
                     modifier = modifier,
                     chatState = chatState,
-                    viewModel = viewModel,
+                    viewModel = chatViewModel,
                 )
             }
         }
