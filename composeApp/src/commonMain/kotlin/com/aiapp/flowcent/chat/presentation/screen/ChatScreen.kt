@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -91,7 +92,8 @@ fun ChatScreen(
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(vertical = 24.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(top = 24.dp, bottom = 72.dp), // TODO improve layout padding
                     reverseLayout = true
                 ) {
                     println("Sohan messages: ${chatState.messages}")
