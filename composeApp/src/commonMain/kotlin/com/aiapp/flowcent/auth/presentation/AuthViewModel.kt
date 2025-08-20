@@ -1,8 +1,8 @@
 package com.aiapp.flowcent.auth.presentation
 
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
@@ -16,7 +16,6 @@ import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -71,10 +70,9 @@ class AuthViewModel(
             UserAction.IsLoggedIn -> {}
             is UserAction.IsUserExist -> {
                 viewModelScope.launch {
-                    setLoaderOn(action.signInType)
                     when (val result = authRepository.isUserExist(action.firebaseUser.uid)) {
                         is Resource.Error -> {
-
+                            setLoaderOff(action.signInType)
                         }
 
                         is Resource.Loading -> {}
@@ -168,11 +166,6 @@ class AuthViewModel(
             }
 
             is UserAction.OnGoogleSignInResult -> onGoogleSignInResult(action.result)
-            is UserAction.SignInWithEmailPass -> signInWithEmailPass(
-                action.email,
-                action.password,
-                Constants.SIGN_IN_TYPE_EMAIL
-            )
 
             UserAction.FetchUserId -> {
                 viewModelScope.launch {
@@ -191,6 +184,21 @@ class AuthViewModel(
                         _uiEvent.send(UiEvent.ShowDialog(dialogType = DialogType.NO_INTERNET))
                     }
                 }
+            }
+
+            is UserAction.SignInWithEmailPass -> signInWithEmailPass(
+                action.email,
+                action.password,
+                Constants.SIGN_IN_TYPE_EMAILPASS
+            )
+
+            is UserAction.SignUpWithEMailPass -> {
+                signUpWithEmailPass(
+                    action.email.trim(),
+                    action.password.trim(),
+                    action.confirmPassword.trim(),
+                    Constants.SIGN_IN_TYPE_EMAILPASS
+                )
             }
         }
     }
@@ -240,7 +248,7 @@ class AuthViewModel(
         _state.update {
             it.copy(
                 isEmailSignInProcessing = when (signInType) {
-                    Constants.SIGN_IN_TYPE_EMAIL -> true
+                    Constants.SIGN_IN_TYPE_EMAILPASS -> true
                     else -> it.isEmailSignInProcessing
                 },
                 isGoogleSignInProcessing = when (signInType) {
@@ -260,7 +268,7 @@ class AuthViewModel(
         _state.update {
             it.copy(
                 isEmailSignInProcessing = when (signInType) {
-                    Constants.SIGN_IN_TYPE_EMAIL -> false
+                    Constants.SIGN_IN_TYPE_EMAILPASS -> false
                     else -> it.isEmailSignInProcessing
                 },
                 isGoogleSignInProcessing = when (signInType) {
@@ -279,8 +287,96 @@ class AuthViewModel(
     private fun signInWithEmailPass(email: String, password: String, signInType: String) {
         viewModelScope.launch {
             setLoaderOn(signInType)
-            delay(5000)
-            setLoaderOff(signInType)
+            when (val result = authRepository.signInWithEmailAndPassword(email, password)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan result.message ${result.message}")
+                    setLoaderOff(signInType)
+                    _uiEvent.send(
+                        UiEvent.ShowDialog(
+                            dialogType = DialogType.ERROR,
+                            title = "Sign In Failed",
+                            body = if (result.message
+                                    .contentEquals(
+                                        "The supplied auth credential is incorrect, malformed or has expired.",
+                                        ignoreCase = true
+                                    )
+                            )
+                                "The email or password is incorrect, or has expired."
+                            else
+                                "Sorry! Something went wrong. Please try again later",
+                        )
+                    )
+                }
+
+                Resource.Loading -> {
+                    setLoaderOn(signInType)
+                }
+
+                is Resource.Success -> {
+                    result.data?.let {
+                        val firebaseUser = it.user
+                        if (firebaseUser != null) {
+                            onAction(UserAction.IsUserExist(firebaseUser, signInType))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun signUpWithEmailPass(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        signInType: String
+    ) {
+        viewModelScope.launch {
+            setLoaderOn(signInType)
+            if (password != confirmPassword) {
+                setLoaderOff(signInType)
+                _uiEvent.send(
+                    UiEvent.ShowDialog(
+                        dialogType = DialogType.ERROR,
+                        title = "Password and Confirm Password does not match",
+                    )
+                )
+            }
+            when (val result =
+                authRepository.signUpWithEmailAndPassword(email, password)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan result.message ${result.message}")
+                    setLoaderOff(signInType)
+                    _uiEvent.send(
+                        UiEvent.ShowDialog(
+                            dialogType = DialogType.ERROR,
+                            title = "Sign In Failed",
+                            body = if (result.message
+                                    .contentEquals(
+                                        "The supplied auth credential is incorrect, malformed or has expired.",
+                                        ignoreCase = true
+                                    )
+                            )
+                                "The email or password is incorrect, or has expired."
+                            else
+                                "Sorry! Something went wrong. Please try again later",
+                        )
+                    )
+                }
+
+                Resource.Loading -> {
+                    setLoaderOn(signInType)
+                }
+
+                is Resource.Success -> {
+                    result.data?.let {
+                        val firebaseUser = it.user
+                        if (firebaseUser != null) {
+                            onAction(UserAction.IsUserExist(firebaseUser, signInType))
+                        }
+                    }
+                }
+            }
         }
     }
 

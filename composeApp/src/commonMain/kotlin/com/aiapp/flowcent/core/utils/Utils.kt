@@ -11,3 +11,5 @@ enum class DialogType {
     ERROR,
     INFO
 }
+
+const val PRIVACY_POLICY_URL = "https://flowcent.github.io/#privacy"

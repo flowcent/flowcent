@@ -2,6 +2,7 @@ package com.aiapp.flowcent.auth.data.repository
 
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.core.domain.utils.Resource
+import dev.gitlive.firebase.auth.AuthResult
 
 interface AuthRepository {
     suspend fun createNewUser(user: User): Resource<String>
@@ -9,4 +10,6 @@ interface AuthRepository {
     suspend fun fetchUserProfile(uid: String): Resource<User>
     suspend fun fetchAllUsersPhoneNumbers(): Resource<List<String>>
     suspend fun fetchMatchingUsers(phoneNumbers: List<String>): Resource<List<User>>
+    suspend fun signInWithEmailAndPassword(email: String, password: String): Resource<AuthResult>
+    suspend fun signUpWithEmailAndPassword(email: String, password: String): Resource<AuthResult>
 }

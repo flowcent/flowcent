@@ -14,6 +14,8 @@ import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.splash.SplashViewModel
 import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.FirebaseAuth
+import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.module.Module
@@ -22,6 +24,7 @@ import org.koin.dsl.module
 
 expect val platformModule: Module
 private val firestore: FirebaseFirestore = Firebase.firestore
+private val auth: FirebaseAuth = Firebase.auth
 
 val sharedModule = module {
     //ViewModels
@@ -50,7 +53,7 @@ val sharedModule = module {
     }
     viewModel {
         AuthViewModel(
-            authRepository = AuthRepositoryImpl(firestore),
+            authRepository = AuthRepositoryImpl(firestore, auth),
             prefRepository = PrefRepositoryImpl(get()),
         )
     }

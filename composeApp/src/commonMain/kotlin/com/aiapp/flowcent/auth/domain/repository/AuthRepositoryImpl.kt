@@ -3,12 +3,17 @@ package com.aiapp.flowcent.auth.domain.repository
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.domain.utils.Resource
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.AuthResult
+import dev.gitlive.firebase.auth.FirebaseAuth
+import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.Filter
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.WhereConstraint
 
 class AuthRepositoryImpl(
-    firestore: FirebaseFirestore
+    firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth = Firebase.auth
 ) : AuthRepository {
 
     private val userCollection = firestore.collection("user")
@@ -78,6 +83,30 @@ class AuthRepositoryImpl(
             Resource.Success(users)
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())
+        }
+    }
+
+    override suspend fun signInWithEmailAndPassword(
+        email: String,
+        password: String
+    ): Resource<AuthResult> {
+        return try {
+            val result = auth.signInWithEmailAndPassword(email, password)
+            Resource.Success(result)
+        } catch (ex: Exception) {
+            Resource.Error(ex.message ?: "Sign in failed")
+        }
+    }
+
+    override suspend fun signUpWithEmailAndPassword(
+        email: String,
+        password: String,
+    ): Resource<AuthResult> {
+        return try {
+            val result = auth.createUserWithEmailAndPassword(email, password)
+            Resource.Success(result)
+        } catch (ex: Exception) {
+            Resource.Error(ex.message ?: "Sign up failed")
         }
     }
 }

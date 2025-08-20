@@ -47,8 +47,10 @@ import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.auth.presentation.component.TermsAndConditionsText
 import com.aiapp.flowcent.core.Spacing
+import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
+import com.aiapp.flowcent.core.utils.PRIVACY_POLICY_URL
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
@@ -182,27 +184,25 @@ fun SignUpScreen(
 
                 //Terms and condition
                 TermsAndConditionsText(
-                    url = "https://www.google.com",
+                    url = PRIVACY_POLICY_URL,
                     modifier = Modifier.fillMaxWidth().padding(start = Spacing.small)
                 )
 
                 Spacer(Modifier.height(Spacing.large))
 
-                // Sign In Button
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0E0E0E))
-                ) {
-                    Text(
-                        text = "Sign Up",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                    )
-                }
+                // Sign Up Button
+                AppButton(
+                    onClick = {
+                        authViewModel.onAction(
+                            UserAction.SignUpWithEMailPass(
+                                email, password, confirmPassword
+                            )
+                        )
+                    },
+                    text = "Sign Up",
+                    backgroundColor = Color(0xFF0E0E0E),
+                    isLoading = authState.isEmailSignInProcessing
+                )
 
                 Spacer(Modifier.height(24.dp))
 

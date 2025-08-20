@@ -18,11 +18,16 @@ sealed interface UserAction {
     data object NavigateToSignUp : UserAction
     data class UpdateSavingTarget(val amount: Double) : UserAction
     data class OnGoogleSignInResult(val result: Result<FirebaseUser?>) : UserAction
+
+    data object FetchUserId : UserAction
+    data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
     data class SignInWithEmailPass(
         val email: String,
         val password: String
     ) : UserAction
-
-    data object FetchUserId : UserAction
-    data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
+    data class SignUpWithEMailPass(
+        val email: String,
+        val password: String,
+        val confirmPassword: String
+    ) : UserAction
 }
