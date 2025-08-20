@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -181,10 +182,10 @@ fun VoiceAssistantScreen(
                     }
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_voice), // replace
+                    imageVector = Icons.Default.Mic,
                     contentDescription = "Mic",
-                    tint = Color.Black,
-                    modifier = Modifier.align(Alignment.Center)
+                    tint = Color.White,
+                    modifier = Modifier.align(Alignment.Center).size(40.dp)
                 )
             }
 
