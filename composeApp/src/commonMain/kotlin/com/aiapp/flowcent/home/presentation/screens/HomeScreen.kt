@@ -34,15 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import com.aiapp.flowcent.core.Spacing
 import com.aiapp.flowcent.core.presentation.components.ShimmerBox
 import com.aiapp.flowcent.core.presentation.components.ShimmerSpendingCard
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
-import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
-import com.aiapp.flowcent.home.presentation.UiEvent
 import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
@@ -81,7 +79,7 @@ fun HomeScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = Spacing.horizontalPadding),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -102,7 +100,7 @@ fun HomeScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                Spacer(modifier = Modifier.padding(horizontal = Spacing.small))
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         painter = painterResource(Res.drawable.compose_multiplatform), // Placeholder
@@ -120,14 +118,14 @@ fun HomeScreen(
                 println("Sohan selected date: $it")
                 homeViewModel.onAction(UserAction.SetSelectedDate(it))
             },
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = Spacing.horizontalPadding)
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(Spacing.mediumLarge))
 
         AnimatedVisibility(
             visible = !isScrolled,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = Spacing.horizontalPadding)
         ) {
             Column(
                 modifier = Modifier
@@ -140,7 +138,7 @@ fun HomeScreen(
                             .height(150.dp)
                             .clip(RoundedCornerShape(16.dp))
                     )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(Spacing.mediumLarge))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -152,7 +150,7 @@ fun HomeScreen(
                                 .height(132.dp)
                                 .clip(RoundedCornerShape(16.dp))
                         )
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(Spacing.mediumLarge))
                         ShimmerBox(
                             modifier = Modifier
                                 .weight(1f)
@@ -170,7 +168,7 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier.height(Spacing.mediumLarge))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -183,7 +181,7 @@ fun HomeScreen(
                                 modifier = Modifier.weight(1f)
                             )
 
-                            Spacer(Modifier.width(12.dp))
+                            Spacer(Modifier.width(Spacing.mediumLarge))
 
                             BalanceHighlightBox(
                                 modifier = Modifier.weight(1f)
@@ -196,7 +194,7 @@ fun HomeScreen(
 
         LazyColumn(
             state = listState,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = Spacing.horizontalPadding)
         ) {
             stickyHeader(key = "latest-transaction-header") {
                 Text(
@@ -206,7 +204,7 @@ fun HomeScreen(
                     color = MaterialTheme.colorScheme.inverseSurface,
                     modifier = Modifier.fillMaxWidth()
                         .background(color = MaterialTheme.colorScheme.background)
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = Spacing.verticalPadding)
                 )
             }
 
