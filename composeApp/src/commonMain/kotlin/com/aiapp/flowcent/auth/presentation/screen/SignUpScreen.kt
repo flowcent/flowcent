@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
+import com.aiapp.flowcent.auth.presentation.component.TermsAndConditionsText
+import com.aiapp.flowcent.core.Spacing
 import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
@@ -176,23 +178,15 @@ fun SignUpScreen(
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
                 )
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(Spacing.medium))
 
                 //Terms and condition
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = rememberMe,
-                        onCheckedChange = { rememberMe = it },
-                        colors = CheckboxDefaults.colors(checkedColor = Color(0xFF9C27B0))
-                    )
-                    Text("I agree with the terms and condition")
-                }
+                TermsAndConditionsText(
+                    url = "https://www.google.com",
+                    modifier = Modifier.fillMaxWidth().padding(start = Spacing.small)
+                )
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(Spacing.large))
 
                 // Sign In Button
                 Button(

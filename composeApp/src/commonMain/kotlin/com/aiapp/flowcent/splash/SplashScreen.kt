@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aiapp.flowcent.core.Spacing
 import com.aiapp.flowcent.splash.SplashState
 import com.aiapp.flowcent.splash.SplashViewModel
 
@@ -34,7 +35,7 @@ fun SplashScreen(
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = Spacing.horizontalPadding)
         )
     }
 }
