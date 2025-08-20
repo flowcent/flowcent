@@ -120,6 +120,7 @@ class HomeViewModel(
             is Resource.Success -> {
                 _state.update {
                     it.copy(
+                        user = result.data,
                         userInitialBalance = result.data?.initialBalance ?: 0.0,
                         userSavingTarget = result.data?.savingTarget ?: 0.0
                     )

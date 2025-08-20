@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -90,7 +92,7 @@ fun HomeScreen(
             ) {
                 IconButton(onClick = { homeViewModel.onAction(UserAction.NavigateToProfile) }) {
                     NameInitial(
-                        text = "TH",
+                        text = homeState.user?.localUserName ?: "TH",
                         textSize = 16.sp,
                         size = 40.dp
                     )
@@ -104,23 +106,26 @@ fun HomeScreen(
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
-                    Text(text = "Tom Hanks", style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = homeState.user?.localUserName ?: "Tom Hanks",
+                        style = MaterialTheme.typography.titleLarge
+                    )
                 }
             }
 
             Row {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
-                        painter = painterResource(Res.drawable.compose_multiplatform), // Placeholder
+                        imageVector = Icons.Default.BarChart, // Placeholder
                         contentDescription = "Insight",
                         tint = MaterialTheme.colorScheme.inverseSurface,
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                Spacer(modifier = Modifier.padding(horizontal = Spacing.small))
+
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
-                        painter = painterResource(Res.drawable.compose_multiplatform), // Placeholder
+                        imageVector = Icons.Default.Notifications, // Placeholder
                         contentDescription = "Notifications",
                         tint = MaterialTheme.colorScheme.inverseSurface,
                         modifier = Modifier.size(24.dp)

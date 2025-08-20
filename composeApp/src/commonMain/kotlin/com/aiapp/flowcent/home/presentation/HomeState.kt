@@ -4,6 +4,7 @@
 
 package com.aiapp.flowcent.home.presentation
 
+import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 
 data class HomeState(
@@ -14,5 +15,6 @@ data class HomeState(
     val currentBalance: Double = 0.0,
     val userInitialBalance: Double = 0.0,
     val userSavingTarget: Double = 0.0,
-    val userTotalSpent: Double = 0.0
+    val userTotalSpent: Double = 0.0,
+    val user: User? = null
 )
