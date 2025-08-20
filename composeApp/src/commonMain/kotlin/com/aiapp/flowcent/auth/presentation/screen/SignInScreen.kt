@@ -85,25 +85,6 @@ fun SignInScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
-//        showDialog?.let {
-//            Dialog(
-//                onDismissRequest = onDismissDialog,
-//            ) {
-//                if (it.dialogType == DialogType.NO_INTERNET) {
-//                    Box(
-//                        modifier = Modifier.fillMaxWidth()
-//                            .height(300.dp)
-//                            .background(Color.White, shape = RoundedCornerShape(12.dp))
-//                            .align(Alignment.Center).padding(12.dp)
-//                    ) {
-//                        NoInternet(
-//                            imageSize = 100.dp,
-//                            onButtonClick = onDismissDialog
-//                        )
-//                    }
-//                }
-//            }
-//        }
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

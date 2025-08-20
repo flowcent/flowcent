@@ -15,6 +15,8 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItem
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
+import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import com.aiapp.flowcent.core.utils.DialogType
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import io.github.aakira.napier.Napier
@@ -91,6 +93,14 @@ class HomeViewModel(
             UserAction.NavigateToProfile -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Profile.route))
+                }
+            }
+
+            is UserAction.CheckInternet -> {
+                viewModelScope.launch {
+                    if (action.status == ConnectivityObserver.Status.Unavailable) {
+                        _uiEvent.send(UiEvent.ShowDialog(dialogType = DialogType.NO_INTERNET))
+                    }
                 }
             }
         }

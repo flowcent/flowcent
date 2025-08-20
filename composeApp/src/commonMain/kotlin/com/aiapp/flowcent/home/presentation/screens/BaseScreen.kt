@@ -24,6 +24,7 @@ import com.aiapp.flowcent.core.utils.DialogType
 import com.aiapp.flowcent.home.presentation.HomeState
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.UiEvent
+import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.event.EventHandler
 
 @Composable
@@ -46,7 +47,7 @@ fun BaseScreen(
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
 
     LaunchedEffect(key1 = status) {
-//        viewModel.onAction(UserAction.CheckInternet(status = status))
+        viewModel.onAction(UserAction.CheckInternet(status = status))
     }
 
 
