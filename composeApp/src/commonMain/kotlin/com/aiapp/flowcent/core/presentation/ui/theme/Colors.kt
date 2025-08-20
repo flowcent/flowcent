@@ -22,4 +22,7 @@ object Colors {
 
     val ExpenseColor = Color(0xFFFF375F)
     val IncomeColor = Color(0xFF4CAF50)
+
+    val GradientOne = Color(0xFF5EE0C9)
+    val GradientTwo = Color(0xFF88E7B5)
 }

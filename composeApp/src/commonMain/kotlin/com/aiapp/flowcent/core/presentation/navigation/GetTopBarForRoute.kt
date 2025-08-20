@@ -27,6 +27,7 @@ fun GetTopBarForRoute(navController: NavHostController, route: String) {
         AppNavRoutes.Auth.route -> null
         AppNavRoutes.Chat.route -> AppBar(navController = navController, title = "Chat")
         ChatNavRoutes.ChatScreen.route -> AppBar(navController = navController, title = "Chat")
+        ChatNavRoutes.VoiceAssistantScreen.route -> AppBar(navController = navController, title = "Marcus")
         AuthNavRoutes.ProfileScreen.route -> AppBar(navController = navController, title = "Profile")
         AccountsNavRoutes.AccountsHomeScreen.route -> AppBar(navController = navController, title = "Accounts")
         AccountsNavRoutes.AddAccountScreen.route -> AppBar(navController = navController, title = "Add Account")

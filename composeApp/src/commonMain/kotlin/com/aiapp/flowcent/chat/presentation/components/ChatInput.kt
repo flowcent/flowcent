@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.chat.presentation.ChatState
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_send
-import flowcent.composeapp.generated.resources.ic_voice
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -131,21 +128,10 @@ fun ChatInput(
 
         Spacer(Modifier.width(16.dp))
 
-        IconButton(onClick = { onClickMic() }) {
-            if (isListening) {
-                Icon(
-                    Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            } else {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_voice),
-                    modifier = Modifier.size(40.dp),
-                    contentDescription = "Mic",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
+        MicButton(
+            size = 48.dp,
+            iconSize = 24.dp,
+            onClickMic = { onClickMic() },
+        )
     }
 }

@@ -1,5 +1,7 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
+import CircularIcon
+import CircularIconButton
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -20,11 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,16 +36,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UserAction
+import com.aiapp.flowcent.chat.presentation.components.MicButton
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.ic_send
-import flowcent.composeapp.generated.resources.ic_voice
+import flowcent.composeapp.generated.resources.lucide_send
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -64,7 +65,12 @@ fun VoiceAssistantScreen(
         )
     )
 
-    val glowColors = listOf(Color(0xFF00E6F6), Color(0xFF0F1B40))
+    val glowColors = listOf(
+        Color(0xFF0F1B40),
+        Color(0xFF001018),
+        Colors.GradientOne,
+        Colors.GradientTwo,
+    )
 
     fun onClickMic() {
         if (chatState.isListening) {
@@ -87,41 +93,30 @@ fun VoiceAssistantScreen(
         viewModel.onAction(UserAction.UpdateVoiceText("", ""))
     }
 
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(24.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // Top Back Button
-        Icon(
-            imageVector = Icons.Default.ArrowBack, // replace with your resource
-            contentDescription = "Back",
-            tint = Color.Black,
-            modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.TopStart)
-                .clickable { onBack() }
-        )
-
         Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Speaking to Echo",
-                color = Color.Black,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
+                text = "Speaking to Marcus",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "Go ahead, I am listening...",
-                color = Color.LightGray,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                style = MaterialTheme.typography.bodySmall
             )
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -139,64 +134,85 @@ fun VoiceAssistantScreen(
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            Text(
-                text = chatState.originalVoiceText.ifEmpty {
-                    "Can you recommend any Top Resources for learning UI"
-                },
-                color = Color.Black,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center,
-                maxLines = 8
-            )
-
-        }
-
-        // Bottom controls
-        Row(
-            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_send), // replace
-                contentDescription = "Send",
-                tint = Color.Black,
-                modifier = Modifier
-                    .size(36.dp)
-                    .clickable { onSend() }
-            )
-
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(
-                        Brush.radialGradient(
-                            listOf(
-                                Color(0xFF00E6F6),
-                                Color(0xFF001018)
-                            )
-                        )
-                    )
-                    .clickable {
-                        onClickMic()
-                    }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Mic,
-                    contentDescription = "Mic",
-                    tint = Color.White,
-                    modifier = Modifier.align(Alignment.Center).size(40.dp)
+            if (chatState.originalVoiceText.isNotEmpty()) {
+                Text(
+                    text = chatState.originalVoiceText,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    maxLines = 8
                 )
+            } else {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "I am listening... Tell me something like:",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "- I have bought a shirt for $50",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "- Just Paid $1200 rent",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "- Got my $5500 salary for this month",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "And I will do the rest",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
-            Icon(
-                imageVector = Icons.Default.Close, // replace
-                contentDescription = "Close",
-                tint = Color.Black,
-                modifier = Modifier
-                    .size(36.dp)
-                    .clickable { onClose() }
-            )
+
         }
+
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                CircularIconButton(
+                    icon = CircularIcon.Vector(Icons.Default.Sell),
+                    iconSize = 56.dp,
+                    iconColor = MaterialTheme.colorScheme.onSurface,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    onClick = { onSend() }
+                )
+
+                MicButton(
+                    size = 70.dp,
+                    onClickMic = { onClickMic() },
+                )
+
+                CircularIconButton(
+                    icon = CircularIcon.Vector(Icons.Default.Close),
+                    iconSize = 56.dp,
+                    iconColor = MaterialTheme.colorScheme.onSurface,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    onClick = { onClose() }
+                )
+            }
+        }
+
     }
 }

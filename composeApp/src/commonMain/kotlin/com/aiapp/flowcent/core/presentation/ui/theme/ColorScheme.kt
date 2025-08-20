@@ -21,7 +21,7 @@ internal val DarkColorScheme = darkColorScheme(
     background = Colors.DarkBackground,
     onBackground = Colors.DarkOnBackground,
     surface = Colors.DarkSurface,
-    onSurface = Colors.DarkPrimary,
+    onSurface = Colors.DarkOnBackground,
     secondary = Colors.DarkSecondary,
     onSecondary = Colors.DarkOnBackground
 )
