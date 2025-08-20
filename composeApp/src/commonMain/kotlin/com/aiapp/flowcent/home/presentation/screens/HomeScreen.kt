@@ -34,7 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.core.Spacing
+import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.ShimmerBox
 import com.aiapp.flowcent.core.presentation.components.ShimmerSpendingCard
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
@@ -83,14 +85,29 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { homeViewModel.onAction(UserAction.NavigateToProfile) }) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "Profile",
-                    tint = MaterialTheme.colorScheme.inverseSurface,
-                    modifier = Modifier.size(24.dp)
-                )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { homeViewModel.onAction(UserAction.NavigateToProfile) }) {
+                    NameInitial(
+                        text = "TH",
+                        textSize = 16.sp,
+                        size = 40.dp
+                    )
+                }
+
+                Spacer(Modifier.width(Spacing.small))
+
+                Column {
+                    Text(
+                        text = "Good Evening",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                    )
+                    Text(text = "Tom Hanks", style = MaterialTheme.typography.titleLarge)
+                }
             }
+
             Row {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
