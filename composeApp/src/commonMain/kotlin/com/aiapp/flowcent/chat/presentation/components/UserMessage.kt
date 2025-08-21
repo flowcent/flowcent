@@ -1,10 +1,13 @@
 package com.aiapp.flowcent.chat.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,27 +25,31 @@ import com.aiapp.flowcent.core.presentation.components.NameInitial
 fun UserMessage(text: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
     ) {
-        Surface(
-            shape = RoundedCornerShape(12.dp), color = Color.White
-        ) {
-            Text(
-                text = text,
-                color = Color.Black,
-                modifier = Modifier.padding(12.dp),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        Spacer(Modifier.padding(Spacing.small))
 
         NameInitial(
             text = "TH",
             textSize = 16.sp,
             size = 40.dp,
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier.padding(start = 12.dp)
         )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+
+        Column(
+            modifier = Modifier.background(Color(0xFF2C2C2E), shape = RoundedCornerShape(12.dp))
+                .padding(12.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = text,
+                color = Color.White,
+                modifier = Modifier.padding(12.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 14
+            )
+        }
+
     }
 }

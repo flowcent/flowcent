@@ -34,7 +34,7 @@ fun SpendingList(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
+                .background(Color(0xFF161616), shape = RoundedCornerShape(8.dp))
                 .border(
                     1.dp,
                     MaterialTheme.colorScheme.background,
@@ -68,12 +68,12 @@ fun SpendingList(
                         ) {
                             Text(
                                 expenseItem.title,
-                                color = Color.Black,
+                                color = Color.White,
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
                                 expenseItem.category,
-                                color = Color.Black,
+                                color = Color.White,
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }

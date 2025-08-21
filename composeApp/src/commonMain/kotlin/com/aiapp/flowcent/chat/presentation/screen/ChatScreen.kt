@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.chat.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +37,7 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.components.PromptSave
 import com.aiapp.flowcent.chat.presentation.components.SpendingList
 import com.aiapp.flowcent.chat.presentation.components.UserMessage
+import com.aiapp.flowcent.core.presentation.components.NameInitial
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.outline_charger
 import org.jetbrains.compose.resources.painterResource
@@ -93,13 +96,22 @@ fun ChatScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(top = 24.dp, bottom = 72.dp), // TODO improve layout padding
+                    contentPadding = PaddingValues(
+                        top = 24.dp,
+                        bottom = 72.dp
+                    ), // TODO improve layout padding
                     reverseLayout = true
                 ) {
                     println("Sohan messages: ${chatState.messages}")
                     items(chatState.messages.reversed()) {
                         if (it.isUser) {
-                            UserMessage(text = it.text)
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                UserMessage(text = it.text)
+                                Spacer(modifier = Modifier.height(24.dp))
+                            }
                         } else {
                             Column {
                                 if (it.isBotMessageLoading) {
@@ -111,18 +123,14 @@ fun ChatScreen(
                                     Row(
                                         modifier = Modifier.padding(8.dp)
                                     ) {
-                                        Icon(
-                                            painter = painterResource(Res.drawable.outline_charger),
-                                            contentDescription = null,
-                                            tint = Color.Black,
-                                            modifier = Modifier.size(32.dp)
+                                        NameInitial(
+                                            text = "AI",
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
-
                                         Column(
                                             modifier = Modifier
                                                 .background(
-                                                    Color.White,
+                                                    Color(0xFF2C2C2E),
                                                     shape = RoundedCornerShape(8.dp)
                                                 )
                                                 .padding(16.dp)

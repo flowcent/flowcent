@@ -79,7 +79,7 @@ fun AppCustomButton(
         ),
         elevation = ButtonDefaults.elevation(0.dp),
         border = when (style) {
-            ButtonStyle.OUTLINED -> BorderStroke(1.dp, Color.Black)
+            ButtonStyle.OUTLINED -> BorderStroke(1.dp, Color(0xFF2E3834))
             ButtonStyle.SAMPLE_CARD -> BorderStroke(3.dp, Color.Yellow)
             else -> null
         },

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.core.presentation.components.AppCustomButton
+import com.aiapp.flowcent.core.presentation.components.ButtonStyle
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -33,8 +35,9 @@ fun PromptSave(
         AppCustomButton(
             onClick = { onClickSave() },
             btnText = if (selectionType == AccountSelectionType.SHARED) "Update $selectedAccountName" else "Save Into Personal",
-            bgColor = Color.Black,
-            textColor = Color.White
+            bgColor = MaterialTheme.colorScheme.secondary,
+            textColor = Color.White,
+            style = ButtonStyle.OUTLINED
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -42,8 +45,9 @@ fun PromptSave(
         AppCustomButton(
             onClick = { onClickDiscard() },
             btnText = "Discard",
-            bgColor = Color.Black,
-            textColor = Color.White
+            bgColor = MaterialTheme.colorScheme.secondary,
+            textColor = Color.White,
+            style = ButtonStyle.OUTLINED
         )
     }
 }

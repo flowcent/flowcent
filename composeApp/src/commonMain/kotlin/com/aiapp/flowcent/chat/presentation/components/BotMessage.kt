@@ -21,9 +21,9 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun BotMessage(text: String, isRich: Boolean = false) {
-    Row(modifier = Modifier.padding(vertical = 4.dp)) {
+    Row(modifier = Modifier.padding(vertical = 8.dp)) {
         Surface(
-            shape = RoundedCornerShape(12.dp), color = Color.White
+            shape = RoundedCornerShape(12.dp), color = Color.Transparent
         ) {
             Text(
                 text = text,
