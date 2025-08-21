@@ -61,18 +61,13 @@ fun App(
     var showBottomNav by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = currentRoute) {
-        if (currentTopLevelRoute == AppNavRoutes.Splash.route ||
-            currentTopLevelRoute == AppNavRoutes.Auth.route ||
-            currentRoute == AuthNavRoutes.ProfileScreen.route ||
-            currentRoute == AuthNavRoutes.BasicIntroScreen.route ||
-            currentRoute == AuthNavRoutes.SignInScreen.route ||
-            currentRoute == AuthNavRoutes.SignUpScreen.route
-        ) {
-            showBottomNav = false
-        } else {
-            delay(300)
-            showBottomNav = true
-        }
+//        if (currentTopLevelRoute == AppNavRoutes.Home.route) {
+//            delay(300)
+//            showBottomNav = true
+//        } else {
+//            showBottomNav = false
+//        }
+        showBottomNav = currentTopLevelRoute == AppNavRoutes.Home.route
     }
 
 
