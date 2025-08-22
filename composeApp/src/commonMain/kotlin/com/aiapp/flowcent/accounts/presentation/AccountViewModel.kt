@@ -223,7 +223,14 @@ class AccountViewModel(
             is Resource.Success -> {
                 _state.update {
                     it.copy(
-                        currentUserProfile = result.data
+                        currentUserProfile = result.data,
+                        selectedUsers = it.selectedUsers.toMutableList().apply {
+                            it.currentUserProfile?.let { profile ->
+                                if (none { user -> user.uid == profile.uid }) {
+                                    add(profile)
+                                }
+                            }
+                        }
                     )
                 }
             }
@@ -334,22 +341,12 @@ class AccountViewModel(
 
     private fun createAccount() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    selectedUsers = it.selectedUsers.toMutableList().apply {
-                        it.currentUserProfile?.let { profile ->
-                            add(profile)
-                        }
-                    }
-                )
-            }
-
             when (val result = accountRepository.addAccount(
                 AccountDto(
                     accountName = _state.value.accountName,
                     initialBalance = _state.value.acInitialBalance,
-                    members = _state.value.selectedUsers.toAcMemberDtos(),
-                    memberIds = _state.value.selectedUsers.toMemberIds(),
+                    members = _state.value.selectedUsers.toAcMemberDtos(_state.value.uid),
+                    memberIds = _state.value.selectedUsers.toMemberIds(_state.value.uid),
                     accountId = getAccountID(),
                     createdBy = _state.value.uid,
                     createdAt = DateTimeUtils.getCurrentTimeInMilli(),
@@ -392,15 +389,6 @@ class AccountViewModel(
 
     private fun fetchRegisteredPhoneNumbers() {
         viewModelScope.launch {
-//            if (_state.value.matchingUsers != null) {
-//                _state.update {
-//                    it.copy(
-//                        isLoading = false,
-//                        showSheet = true
-//                    )
-//                }
-//                return@launch
-//            }
             when (val result = authRepository.fetchAllUsersPhoneNumbers()) {
                 is Resource.Error -> {
                     Napier.e("Sohan Error in fetching registered phone numbers: ${result.message}")

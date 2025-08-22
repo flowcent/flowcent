@@ -41,4 +41,6 @@ object Colors {
     val Gray300 = Color(0xFFEAEBEE) // Divider, outlineVariant
     val Gray600 = Color(0xFF9A9A9E) // Secondary text
 
+    val Red300 = Color(0xFFE57373)
+
 }

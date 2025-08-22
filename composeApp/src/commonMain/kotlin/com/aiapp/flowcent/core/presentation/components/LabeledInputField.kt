@@ -71,7 +71,7 @@ fun LabeledInputField(
                     KeyboardOptions.Default,
                 singleLine = singleLine,
                 decorationBox = { innerTextField ->
-                    innerTextField() // shows typed text
+                    innerTextField()
                 },
                 maxLines = maxLines
             )

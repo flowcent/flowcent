@@ -2,7 +2,6 @@ package com.aiapp.flowcent.accounts.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,12 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.accounts.domain.model.MemberRole
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
@@ -78,6 +73,7 @@ fun AddAccountScreen(
 
     LaunchedEffect(key1 = Unit) {
         permissionVm.provideOrRequestContactPermission()
+        viewModel.onAction(UserAction.FetchUserUId)
     }
 
     LaunchedEffect(key1 = fcPermissionState.contactPermissionState) {
@@ -225,20 +221,27 @@ fun AddAccountScreen(
                     modifier = Modifier.align(Alignment.Start)
                 )
 
-                // Member Card
-                MemberCard(
-                    name = "Sohan", role = "Owner", isCurrentUser = true, showCheckmark = true
-                )
-
                 state.selectedUsers.forEach { user ->
                     Column(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                     ) {
-                        MemberCard(
-                            name = user.localUserName,
-                            role = "Member",
-                            canRemove = true,
-                            onRemove = { viewModel.onAction(UserAction.OnRemoveMember(user)) })
+                        if (user.uid == state.uid) {
+                            MemberCard(
+                                name = "You",
+                                initial = user.localUserName,
+                                role = MemberRole.ADMIN.displayName,
+                                isCurrentUser = true,
+                                showCheckmark = true
+                            )
+                        } else {
+                            MemberCard(
+                                name = user.localUserName,
+                                initial = user.localUserName,
+                                role = MemberRole.MEMBER.displayName,
+                                canRemove = true,
+                                onRemove = { viewModel.onAction(UserAction.OnRemoveMember(user)) }
+                            )
+                        }
                     }
                 }
 

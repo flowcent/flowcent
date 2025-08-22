@@ -2,15 +2,15 @@ package com.aiapp.flowcent.accounts.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -24,7 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.auth.data.model.User
-import com.aiapp.flowcent.core.presentation.components.UserProfileImage
+import com.aiapp.flowcent.core.presentation.components.NameInitial
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
 @Composable
 fun SelectedUserCard(
@@ -34,36 +35,38 @@ fun SelectedUserCard(
 ) {
     Box(
         modifier = modifier
-            .padding(12.dp)
-            .width(80.dp)
+            .size(120.dp)
+            .padding(8.dp)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+            .padding(horizontal = 8.dp, vertical = 8.dp)
     ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .size(18.dp)
+                .clip(CircleShape)
+                .background(Colors.Red300)
+                .clickable { onRemoveClick(user) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Remove",
+                tint = Color.White,
+                modifier = Modifier.size(14.dp).align(Alignment.Center)
+            )
+
+        }
+
         Column(
             modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Profile image with cross icon
-            Box(
-                modifier = Modifier
-                    .size(55.dp)
-                    .clip(CircleShape)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                UserProfileImage(
-                    imageUrl = user.imageUrl,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Remove",
-                    tint = Color.Red,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.TopEnd)
-                        .clickable { onRemoveClick(user) }
-                        .background(Color.White, CircleShape)
-                )
-            }
+            NameInitial(
+                text = user.localUserName,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -71,15 +74,15 @@ fun SelectedUserCard(
                 text = user.localUserName,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = user.phoneNumber,
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }

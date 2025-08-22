@@ -10,4 +10,5 @@ data class AccountMemberDto(
     val memberProfileImage: String = "",
     val totalContribution: Double = 0.0,
     val totalExpense: Double = 0.0,
+    val role: String = ""
 )

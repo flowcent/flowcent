@@ -17,6 +17,3 @@ data class Account(
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
 )
-
-///Need to add members after searching
-///Accounts that each user is a member of, needs to updated into the User collection

@@ -4,6 +4,7 @@ import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.model.AccountMemberDto
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.model.AccountMember
+import com.aiapp.flowcent.accounts.domain.model.MemberRole
 import com.aiapp.flowcent.auth.data.model.User
 
 
@@ -14,7 +15,8 @@ fun AccountMemberDto.toAccountMember(): AccountMember {
         memberLocalUserName = memberLocalUserName,
         memberProfileImage = memberProfileImage,
         totalContribution = totalContribution,
-        totalExpense = totalExpense
+        totalExpense = totalExpense,
+        role = MemberRole.fromDisplayName(role)
     )
 }
 
@@ -25,7 +27,8 @@ fun AccountMember.toAccountMemberDto(): AccountMemberDto {
         memberLocalUserName = memberLocalUserName,
         memberProfileImage = memberProfileImage,
         totalContribution = totalContribution,
-        totalExpense = totalExpense
+        totalExpense = totalExpense,
+        role = role.displayName
     )
 }
 
@@ -65,12 +68,17 @@ fun Account.toAccountDto(): AccountDto {
     )
 }
 
-fun User.toAcMemberDto(): AccountMemberDto {
+fun User.toAcMemberDto(
+    acCreatorUid: String
+): AccountMemberDto {
+    val role = if (uid == acCreatorUid) MemberRole.ADMIN else MemberRole.MEMBER
+
     return AccountMemberDto(
         memberId = uid,
         memberFullName = fullName,
         memberLocalUserName = localUserName,
         memberProfileImage = imageUrl,
+        role = role.displayName
     )
 }
 
@@ -83,10 +91,14 @@ fun List<Account>.toAccountDtos(): List<AccountDto> {
     return map { it.toAccountDto() }
 }
 
-fun List<User>.toAcMemberDtos(): List<AccountMemberDto> {
-    return map { it.toAcMemberDto() }
+fun List<User>.toAcMemberDtos(
+    acCreatorUid: String
+): List<AccountMemberDto> {
+    return map { it.toAcMemberDto(acCreatorUid) }
 }
 
-fun List<User>.toMemberIds(): List<String> {
-    return map { it.toAcMemberDto().memberId }
+fun List<User>.toMemberIds(
+    acCreatorUid: String
+): List<String> {
+    return map { it.toAcMemberDto(acCreatorUid).memberId }
 }

@@ -45,7 +45,7 @@ fun NameInitial(
                 fontWeight = FontWeight.Bold,
                 fontSize = textSize
             ),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.background,
         )
     }
 }

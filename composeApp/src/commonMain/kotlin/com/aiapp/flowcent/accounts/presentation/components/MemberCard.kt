@@ -23,6 +23,7 @@ import com.aiapp.flowcent.core.presentation.components.NameInitial
 @Composable
 fun MemberCard(
     name: String,
+    initial: String,
     role: String,
     isCurrentUser: Boolean = false,
     showCheckmark: Boolean = false,
@@ -44,7 +45,7 @@ fun MemberCard(
     ) {
         // Profile Picture (Initials)
         NameInitial(
-            text = name,
+            text = initial,
             textSize = textSize,
             size = avatarSize
         )
