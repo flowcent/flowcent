@@ -60,6 +60,7 @@ fun AddMembersSheetContent(
             Text(
                 "Cancel",
                 style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.clickable { onDoneClick() }
             )
 
             Text(
@@ -79,9 +80,7 @@ fun AddMembersSheetContent(
             onQueryChange = { query = it },
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        if (state.selectedUsers.isNotEmpty()) {
+        if (state.selectedUsers.isNotEmpty() && state.selectedUsers.size > 1) {
             LazyRow(
                 modifier = Modifier.fillMaxWidth()
                     .background(
@@ -90,6 +89,9 @@ fun AddMembersSheetContent(
                     )
                     .padding(8.dp)
             ) {
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
                 items(state.selectedUsers) { user ->
                     if (user.uid != state.uid) {
                         SelectedUserCard(
@@ -98,17 +100,18 @@ fun AddMembersSheetContent(
                         )
                     }
                 }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
         ) {
-
             item {
                 if (state.matchingUsers.isNotEmpty()) {
                     Text(

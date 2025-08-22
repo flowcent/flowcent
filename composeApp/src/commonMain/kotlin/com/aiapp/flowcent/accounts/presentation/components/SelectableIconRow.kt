@@ -2,6 +2,7 @@ package com.aiapp.flowcent.accounts.presentation.components
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,13 @@ fun SelectableIconRow(
                             MaterialTheme.colorScheme.primaryContainer
                         else
                             MaterialTheme.colorScheme.surfaceVariant
+                    )
+                    .border(
+                        if (item.id == selectedIconId) 2.dp else 0.dp,
+                        if (item.id == selectedIconId) MaterialTheme.colorScheme.primary else Color.Transparent,
+                        if (item.id == selectedIconId) RoundedCornerShape(cornerRadius) else RoundedCornerShape(
+                            0.dp
+                        )
                     )
                     .clickable { onIconSelected(item.id) },
                 contentAlignment = Alignment.Center
