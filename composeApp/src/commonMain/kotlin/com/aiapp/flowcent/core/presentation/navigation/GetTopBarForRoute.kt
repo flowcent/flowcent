@@ -4,6 +4,10 @@
 
 package com.aiapp.flowcent.core.presentation.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,6 +17,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
@@ -47,25 +53,29 @@ private fun AppBar(
     showBackButton: Boolean = true,
     actions: @Composable (() -> Unit)? = null
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.inverseSurface
-            )
-        },
-        navigationIcon = {
-            if (showBackButton) {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.inverseSurface
-                    )
-                }
-            } else null
-        },
-        actions = { actions }
-    )
+    Column (modifier = Modifier.fillMaxWidth()){
+        TopAppBar(
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.inverseSurface
+                )
+            },
+            navigationIcon = {
+                if (showBackButton) {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.inverseSurface
+                        )
+                    }
+                } else null
+            },
+            actions = { actions }
+        )
+
+        Divider(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.outlineVariant))
+    }
 }

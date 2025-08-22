@@ -18,5 +18,7 @@ data class AccountState(
     val latestTransactions: List<Transaction> = emptyList(),
     val selectedDate: String? = null,
     val deviceContacts: List<DeviceContact> = emptyList(),
-    val currentUserProfile: User? = null
+    val currentUserProfile: User? = null,
+    val accountDescription: String = "",
+    val selectedIconId: Int = 1111,
 )

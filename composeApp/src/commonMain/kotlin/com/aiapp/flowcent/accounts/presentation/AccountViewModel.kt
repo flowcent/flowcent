@@ -103,7 +103,7 @@ class AccountViewModel(
                 }
             }
 
-            is UserAction.OnRemoveUser -> {
+            is UserAction.OnRemoveMember -> {
                 viewModelScope.launch {
                     val selectedUserSet =
                         _state.value.selectedUsers.toMutableSet()
@@ -185,6 +185,26 @@ class AccountViewModel(
                             UiEvent.ShowDialog(
                                 dialogType = DialogType.NO_INTERNET
                             )
+                        )
+                    }
+                }
+            }
+
+            is UserAction.UpdateAccountDescription -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            accountDescription = action.accountDescription
+                        )
+                    }
+                }
+            }
+
+            is UserAction.SelectAccountIcon -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            selectedIconId = action.id
                         )
                     }
                 }

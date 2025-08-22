@@ -21,7 +21,7 @@ import kotlin.random.Random
 @Composable
 fun NameInitial(
     text: String,
-    textSize: TextUnit = 24.sp,
+    textSize: TextUnit = 16.sp,
     bgColor: Color = randomColor(),
     size: Dp = 40.dp,
     modifier: Modifier = Modifier
@@ -41,10 +41,11 @@ fun NameInitial(
     ) {
         Text(
             text = initials,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = textSize
+            ),
             color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = textSize
         )
     }
 }

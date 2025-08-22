@@ -12,7 +12,7 @@ sealed interface UserAction {
     data class UpdateAccountName(val accountName: String) : UserAction
     data class UpdateAcInitialBalance(val initialBalance: Double) : UserAction
     data class OnUserCheckedChange(val user: User, val checked: Boolean) : UserAction
-    data class OnRemoveUser(val user: User) : UserAction
+    data class OnRemoveMember(val user: User) : UserAction
     data object CreateAccount : UserAction
     data object FetchUserUId : UserAction
     data class OnAccountItemClick(val account: Account) : UserAction
@@ -22,4 +22,6 @@ sealed interface UserAction {
     data class SetSelectedDate(val dateString: LocalDate) : UserAction
     data class GetUsersDailyTransaction(val uid: String) : UserAction
     data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
+    data class UpdateAccountDescription(val accountDescription: String) : UserAction
+    data class SelectAccountIcon(val id: Int) : UserAction
 }

@@ -25,4 +25,20 @@ object Colors {
 
     val GradientOne = Color(0xFF5EE0C9)
     val GradientTwo = Color(0xFF88E7B5)
+
+
+    //Black shades
+    val Black900 = Color(0xFF1C1C1E)
+
+
+    // Blue shades
+    val Blue500 = Color(0xFF007AFF) // Primary (Skip text, toggle ON)
+    val Blue100 = Color(0xFFDBE9FE) // Light blue (circle bg, selected icon bg)
+    val Blue900 = Color(0xFF1C6AF0) // Dark blue (icon inside selected container)
+
+    // Grays
+    val Gray100 = Color(0xFFF5F5F5) // Input fields, unselected icons
+    val Gray300 = Color(0xFFEAEBEE) // Divider, outlineVariant
+    val Gray600 = Color(0xFF9A9A9E) // Secondary text
+
 }

@@ -35,7 +35,7 @@ fun AppButton(
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = RoundedCornerShape(8.dp),
-    height: Dp = 60.dp,
+    height: Dp = 48.dp,
     enabled: Boolean = true,
     isLoading: Boolean = false,
     clickCooldownMillis: Long = 1000, // 1 second default

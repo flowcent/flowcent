@@ -4,7 +4,10 @@
 
 package com.aiapp.flowcent.core.presentation.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -25,10 +28,9 @@ fun BottomNavigationBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit
 ) {
-    Napier.e("Sohan selectedIndex $selectedIndex")
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -47,7 +49,7 @@ fun BottomNavigationBar(
                     selectedTextColor = MaterialTheme.colorScheme.inverseSurface,
                     unselectedIconColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.6f),
                     unselectedTextColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.6f),
-                    indicatorColor = Color.Transparent
+                    indicatorColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
         }
