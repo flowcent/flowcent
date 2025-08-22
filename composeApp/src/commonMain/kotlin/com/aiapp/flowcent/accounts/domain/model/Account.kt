@@ -16,4 +16,5 @@ data class Account(
     val totalAddition: Double = 0.0,
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
+    val iconId: Int = 1111,
 )

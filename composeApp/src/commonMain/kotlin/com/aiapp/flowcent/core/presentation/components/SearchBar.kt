@@ -14,12 +14,13 @@ import androidx.compose.ui.unit.dp
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
+    placeholder: String = "Search accounts...",
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text("Search accounts...") },
+        placeholder = { Text(placeholder) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,

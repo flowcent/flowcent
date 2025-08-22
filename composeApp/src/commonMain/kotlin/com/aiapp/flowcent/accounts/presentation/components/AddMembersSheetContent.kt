@@ -77,6 +77,7 @@ fun AddMembersSheetContent(
 
         SearchBar(
             query = query,
+            placeholder = "Search contacts...",
             onQueryChange = { query = it },
         )
 
