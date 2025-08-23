@@ -87,7 +87,7 @@ fun AccountsHomeScreen(
             onQueryChange = {}
         )
 
-        if (state.accounts.isEmpty()) {
+        if (state.accounts.isNotEmpty()) {
             AccountList(
                 accounts = state.accounts,
                 onAccountClick = { account ->
