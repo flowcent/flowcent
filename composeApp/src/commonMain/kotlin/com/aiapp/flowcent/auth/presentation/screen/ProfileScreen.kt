@@ -81,8 +81,10 @@ fun ProfileScreen(
                 // Name
                 Text(
                     text = authState.user?.localUserName ?: "",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -161,9 +163,10 @@ fun ProfileScreen(
 fun SectionHeader(title: String) {
     Text(
         text = title,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.SemiBold,
-        color = Color.Gray,
+        style = MaterialTheme.typography.bodyMedium.copy(
+            fontWeight = FontWeight.Bold
+        ),
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
@@ -176,7 +179,7 @@ fun SettingsCard(items: List<Pair<String, String>>) {
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFF7F7F7))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         items.forEachIndexed { index, (title, _) ->
             SettingItem(
@@ -187,7 +190,7 @@ fun SettingsCard(items: List<Pair<String, String>>) {
                     .padding(horizontal = 12.dp, vertical = 14.dp)
             )
             if (index != items.lastIndex) {
-                Divider(color = Color(0xFFE0E0E0), thickness = 1.dp)
+                Divider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
             }
         }
     }
@@ -210,13 +213,13 @@ fun SettingItem(
         Box(
             modifier = Modifier
                 .size(24.dp)
-                .background(Color.LightGray, CircleShape)
+                .background(MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = title,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal,
+            style = MaterialTheme.typography.bodyLarge.copy(),
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
         trailingContent?.invoke()
