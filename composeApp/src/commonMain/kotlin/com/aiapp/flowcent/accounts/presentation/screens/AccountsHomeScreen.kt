@@ -95,7 +95,6 @@ fun AccountsHomeScreen(
                 },
             )
         } else {
-            Spacer(Modifier.height(16.dp))
             NoAccountsYetScreen(
                 onAddAccountClick = { viewModel.onAction(UserAction.ClickAdd) },
                 onLearnMoreClick = { }
