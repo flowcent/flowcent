@@ -70,7 +70,7 @@ fun ProfileScreen(
             item {
                 NameInitial(
                     text = authState.user?.localUserName ?: "",
-                    textSize = 60.sp,
+                    textSize = 50.sp,
                     size = 150.dp
                 )
 
@@ -100,6 +100,7 @@ fun ProfileScreen(
             // MemberShip Section
             item { SectionHeader("MemberShip") }
             item {
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsCard(
                     items = listOf(
                         "Free trial" to "tips_icon.png",
@@ -113,6 +114,7 @@ fun ProfileScreen(
             // PERSONALIZE Section
             item { SectionHeader("PERSONALIZE") }
             item {
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsCard(
                     items = listOf(
                         "Personal Details" to "personal_icon.png",
@@ -127,6 +129,7 @@ fun ProfileScreen(
             // NEED HELP? Section
             item { SectionHeader("NEED HELP?") }
             item {
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsCard(
                     items = listOf(
                         "Privacy Policy" to "tips_icon.png",
@@ -149,7 +152,6 @@ fun ProfileScreen(
                     authViewModel.onAction(UserAction.FirebaseSignOut)
                 },
                 text = "Sign Out",
-                backgroundColor = Color(0xFF0E0E0E),
                 isLoading = authState.isEmailSignInProcessing,
             )
 
@@ -169,7 +171,6 @@ fun SectionHeader(title: String) {
         color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
     )
 }
 
@@ -177,7 +178,6 @@ fun SectionHeader(title: String) {
 fun SettingsCard(items: List<Pair<String, String>>) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -224,6 +224,5 @@ fun SettingItem(
         )
         trailingContent?.invoke()
     }
-
 }
 
