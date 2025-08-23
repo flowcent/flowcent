@@ -8,6 +8,7 @@ data class Account(
     val currentBalance: String = "",
     val accountId: String = "",
     val accountName: String = "",
+    val accountDescription: String = "",
     val creatorUserId: String = "",
     val creatorUserName: String = "",
     val members: List<AccountMember>? = emptyList(),
@@ -16,5 +17,5 @@ data class Account(
     val totalAddition: Double = 0.0,
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
-    val iconId: Int = 1111,
+    val accountIconId: Int = 1111
 )

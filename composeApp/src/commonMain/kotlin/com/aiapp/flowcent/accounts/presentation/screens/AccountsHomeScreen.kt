@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -35,12 +36,11 @@ import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.components.AccountList
 import com.aiapp.flowcent.accounts.presentation.components.NoAccountsYetScreen
 import com.aiapp.flowcent.core.presentation.components.SearchBar
+import com.aiapp.flowcent.core.presentation.components.ShimmerAccount
 
 @Composable
 fun AccountsHomeScreen(
-    modifier: Modifier = Modifier,
-    viewModel: AccountViewModel,
-    state: AccountState
+    modifier: Modifier = Modifier, viewModel: AccountViewModel, state: AccountState
 ) {
 
     LaunchedEffect(key1 = Unit) {
@@ -48,9 +48,7 @@ fun AccountsHomeScreen(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier = modifier.fillMaxSize().padding(16.dp)
     ) {
         // Header
         Row(
@@ -68,11 +66,8 @@ fun AccountsHomeScreen(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add Account",
                     tint = Color.White,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
-                        .padding(6.dp)
+                    modifier = Modifier.size(36.dp).clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary).padding(6.dp)
                 )
             }
         }
@@ -82,10 +77,23 @@ fun AccountsHomeScreen(
 
         // Search bar
         SearchBar(
-            query = "",
-            placeholder = "Search accounts...",
-            onQueryChange = {}
-        )
+            query = "", placeholder = "Search accounts...", onQueryChange = {})
+
+        if (state.isAcCreationLoading) {
+            LazyColumn {
+                item {
+                    Spacer(Modifier.height(12.dp))
+                }
+                items(20) {
+                    ShimmerAccount(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+                }
+            }
+        }
 
         if (state.accounts.isNotEmpty()) {
             AccountList(
@@ -97,8 +105,7 @@ fun AccountsHomeScreen(
         } else {
             NoAccountsYetScreen(
                 onAddAccountClick = { viewModel.onAction(UserAction.ClickAdd) },
-                onLearnMoreClick = { }
-            )
+                onLearnMoreClick = { })
         }
     }
 

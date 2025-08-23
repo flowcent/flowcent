@@ -41,12 +41,14 @@ fun AccountDto.toAccount(): Account {
         currentBalance = currentBalance,
         accountId = accountId,
         accountName = accountName,
+        accountDescription = accountDescription,
         creatorUserId = creatorUserId,
         members = members?.map { it.toAccountMember() },
         profileImage = profileImage,
         totalExpense = totalExpense,
         updatedAt = updatedAt,
-        updatedBy = updatedBy
+        updatedBy = updatedBy,
+        accountIconId = accountIconId
     )
 }
 
@@ -58,13 +60,15 @@ fun Account.toAccountDto(): AccountDto {
         currentBalance = currentBalance,
         accountId = accountId,
         accountName = accountName,
+        accountDescription = accountDescription,
         creatorUserId = creatorUserId,
         members = members?.map { it.toAccountMemberDto() },
         profileImage = profileImage,
         totalExpense = totalExpense,
         updatedAt = updatedAt,
         updatedBy = updatedBy,
-        totalAddition = totalAddition
+        totalAddition = totalAddition,
+        accountIconId = accountIconId
     )
 }
 

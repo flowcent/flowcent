@@ -6,7 +6,7 @@ import com.aiapp.flowcent.core.domain.model.Transaction
 import com.aiapp.flowcent.core.presentation.platform.DeviceContact
 
 data class AccountState(
-    val isLoading: Boolean = false,
+    val isAcCreationLoading: Boolean = false,
     val accounts: List<Account> = emptyList(),
     val matchingUsers: List<User> = emptyList(),
     val showSheet: Boolean = false,

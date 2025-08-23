@@ -67,7 +67,7 @@ fun AccountCard(
                     ) {
                         // Replace with actual icons if available
                         Icon(
-                            imageVector = getAccountIcon(account.iconId).icon,
+                            imageVector = getAccountIcon(account.accountIconId).icon,
                             contentDescription = null,
                             tint = Color.White
                         )

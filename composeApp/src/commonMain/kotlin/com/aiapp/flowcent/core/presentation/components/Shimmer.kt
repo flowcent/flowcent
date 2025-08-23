@@ -31,6 +31,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -106,4 +107,42 @@ fun ShimmerBox(modifier: Modifier = Modifier) {
         modifier = modifier
             .shimmerEffect()
     )
+}
+
+@Composable
+fun ShimmerAccount(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .fillMaxWidth(0.5f)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .fillMaxWidth(0.3f)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .width(60.dp)
+                .height(24.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .shimmerEffect()
+        )
+    }
 }

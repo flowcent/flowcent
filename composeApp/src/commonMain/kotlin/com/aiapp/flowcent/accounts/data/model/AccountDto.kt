@@ -12,6 +12,7 @@ data class AccountDto(
     val currentBalance: String = "",
     val accountId: String = "",
     val accountName: String = "",
+    val accountDescription: String = "",
     val creatorUserId: String = "",
     val members: List<AccountMemberDto>? = emptyList(),
     val memberIds: List<String>? = emptyList(),
@@ -20,4 +21,5 @@ data class AccountDto(
     val totalAddition: Double = 0.0,
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
+    val accountIconId: Int = 1111
 )

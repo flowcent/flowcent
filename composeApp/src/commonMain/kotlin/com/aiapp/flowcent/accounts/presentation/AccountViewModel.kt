@@ -124,7 +124,7 @@ class AccountViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            isLoading = true
+                            isAcCreationLoading = true
                         )
                     }
                     if (_state.value.uid.isNotEmpty()) {
@@ -319,7 +319,7 @@ class AccountViewModel(
                 is Resource.Error -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
+                            isAcCreationLoading = false,
                             accounts = emptyList()
                         )
                     }
@@ -330,7 +330,7 @@ class AccountViewModel(
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
+                            isAcCreationLoading = false,
                             accounts = result.data ?: emptyList()
                         )
                     }
@@ -345,6 +345,7 @@ class AccountViewModel(
                 AccountDto(
                     accountName = _state.value.accountName,
                     initialBalance = _state.value.acInitialBalance,
+                    accountDescription = _state.value.accountDescription,
                     members = _state.value.selectedUsers.toAcMemberDtos(_state.value.uid),
                     memberIds = _state.value.selectedUsers.toMemberIds(_state.value.uid),
                     accountId = getAccountID(),
@@ -355,12 +356,13 @@ class AccountViewModel(
                     creatorUserId = _state.value.uid,
                     totalExpense = 0.0,
                     totalAddition = 0.0,
+                    accountIconId = _state.value.selectedIconId
                 )
             )) {
                 is Resource.Error -> {
                     _state.update {
                         it.copy(
-                            isLoading = false
+                            isAcCreationLoading = false
                         )
                     }
                 }
@@ -368,7 +370,7 @@ class AccountViewModel(
                 Resource.Loading -> {
                     _state.update {
                         it.copy(
-                            isLoading = true
+                            isAcCreationLoading = true
                         )
                     }
                 }
@@ -376,7 +378,7 @@ class AccountViewModel(
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            isLoading = false
+                            isAcCreationLoading = false
                         )
                     }
                     _uiEvent.send(UiEvent.NavigateToAccountHome)
