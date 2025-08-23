@@ -67,6 +67,7 @@ kotlin {
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.firebase.ai)
             implementation(libs.androidx.multidex)
+            implementation(libs.billing)
         }
 
         commonMain.dependencies {
@@ -124,7 +125,7 @@ android {
         applicationId = "com.aiapp.flowcent"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 3
+        versionCode = 5
         versionName = "1.0"
     }
     packaging {
