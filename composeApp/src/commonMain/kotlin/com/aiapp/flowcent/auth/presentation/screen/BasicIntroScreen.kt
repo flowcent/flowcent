@@ -18,6 +18,8 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,8 +33,10 @@ import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
+import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppCountryPickerPhoneField
 import com.aiapp.flowcent.core.presentation.components.CustomBalanceSlider
+import com.aiapp.flowcent.core.presentation.components.LabeledInputField
 import io.github.aakira.napier.Napier
 
 @Composable
@@ -44,20 +48,6 @@ fun BasicIntroScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-//            .drawWithCache {
-//                onDrawBehind {
-//                    drawRect(
-//                        brush = Brush.verticalGradient(
-//                            colors = listOf(
-//                                Color(0xFFECE8FD),
-//                                Color(0xFFFFFFFF),
-//                                Color(0xFFEBF9FE),
-//                                Color(0xFFF9E8FA),
-//                            )
-//                        )
-//                    )
-//                }
-//            }
             .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
         Column(
@@ -68,45 +58,39 @@ fun BasicIntroScreen(
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 item {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Spacer(Modifier.height(72.dp))
+                        Spacer(Modifier.height(48.dp))
 
                         Text(
                             text = "We need some basics to start with you",
                             style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 32.sp
-                            )
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
                             text = "No worries! It's just a formality",
-                            style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
                         Spacer(Modifier.height(48.dp))
 
-                        // Username
-                        Text(text = "What should we call you?", fontWeight = FontWeight.SemiBold)
-                        Spacer(Modifier.height(6.dp))
-
-                        OutlinedTextField(
+                        // Nick name
+                        LabeledInputField(
+                            label = "What should we call you?",
+                            placeholder = "Please type your nick name",
                             value = authState.username,
                             onValueChange = { authViewModel.onAction(UserAction.UpdateUsername(it)) },
-                            placeholder = { Text("Type Your Usual Name") },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
                         )
 
                         Spacer(Modifier.height(24.dp))
 
-                        // Opening Balance
-                        Text(
-                            text = "Your balance to begin with?",
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(Modifier.height(6.dp))
-
-                        OutlinedTextField(
+                        // Initial Balance
+                        LabeledInputField(
+                            label = "Your balance to start with?",
+                            placeholder = "Add an initial balance",
+                            isNumeric = true,
                             value = if (authState.initialBalance > 0.0) {
                                 if (authState.initialBalance % 1.0 == 0.0) {
                                     authState.initialBalance.toInt()
@@ -122,10 +106,6 @@ fun BasicIntroScreen(
                                     )
                                 )
                             },
-                            placeholder = { androidx.compose.material.Text("Opening Balance") },
-                            modifier = Modifier.fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            singleLine = true
                         )
 
                         Spacer(Modifier.height(24.dp))
@@ -133,11 +113,10 @@ fun BasicIntroScreen(
                         // Saving Goals
                         Text(
                             text = "How much do you want to save of it monthly?",
-                            fontWeight = FontWeight.SemiBold
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        Spacer(Modifier.height(6.dp))
-
-
                         CustomBalanceSlider(
                             openingBalance = authState.initialBalance,
                             onSliderValueChange = { amount ->
@@ -150,10 +129,11 @@ fun BasicIntroScreen(
 
                         // Phone number
                         Text(
-                            text = "Please provide us your phone number",
-                            fontWeight = FontWeight.SemiBold
+                            text = "Please provide us your mobile number",
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        Spacer(Modifier.height(6.dp))
 
                         AppCountryPickerPhoneField(
                             mobileNumber = authState.phoneNumber,
@@ -164,37 +144,33 @@ fun BasicIntroScreen(
                             onCountrySelected = { country ->
                                 authViewModel.onAction(UserAction.UpdateCountry(country))
                             },
-                            modifier = Modifier.fillMaxWidth()
-                                .background(Color.White, shape = RoundedCornerShape(8.dp))
-                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
+                            modifier = Modifier.fillMaxWidth(),
                             label = {
                                 Text(
                                     "Mobile Number",
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                            }
+                            },
+                            textFieldColors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
                         )
 
                     }
                 }
             }
 
-            // Next Button
+            // Continue Button
             Column(modifier = Modifier.fillMaxWidth()) {
-                Button(
+                AppButton(
                     onClick = { authViewModel.onAction(UserAction.CreateNewUser) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0E0E0E))
-                ) {
-                    Text(
-                        text = "Next",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                    )
-                }
+                    text = "Continue",
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.onPrimary,
+                    isLoading = authState.isEmailSignInProcessing
+                )
             }
         }
     }

@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Text
@@ -33,6 +36,8 @@ fun CustomBalanceSlider(
     val segmentValue = openingBalance / steps
     val selectedValue = (sliderPosition * segmentValue.toInt()).toInt()
 
+    val lineColor = MaterialTheme.colorScheme.surfaceVariant
+
     fun handleSliderPosChange(position: Float) {
         sliderPosition = position
         onSliderValueChange(selectedValue.toDouble())
@@ -41,15 +46,14 @@ fun CustomBalanceSlider(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 40.dp),
+            .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Big Number
         Text(
             text = "$selectedValue $",
-            fontSize = 36.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -70,7 +74,7 @@ fun CustomBalanceSlider(
                     val tickHeight =
                         if (i == (sliderPosition - 1).toInt()) 20.dp.toPx() else 12.dp.toPx()
                     drawLine(
-                        color = Color.Gray,
+                        color = lineColor,
                         start = Offset(x, size.height / 2 - tickHeight / 2),
                         end = Offset(x, size.height / 2 + tickHeight / 2),
                         strokeWidth = 2.dp.toPx()
@@ -86,7 +90,7 @@ fun CustomBalanceSlider(
                 steps = steps - 2,
                 modifier = Modifier.fillMaxWidth(),
                 colors = SliderColors(
-                    thumbColor = Color.Black,
+                    thumbColor = MaterialTheme.colorScheme.onSurface,
                     activeTrackColor = Color.Transparent,
                     activeTickColor = Color.Transparent,
                     inactiveTrackColor = Color.Transparent,

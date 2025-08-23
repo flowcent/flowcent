@@ -2,6 +2,7 @@ package com.aiapp.flowcent.auth.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -45,11 +49,14 @@ import com.aiapp.flowcent.auth.presentation.UiEvent
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.AppTextField
+import com.aiapp.flowcent.core.presentation.components.LabeledInputField
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.aiapp.flowcent.core.utils.DialogType
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
+import com.mmk.kmpauth.uihelper.apple.AppleButtonMode
+import com.mmk.kmpauth.uihelper.apple.AppleSignInButton
 import com.mmk.kmpauth.uihelper.google.GoogleButtonMode
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 
@@ -68,66 +75,52 @@ fun SignInScreen(
 
     Box(
         modifier = Modifier.fillMaxSize()
-//            .drawWithCache {
-//                onDrawBehind {
-//                    drawRect(
-//                        brush = Brush.verticalGradient(
-//                            colors = listOf(
-//                                Color(0xFFECE8FD),
-//                                Color(0xFFFFFFFF),
-//                                Color(0xFFEBF9FE),
-//                                Color(0xFFF9E8FA),
-//                            )
-//                        )
-//                    )
-//                }
-//            }
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .padding(
+                    vertical = 12.dp
+                ).verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Spacer(Modifier.height(72.dp))
+                Spacer(Modifier.height(48.dp))
 
                 Text(
-                    text = "Sign In", style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold, fontSize = 32.sp
-                    )
+                    text = "Sign In",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
                     text = "Welcome back you’ve been missed",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(Modifier.height(48.dp))
 
                 // Email Field
-                Text(text = "Email ID", fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(6.dp))
-                AppTextField(
+                LabeledInputField(
+                    label = "Email ID",
+                    placeholder = "Please type your email",
                     value = email,
                     onValueChange = { email = it },
-                    placeholder = "Enter Email ID",
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
                 )
 
                 Spacer(Modifier.height(24.dp))
 
                 // Password Field
-                Text(text = "Password", fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(6.dp))
-
-                AppTextField(
+                LabeledInputField(
+                    label = "Password",
+                    placeholder = "Please type your password",
                     value = password,
                     onValueChange = { password = it },
-                    placeholder = "Enter password",
-                    modifier = Modifier.fillMaxWidth(),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         val icon =
@@ -135,7 +128,8 @@ fun SignInScreen(
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(icon, contentDescription = null)
                         }
-                    })
+                    }
+                )
 
                 Spacer(Modifier.height(16.dp))
 
@@ -149,12 +143,20 @@ fun SignInScreen(
                         Checkbox(
                             checked = rememberMe,
                             onCheckedChange = { rememberMe = it },
-                            colors = CheckboxDefaults.colors(checkedColor = Color(0xFF9C27B0))
+                            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
                         )
-                        Text("Remember Me")
+                        Text(
+                            "Remember Me",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
                     }
                     TextButton(onClick = {}) {
-                        Text("Forgot Password?", color = Color.Black)
+                        Text(
+                            "Forgot Password?",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
                     }
                 }
 
@@ -170,7 +172,8 @@ fun SignInScreen(
                         )
                     },
                     text = "Sign In",
-                    backgroundColor = Color(0xFF0E0E0E),
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.onPrimary,
                     isLoading = authState.isEmailSignInProcessing
                 )
 
@@ -181,9 +184,19 @@ fun SignInScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Divider(modifier = Modifier.weight(1f))
-                    Text("  Or with  ", color = Color.Gray)
-                    Divider(modifier = Modifier.weight(1f))
+                    Divider(
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        "  Or with  ",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Divider(
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 Spacer(Modifier.height(24.dp))
@@ -201,10 +214,13 @@ fun SignInScreen(
                 ) {
                     GoogleSignInButton(
                         modifier = Modifier.fillMaxWidth()
-                            .background(Color(0xFF0E0E0E), shape = RoundedCornerShape(8.dp))
-                            .height(60.dp),
+                            .background(
+                                MaterialTheme.colorScheme.onSurface,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .height(48.dp),
                         shape = RoundedCornerShape(8.dp),
-                        mode = GoogleButtonMode.Light,
+                        mode = if (isSystemInDarkTheme()) GoogleButtonMode.Dark else GoogleButtonMode.Light,
                         text = "Continue With Google",
                         fontSize = MaterialTheme.typography.titleMedium.fontSize,
                     ) { this.onClick() }
@@ -212,10 +228,16 @@ fun SignInScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                AppButton(
-                    onClick = { /* Handle click */ },
-                    text = "Continue With Apple",
-                    backgroundColor = Color(0xFF0E0E0E),
+                AppleSignInButton(
+                    modifier = Modifier.fillMaxWidth()
+                        .height(48.dp),
+                    onClick = {},
+                    text = "Continue With apple ",
+                    shape = RoundedCornerShape(8.dp),
+                    fontFamily = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 16.sp
+                    ).fontFamily!!,
+                    mode = if (isSystemInDarkTheme()) AppleButtonMode.White else AppleButtonMode.Black,
                 )
             }
 
@@ -225,11 +247,15 @@ fun SignInScreen(
                     modifier = Modifier.fillMaxWidth().padding(12.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("Don’t have an account? ")
+                    Text(
+                        "Don’t have an account? ",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    )
                     Text(
                         text = "Sign Up",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.clickable(
                             onClick = { authViewModel.onAction(UserAction.NavigateToSignUp) })
                     )

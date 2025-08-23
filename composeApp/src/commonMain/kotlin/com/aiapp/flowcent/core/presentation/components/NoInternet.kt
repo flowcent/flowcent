@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.noInternet
 import org.jetbrains.compose.resources.painterResource
@@ -35,7 +36,7 @@ fun NoInternet(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.surfaceVariant),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -51,7 +52,8 @@ fun NoInternet(
         // Message
         Text(
             text = "Please double check your internet connection or try again later.",
-            fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             maxLines = 4
         )
@@ -61,8 +63,8 @@ fun NoInternet(
         // OK Button
         Text(
             text = buttonName,
-            fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
-            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Colors.Red300,
             modifier = Modifier.clickable { onButtonClick() })
     }
 }
