@@ -13,6 +13,7 @@ import com.aiapp.flowcent.auth.presentation.navigation.addAuthGraph
 import com.aiapp.flowcent.chat.presentation.navigation.addChatGraph
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.home.presentation.navigation.addHomeGraph
+import com.aiapp.flowcent.insights.presentation.navigation.addInsightsGraph
 import com.aiapp.flowcent.splash.navigation.addSplashGraph
 
 @Composable
@@ -31,5 +32,6 @@ fun AppNavGraph(
         addAccountsGraph(navController, modifier)
         addHomeGraph(navController, modifier)
         addChatGraph(navController, modifier, speechRecognizer)
+        addInsightsGraph(navController, modifier)
     }
 }

@@ -103,6 +103,12 @@ class HomeViewModel(
                     }
                 }
             }
+
+            UserAction.NavigateToInsights -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Insights.route))
+                }
+            }
         }
     }
 

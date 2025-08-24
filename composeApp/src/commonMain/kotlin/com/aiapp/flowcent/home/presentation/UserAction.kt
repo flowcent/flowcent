@@ -9,5 +9,6 @@ sealed interface UserAction {
     data object FirebaseSignOut: UserAction
     data object FetchUserUId: UserAction
     data object NavigateToProfile: UserAction
+    data object NavigateToInsights: UserAction
     data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
 }

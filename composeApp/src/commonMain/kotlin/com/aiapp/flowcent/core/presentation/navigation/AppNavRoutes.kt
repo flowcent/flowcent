@@ -11,4 +11,5 @@ sealed class AppNavRoutes(val route: String) {
     data object Home : AppNavRoutes("home")
     data object Chat : AppNavRoutes("chat")
     data object Profile : AppNavRoutes("profile_screen")
+    data object Insights : AppNavRoutes("insights")
 }

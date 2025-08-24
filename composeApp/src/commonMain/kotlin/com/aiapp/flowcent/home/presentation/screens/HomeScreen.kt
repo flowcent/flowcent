@@ -6,6 +6,7 @@ package com.aiapp.flowcent.home.presentation.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -187,7 +188,9 @@ fun HomeScreen(
                         RingChart(
                             spent = homeState.userTotalSpent.toFloat(),
                             budget = dailyExpenseBudget().toFloat(),
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().clickable {
+                                homeViewModel.onAction(UserAction.NavigateToInsights)
+                            }
                         )
 
                         Spacer(Modifier.height(Spacing.mediumLarge))
