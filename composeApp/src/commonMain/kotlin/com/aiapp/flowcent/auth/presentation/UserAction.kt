@@ -25,9 +25,12 @@ sealed interface UserAction {
         val email: String,
         val password: String
     ) : UserAction
+
     data class SignUpWithEMailPass(
         val email: String,
         val password: String,
         val confirmPassword: String
     ) : UserAction
+
+    data class ShowPaymentSheet(val sheetState: Boolean) : UserAction
 }

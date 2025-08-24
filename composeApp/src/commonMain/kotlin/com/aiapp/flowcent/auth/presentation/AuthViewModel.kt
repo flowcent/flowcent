@@ -200,6 +200,16 @@ class AuthViewModel(
                     Constants.SIGN_IN_TYPE_EMAILPASS
                 )
             }
+
+            is UserAction.ShowPaymentSheet -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            showPaymentSheet = action.sheetState
+                        )
+                    }
+                }
+            }
         }
     }
 

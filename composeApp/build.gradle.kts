@@ -52,6 +52,12 @@ kotlin {
     }
 
     sourceSets {
+        named { it.lowercase().startsWith("ios") }.configureEach {
+            languageSettings {
+                optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            }
+        }
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -101,6 +107,11 @@ kotlin {
             implementation(libs.napier)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+            implementation(libs.purchases.core)
+            implementation(libs.purchases.ui)
+            implementation(libs.purchases.datetime)
+            implementation(libs.purchases.either)
+            implementation(libs.purchases.result)
         }
 
         iosMain.dependencies {

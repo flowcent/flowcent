@@ -10,6 +10,8 @@
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
+		DE190E1A2E5B117000F69287 /* PurchasesHybridCommon in Frameworks */ = {isa = PBXBuildFile; productRef = DE190E192E5B117000F69287 /* PurchasesHybridCommon */; };
+		DE190E1C2E5B117000F69287 /* PurchasesHybridCommonUI in Frameworks */ = {isa = PBXBuildFile; productRef = DE190E1B2E5B117000F69287 /* PurchasesHybridCommonUI */; };
 		DE612B9F2E19B92B005BA844 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		DE612BB92E1AE52E005BA844 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = DE612BB82E1AE52E005BA844 /* GoogleSignIn */; };
 		DE612BBB2E1AE52E005BA844 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DE612BBA2E1AE52E005BA844 /* GoogleSignInSwift */; };
@@ -64,11 +66,13 @@
 				DEC76B232E011DDF0039F567 /* FirebaseAnalytics in Frameworks */,
 				DEC76B292E011DDF0039F567 /* FirebaseAuth in Frameworks */,
 				DE612BBB2E1AE52E005BA844 /* GoogleSignInSwift in Frameworks */,
+				DE190E1C2E5B117000F69287 /* PurchasesHybridCommonUI in Frameworks */,
 				DEC76B252E011DDF0039F567 /* FirebaseAppCheck in Frameworks */,
 				DEC76B2D2E011DDF0039F567 /* FirebaseCrashlytics in Frameworks */,
 				DE612BB92E1AE52E005BA844 /* GoogleSignIn in Frameworks */,
 				DEC76B212E011DDF0039F567 /* FirebaseAI in Frameworks */,
 				DEC76B312E011DDF0039F567 /* FirebaseFirestore in Frameworks */,
+				DE190E1A2E5B117000F69287 /* PurchasesHybridCommon in Frameworks */,
 				DEC76B2B2E011DDF0039F567 /* FirebaseCore in Frameworks */,
 				DEC76B352E011DDF0039F567 /* FirebaseMLModelDownloader in Frameworks */,
 				DEC76B2F2E011DDF0039F567 /* FirebaseDatabase in Frameworks */,
@@ -176,6 +180,8 @@
 				DEC76B3A2E011DDF0039F567 /* FirebaseVertexAI */,
 				DE612BB82E1AE52E005BA844 /* GoogleSignIn */,
 				DE612BBA2E1AE52E005BA844 /* GoogleSignInSwift */,
+				DE190E192E5B117000F69287 /* PurchasesHybridCommon */,
+				DE190E1B2E5B117000F69287 /* PurchasesHybridCommonUI */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* FlowCent.app */;
@@ -209,6 +215,7 @@
 			packageReferences = (
 				DEC76B1F2E011DDF0039F567 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				DE612BB72E1AE52E005BA844 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				DE190E182E5B117000F69287 /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -482,6 +489,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DE190E182E5B117000F69287 /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-hybrid-common";
+			requirement = {
+				kind = exactVersion;
+				version = 16.2.2;
+			};
+		};
 		DE612BB72E1AE52E005BA844 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -501,6 +516,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DE190E192E5B117000F69287 /* PurchasesHybridCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE190E182E5B117000F69287 /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */;
+			productName = PurchasesHybridCommon;
+		};
+		DE190E1B2E5B117000F69287 /* PurchasesHybridCommonUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE190E182E5B117000F69287 /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */;
+			productName = PurchasesHybridCommonUI;
+		};
 		DE612BB82E1AE52E005BA844 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DE612BB72E1AE52E005BA844 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;

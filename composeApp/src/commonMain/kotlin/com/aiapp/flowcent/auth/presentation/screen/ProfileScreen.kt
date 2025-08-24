@@ -13,14 +13,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,27 +34,56 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.SubscriptionBadge
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil
+import com.revenuecat.purchases.kmp.ui.revenuecatui.Paywall
+import com.revenuecat.purchases.kmp.ui.revenuecatui.PaywallOptions
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel,
-    authState: AuthState
+    modifier: Modifier = Modifier, authViewModel: AuthViewModel, authState: AuthState
 ) {
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
+
+    fun handleHideBottomSheet() {
+        authViewModel.onAction(UserAction.ShowPaymentSheet(false))
+    }
+
+    val options = remember {
+        PaywallOptions(dismissRequest = { handleHideBottomSheet() })
+    }
+
+    Napier.e("Sohan paywall options $options ")
+
+
+    LaunchedEffect(key1 = authState.showPaymentSheet) {
+        if (authState.showPaymentSheet) {
+            coroutineScope.launch {
+                bottomSheetState.show()
+            }
+        } else {
+            coroutineScope.launch {
+                bottomSheetState.hide()
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
         authViewModel.onAction(UserAction.FetchUserId)
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier = modifier.fillMaxSize().padding(16.dp)
             .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -59,19 +94,9 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            // Profile Image
-//        Image(
-//            painter = painterResource("profile_picture.png"), // Replace with actual image
-//            contentDescription = "Profile Picture",
-//            modifier = Modifier
-//                .size(100.dp)
-//                .clip(CircleShape)
-//        )
             item {
                 NameInitial(
-                    text = authState.user?.localUserName ?: "",
-                    textSize = 50.sp,
-                    size = 150.dp
+                    text = authState.user?.localUserName ?: "", textSize = 50.sp, size = 150.dp
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -92,7 +117,9 @@ fun ProfileScreen(
 
 
             item {
-                SubscriptionBadge { }
+                SubscriptionBadge {
+                    authViewModel.onAction(UserAction.ShowPaymentSheet(true))
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -156,38 +183,46 @@ fun ProfileScreen(
             )
 
         }
+    }
 
-
+    if (authState.showPaymentSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                handleHideBottomSheet()
+            },
+            sheetState = bottomSheetState,
+            containerColor = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Paywall(options)
+            }
+        }
     }
 }
 
 @Composable
 fun SectionHeader(title: String) {
     Text(
-        text = title,
-        style = MaterialTheme.typography.bodyMedium.copy(
+        text = title, style = MaterialTheme.typography.bodyMedium.copy(
             fontWeight = FontWeight.Bold
-        ),
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier
-            .fillMaxWidth()
+        ), color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.fillMaxWidth()
     )
 }
 
 @Composable
 fun SettingsCard(items: List<Pair<String, String>>) {
     Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
+        modifier = Modifier.clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         items.forEachIndexed { index, (title, _) ->
             SettingItem(
-                title = title,
-                icon = "", // Replace with actual icon resource
-                modifier = Modifier
-                    .clickable { }
-                    .padding(horizontal = 12.dp, vertical = 14.dp)
+                title = title, icon = "", // Replace with actual icon resource
+                modifier = Modifier.clickable { }.padding(horizontal = 12.dp, vertical = 14.dp)
             )
             if (index != items.lastIndex) {
                 Divider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
@@ -204,15 +239,12 @@ fun SettingItem(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 14.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Icon placeholder
         Box(
-            modifier = Modifier
-                .size(24.dp)
+            modifier = Modifier.size(24.dp)
                 .background(MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
         )
         Spacer(modifier = Modifier.width(12.dp))
