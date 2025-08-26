@@ -50,6 +50,9 @@ import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import com.aiapp.flowcent.home.presentation.components.InsightsHighlightBox
 import com.aiapp.flowcent.home.presentation.components.RingChart
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun HomeScreen(
@@ -60,6 +63,13 @@ fun HomeScreen(
     val allTransactions = homeState.latestTransactions.flatten()
     val listState = rememberLazyListState()
     val isScrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 } }
+
+    val currentHour = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).hour
+    val greeting = when (currentHour) {
+        in 0..11 -> "Good Morning"
+        in 12..16 -> "Good Afternoon"
+        else -> "Good Evening"
+    }
 
     fun dailyExpenseBudget(): Double {
         try {
@@ -99,7 +109,7 @@ fun HomeScreen(
 
                 Column {
                     Text(
-                        text = "Good Evening",
+                        text = greeting,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
