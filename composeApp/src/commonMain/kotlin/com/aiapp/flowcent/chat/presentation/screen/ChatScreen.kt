@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -60,26 +61,23 @@ fun ChatScreen(
         }
     }
 
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .imePadding()
     ) {
-        Column(
+        AccountTypeSelectionToggle(
+            selectionType = chatState.selectionType,
+            onSelectionChanged = {
+                viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
+            },
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp)
-        ) {
-            AccountTypeSelectionToggle(
-                selectionType = chatState.selectionType,
-                onSelectionChanged = {
-                    viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-            )
+        )
 
+        Box(modifier = Modifier.weight(1f)) {
             if (chatState.messages.isEmpty()) {
                 Box(
                     modifier = Modifier
@@ -98,8 +96,8 @@ fun ChatScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(
                         top = 24.dp,
-                        bottom = 72.dp
-                    ), // TODO improve layout padding
+                        bottom = 16.dp
+                    ),
                     reverseLayout = true
                 ) {
                     println("Sohan messages: ${chatState.messages}")
@@ -194,8 +192,7 @@ fun ChatScreen(
         ChatInput(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(20.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             state = chatState,
             isListening = chatState.isListening,
             onUpdateText = {
