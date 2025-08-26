@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.core.Spacing
@@ -91,7 +91,7 @@ fun HomeScreen(
                     NameInitial(
                         text = homeState.user?.localUserName ?: "TH",
                         textSize = 16.sp,
-                        size = 40.dp
+                        size = 36.dp
                     )
                 }
 
@@ -104,30 +104,23 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
                     Text(
-                        text = homeState.user?.localUserName ?: "Tom Hanks",
-                        style = MaterialTheme.typography.titleLarge
+                        text = homeState.user?.localUserName ?: "User",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     )
                 }
             }
 
-            Row {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.BarChart, // Placeholder
-                        contentDescription = "Insight",
-                        tint = MaterialTheme.colorScheme.inverseSurface,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
 
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.Notifications, // Placeholder
-                        contentDescription = "Notifications",
-                        tint = MaterialTheme.colorScheme.inverseSurface,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Default.Notifications, // Placeholder
+                    contentDescription = "Notifications",
+                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
 
@@ -186,12 +179,10 @@ fun HomeScreen(
                             budget = dailyExpenseBudget().toFloat(),
                             dailyAverage = 853.0f,
                             previousMonthAverage = 1201.12f,
-                            modifier = Modifier.fillMaxWidth().clickable {
-                                homeViewModel.onAction(UserAction.NavigateToInsights)
-                            }
+                            modifier = Modifier.fillMaxWidth()
                         )
 
-                        Spacer(Modifier.height(Spacing.mediumLarge))
+                        Spacer(Modifier.height(Spacing.large))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -202,7 +193,7 @@ fun HomeScreen(
                                 modifier = Modifier.weight(1f)
                             )
 
-                            Spacer(Modifier.width(Spacing.mediumLarge))
+                            Spacer(Modifier.width(Spacing.large))
 
                             InsightsHighlightBox(
                                 modifier = Modifier.weight(1f),
@@ -229,6 +220,7 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(vertical = Spacing.verticalPadding)
+                        .padding(top = 12.dp)
                 )
             }
 

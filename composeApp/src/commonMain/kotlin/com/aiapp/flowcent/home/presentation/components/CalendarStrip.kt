@@ -83,6 +83,20 @@ fun CalendarStrip(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
+            IconButton(
+                onClick = {
+                    currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
+                }) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_arrow_left),
+                    contentDescription = "Previous Month",
+                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(Modifier.weight(1f))
+
             AnimatedContent(
                 targetState = currentMonthStart,
                 transitionSpec = { fadeIn() togetherWith fadeOut() }
@@ -97,18 +111,6 @@ fun CalendarStrip(
             }
 
             Spacer(Modifier.weight(1f))
-
-            IconButton(
-                onClick = {
-                    currentMonthStart = currentMonthStart.minus(1, DateTimeUnit.MONTH)
-                }) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_left),
-                    contentDescription = "Previous Month",
-                    tint = MaterialTheme.colorScheme.inverseSurface,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
 
             val canGoToNextMonth = currentMonthStart.year < today.year ||
                     (currentMonthStart.year == today.year && currentMonthStart.month < today.month)
