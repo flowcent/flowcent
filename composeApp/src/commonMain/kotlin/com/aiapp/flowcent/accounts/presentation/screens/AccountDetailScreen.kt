@@ -52,7 +52,6 @@ import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
-import com.aiapp.flowcent.home.presentation.components.DailyAverageSpendingCard
 import com.aiapp.flowcent.home.presentation.components.RingChart
 
 sealed class MemberTab {
@@ -179,7 +178,9 @@ fun AccountDetailScreen(
                 )
             }
 
-            Column(modifier = Modifier.clipToBounds().padding(vertical = 12.dp, horizontal = 16.dp)) {
+            Column(
+                modifier = Modifier.clipToBounds().padding(vertical = 12.dp, horizontal = 16.dp)
+            ) {
                 AnimatedVisibility(
                     visible = !isScrolled, enter = slideInVertically(
                         initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
@@ -191,7 +192,8 @@ fun AccountDetailScreen(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
                     ) {
                         RingChart(
-                            spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth()
+                            spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth(),
+                            dailyAverage = 853.0f, previousMonthAverage = 1201.12f
                         )
 
                         Spacer(Modifier.height(12.dp))
@@ -201,11 +203,6 @@ fun AccountDetailScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            DailyAverageSpendingCard(
-                                dailyAverage = 853.0f,
-                                previousMonthAverage = 1201.12f,
-                                modifier = Modifier.weight(1f)
-                            )
 
                             Spacer(Modifier.width(12.dp))
 

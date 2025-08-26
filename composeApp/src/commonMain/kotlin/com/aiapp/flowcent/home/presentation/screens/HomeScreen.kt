@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,11 +48,8 @@ import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.UserAction
 import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
-import com.aiapp.flowcent.home.presentation.components.DailyAverageSpendingCard
+import com.aiapp.flowcent.home.presentation.components.InsightsHighlightBox
 import com.aiapp.flowcent.home.presentation.components.RingChart
-import flowcent.composeapp.generated.resources.Res
-import flowcent.composeapp.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun HomeScreen(
@@ -188,6 +184,8 @@ fun HomeScreen(
                         RingChart(
                             spent = homeState.userTotalSpent.toFloat(),
                             budget = dailyExpenseBudget().toFloat(),
+                            dailyAverage = 853.0f,
+                            previousMonthAverage = 1201.12f,
                             modifier = Modifier.fillMaxWidth().clickable {
                                 homeViewModel.onAction(UserAction.NavigateToInsights)
                             }
@@ -200,16 +198,17 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            DailyAverageSpendingCard(
-                                dailyAverage = 853.0f,
-                                previousMonthAverage = 1201.12f,
+                            BalanceHighlightBox(
                                 modifier = Modifier.weight(1f)
                             )
 
                             Spacer(Modifier.width(Spacing.mediumLarge))
 
-                            BalanceHighlightBox(
-                                modifier = Modifier.weight(1f)
+                            InsightsHighlightBox(
+                                modifier = Modifier.weight(1f),
+                                onClicked = {
+                                    homeViewModel.onAction(UserAction.NavigateToInsights)
+                                }
                             )
                         }
                     }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,11 +32,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.core.presentation.animation.fadeInAndScale
+import com.aiapp.flowcent.core.presentation.utils.asCurrency
 
 @Composable
 fun RingChart(
     spent: Float,
     budget: Float,
+    dailyAverage: Float,
+    previousMonthAverage: Float?,
     modifier: Modifier = Modifier,
 ) {
     val progress = remember { Animatable(0f) }
@@ -49,6 +53,21 @@ fun RingChart(
     }
 
     val animatedSpent = (progress.value * budget).toInt()
+
+    val subTextColor = if (isSystemInDarkTheme) Color.Gray else Color.DarkGray
+    val diff = previousMonthAverage?.let { dailyAverage - it }
+    val trendText = when {
+        diff == null -> ""
+        diff > 0 -> "▲ +${diff.asCurrency()} from last month"
+        diff < 0 -> "▼ -${(-diff).asCurrency()} from last month"
+        else -> "No change from last month"
+    }
+    val trendColor = when {
+        diff == null -> subTextColor
+        diff > 0 -> Color.Red.copy(alpha = 0.8f)
+        diff < 0 -> Color(0xFF4CAF50)
+        else -> subTextColor
+    }
 
     Row(
         modifier = modifier
@@ -104,8 +123,35 @@ fun RingChart(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Daily Avg Spend",
+                color = subTextColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+
+            Text(
+                text = dailyAverage.asCurrency(),
+                color = MaterialTheme.colorScheme.inverseSurface,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            if (trendText.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = trendText,
+                    color = trendColor,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            }
         }
     }
 }
+
 
 
