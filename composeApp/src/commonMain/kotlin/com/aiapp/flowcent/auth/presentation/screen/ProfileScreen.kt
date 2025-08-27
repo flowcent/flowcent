@@ -30,18 +30,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aiapp.flowcent.accounts.presentation.components.AddMembersSheetContent
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.SubscriptionBadge
-import com.aiapp.flowcent.subscription.util.SubscriptionUtil
+import com.revenuecat.purchases.kmp.Purchases
+import com.revenuecat.purchases.kmp.PurchasesDelegate
+import com.revenuecat.purchases.kmp.datetime.allPurchaseInstants
+import com.revenuecat.purchases.kmp.models.CustomerInfo
+import com.revenuecat.purchases.kmp.models.PurchasesError
+import com.revenuecat.purchases.kmp.models.StoreProduct
+import com.revenuecat.purchases.kmp.models.StoreTransaction
 import com.revenuecat.purchases.kmp.ui.revenuecatui.Paywall
 import com.revenuecat.purchases.kmp.ui.revenuecatui.PaywallOptions
 import io.github.aakira.napier.Napier
@@ -55,6 +59,22 @@ fun ProfileScreen(
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
+    Purchases.sharedInstance.delegate = object : PurchasesDelegate {
+        override fun onCustomerInfoUpdated(customerInfo: CustomerInfo) {
+            Napier.e("Sohan → onCustomerInfoUpdated entitlements: ${customerInfo.entitlements.all}")
+            Napier.e("Sohan → onCustomerInfoUpdated activeSubscriptions: ${customerInfo.activeSubscriptions}")
+            Napier.e("Sohan → onCustomerInfoUpdated allPurchaseInstants: ${customerInfo.allPurchaseInstants}")
+        }
+
+        override fun onPurchasePromoProduct(
+            product: StoreProduct,
+            startPurchase: (onError: (error: PurchasesError, userCancelled: Boolean) -> Unit, onSuccess: (storeTransaction: StoreTransaction, customerInfo: CustomerInfo) -> Unit) -> Unit
+        ) {
+
+        }
+    }
+
+
     fun handleHideBottomSheet() {
         authViewModel.onAction(UserAction.ShowPaymentSheet(false))
     }
@@ -62,8 +82,6 @@ fun ProfileScreen(
     val options = remember {
         PaywallOptions(dismissRequest = { handleHideBottomSheet() })
     }
-
-    Napier.e("Sohan paywall options $options ")
 
 
     LaunchedEffect(key1 = authState.showPaymentSheet) {

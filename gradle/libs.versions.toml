@@ -34,6 +34,7 @@ multidex = "2.0.1"
 moko = "0.19.1"
 google-service = "4.4.2"
 purchases-kmp = "2.1.0+16.2.0"
+connectivity = "1.2.0"
 
 [libraries]
 billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
@@ -86,6 +87,8 @@ moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "mok
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
 moko-permissions-microphone = { module = "dev.icerock.moko:permissions-microphone", version.ref = "moko" }
 moko-permissions-contacts = { module = "dev.icerock.moko:permissions-contacts", version.ref = "moko" }
+connectivity-compose-device = { module = "dev.jordond.connectivity:connectivity-compose-device", version.ref = "connectivity" }
+connectivity-compose-http = { module = "dev.jordond.connectivity:connectivity-compose-http", version.ref = "connectivity" }
 
 #Revenuecat
 # Required

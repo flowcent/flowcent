@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
@@ -27,10 +27,9 @@ import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
-import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.aiapp.flowcent.core.utils.DialogType
+import com.aiapp.flowcent.util.ConnectivityManager
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
 
@@ -44,22 +43,23 @@ fun BaseScreen(
     modifier: Modifier = Modifier,
     content: @Composable (modifier: Modifier, viewModel: ChatViewModel, state: ChatState) -> Unit
 ) {
-    val connectivityObserver = rememberConnectivityObserver()
-
     val state by viewModel.chatState.collectAsState()
-
-    val status by connectivityObserver.observe()
-        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
-
-    val isMobileData by connectivityObserver.isMobileDataEnabled()
-        .collectAsState(initial = false)
 
     var hasAudioPermission: Boolean by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
+    val isNetworkConnected by ConnectivityManager.connectivityStatus.collectAsState()
 
-    LaunchedEffect(key1 = status) {
-        viewModel.onAction(UserAction.CheckInternet(status = status))
+    LaunchedEffect(key1 = isNetworkConnected) {
+        showDialog = if (isNetworkConnected) {
+            null
+        } else {
+            UiEvent.ShowDialog(
+                title = "No Internet",
+                body = "Please check your internet connection",
+                dialogType = DialogType.NO_INTERNET
+            )
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -136,7 +136,7 @@ fun BaseScreen(
                 Box(
                     modifier = Modifier.fillMaxWidth()
                         .height(300.dp)
-                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(12.dp))
 
                 ) {
                     NoInternet(

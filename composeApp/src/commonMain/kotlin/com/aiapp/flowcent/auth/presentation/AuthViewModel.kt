@@ -1,15 +1,13 @@
 package com.aiapp.flowcent.auth.presentation
 
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.utils.Constants
-import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.domain.utils.Resource
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.utils.DialogType
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
@@ -174,14 +172,6 @@ class AuthViewModel(
                             currentState.copy(uid = uidFromDataStore ?: "")
                         }
                         fetchUserProfile(uid = uidFromDataStore)
-                    }
-                }
-            }
-
-            is UserAction.CheckInternet -> {
-                viewModelScope.launch {
-                    if (action.status == ConnectivityObserver.Status.Unavailable) {
-                        _uiEvent.send(UiEvent.ShowDialog(dialogType = DialogType.NO_INTERNET))
                     }
                 }
             }

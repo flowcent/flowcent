@@ -2,7 +2,6 @@ package com.aiapp.flowcent.accounts.presentation
 
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.auth.data.model.User
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import kotlinx.datetime.LocalDate
 
 sealed interface UserAction {
@@ -21,7 +20,6 @@ sealed interface UserAction {
     data object NavigateToChat : UserAction
     data class SetSelectedDate(val dateString: LocalDate) : UserAction
     data class GetUsersDailyTransaction(val uid: String) : UserAction
-    data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
     data class UpdateAccountDescription(val accountDescription: String) : UserAction
     data class SelectAccountIcon(val id: Int) : UserAction
 }

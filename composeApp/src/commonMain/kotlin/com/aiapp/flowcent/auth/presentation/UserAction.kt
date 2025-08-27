@@ -1,8 +1,7 @@
 package com.aiapp.flowcent.auth.presentation
 
-import dev.gitlive.firebase.auth.FirebaseUser
 import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.CountryDetails
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
+import dev.gitlive.firebase.auth.FirebaseUser
 
 sealed interface UserAction {
     data object FirebaseSignOut : UserAction
@@ -20,7 +19,6 @@ sealed interface UserAction {
     data class OnGoogleSignInResult(val result: Result<FirebaseUser?>) : UserAction
 
     data object FetchUserId : UserAction
-    data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
     data class SignInWithEmailPass(
         val email: String,
         val password: String

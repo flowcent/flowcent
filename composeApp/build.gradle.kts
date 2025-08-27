@@ -112,6 +112,8 @@ kotlin {
             implementation(libs.purchases.datetime)
             implementation(libs.purchases.either)
             implementation(libs.purchases.result)
+            implementation(libs.connectivity.compose.device)
+            implementation(libs.connectivity.compose.http)
         }
 
         iosMain.dependencies {
@@ -136,7 +138,7 @@ android {
         applicationId = "com.aiapp.flowcent"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 5
+        versionCode = 6
         versionName = "1.0"
     }
     packaging {

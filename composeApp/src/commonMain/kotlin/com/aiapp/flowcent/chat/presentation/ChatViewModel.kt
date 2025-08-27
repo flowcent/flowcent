@@ -8,17 +8,15 @@ import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.checkInvalidExpense
+import com.aiapp.flowcent.chat.domain.utils.getTransactionId
 import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.domain.utils.Resource
+import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
-import com.aiapp.flowcent.core.domain.utils.Resource
-import com.aiapp.flowcent.chat.domain.utils.getTransactionId
-import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
-import com.aiapp.flowcent.core.utils.DialogType
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -170,18 +168,6 @@ class ChatViewModel(
                     _chatState.update { currentState ->
                         currentState.copy(
                             isListening = action.isListening
-                        )
-                    }
-                }
-            }
-
-            is UserAction.CheckInternet -> {
-                viewModelScope.launch {
-                    if (action.status == ConnectivityObserver.Status.Unavailable) {
-                        _uiEvent.send(
-                            UiEvent.ShowDialog(
-                                dialogType = DialogType.NO_INTERNET
-                            )
                         )
                     }
                 }

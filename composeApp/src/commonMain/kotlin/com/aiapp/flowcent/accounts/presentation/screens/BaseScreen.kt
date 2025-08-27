@@ -20,14 +20,12 @@ import androidx.navigation.NavController
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UiEvent
-import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.accounts.presentation.event.EventHandler
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
-import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.aiapp.flowcent.core.utils.DialogType
+import com.aiapp.flowcent.util.ConnectivityManager
 
 @Composable
 fun BaseScreen(
@@ -36,18 +34,8 @@ fun BaseScreen(
     modifier: Modifier = Modifier,
     content: @Composable (modifier: Modifier, viewModel: AccountViewModel, state: AccountState) -> Unit
 ) {
-    val connectivityObserver = rememberConnectivityObserver()
-
-    val status by connectivityObserver.observe()
-        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
-
-    val isMobileData by connectivityObserver.isMobileDataEnabled()
-        .collectAsState(initial = false)
-
-    LaunchedEffect(key1 = status) {
-        viewModel.onAction(UserAction.CheckInternet(status = status))
-    }
-
+    val state by viewModel.state.collectAsState()
+    val isNetworkConnected by ConnectivityManager.connectivityStatus.collectAsState()
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
 
     EventHandler(eventFlow = viewModel.uiEvent) { event ->
@@ -56,7 +44,17 @@ fun BaseScreen(
         }
     }
 
-    val state by viewModel.state.collectAsState()
+    LaunchedEffect(key1 = isNetworkConnected) {
+        showDialog = if (isNetworkConnected) {
+            null
+        } else {
+            UiEvent.ShowDialog(
+                title = "No Internet",
+                body = "Please check your internet connection",
+                dialogType = DialogType.NO_INTERNET
+            )
+        }
+    }
 
     showDialog?.let {
         Dialog(

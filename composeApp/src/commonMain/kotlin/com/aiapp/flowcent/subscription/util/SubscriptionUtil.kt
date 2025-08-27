@@ -5,7 +5,8 @@ import com.revenuecat.purchases.kmp.ktx.awaitCustomerInfo
 import io.github.aakira.napier.Napier
 
 object SubscriptionUtil {
-    val ENTITLEMENT_IDENTIFIER = "Lite"
+    const val LITE_ENTITLEMENT_IDENTIFIER = "Lite"
+    const val PRO_ENTITLEMENT_IDENTIFIER = "Pro"
 
     suspend fun isUserEntitled(entitlementId: String): Boolean {
         return try {

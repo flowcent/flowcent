@@ -28,14 +28,12 @@ import androidx.navigation.NavController
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UiEvent
-import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.auth.presentation.event.EventHandler
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
-import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.aiapp.flowcent.core.utils.DialogType
+import com.aiapp.flowcent.util.ConnectivityManager
 
 @Composable
 fun BaseScreen(
@@ -44,31 +42,28 @@ fun BaseScreen(
     modifier: Modifier = Modifier,
     content: @Composable (modifier: Modifier, viewModel: AuthViewModel, state: AuthState) -> Unit
 ) {
-    val connectivityObserver = rememberConnectivityObserver()
+    val state by viewModel.state.collectAsState()
+    val isNetworkConnected by ConnectivityManager.connectivityStatus.collectAsState()
 
-    // Observe general connectivity
-    val status by connectivityObserver.observe()
-        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
-
-    // Observe mobile data status
-    val isMobileData by connectivityObserver.isMobileDataEnabled()
-        .collectAsState(initial = false)
-
-    LaunchedEffect(key1 = status) {
-        viewModel.onAction(UserAction.CheckInternet(status = status))
-    }
-
-    // You can manage other shared states here, like a global dialog
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
 
-    // The EventHandler is now centralized in this single location
     EventHandler(eventFlow = viewModel.uiEvent) { event ->
         handleEvent(event, navController) { dialogEvent ->
             showDialog = dialogEvent
         }
     }
 
-    val state by viewModel.state.collectAsState()
+    LaunchedEffect(key1 = isNetworkConnected) {
+        showDialog = if (isNetworkConnected) {
+            null
+        } else {
+            UiEvent.ShowDialog(
+                title = "No Internet",
+                body = "Please check your internet connection",
+                dialogType = DialogType.NO_INTERNET
+            )
+        }
+    }
 
 
     // Handle showing the dialog here
@@ -80,7 +75,10 @@ fun BaseScreen(
                 Box(
                     modifier = Modifier.fillMaxWidth()
                         .height(300.dp)
-                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            shape = RoundedCornerShape(12.dp)
+                        )
 
                 ) {
                     NoInternet(
@@ -132,5 +130,6 @@ private fun handleEvent(
         UiEvent.NavigateToSignIn -> navController.navigate(AuthNavRoutes.SignInScreen.route)
         UiEvent.NavigateToSignUp -> navController.navigate(AuthNavRoutes.SignUpScreen.route)
         is UiEvent.ShowDialog -> onShowDialog(event)
+        UiEvent.HideDialog -> {}
     }
 }
