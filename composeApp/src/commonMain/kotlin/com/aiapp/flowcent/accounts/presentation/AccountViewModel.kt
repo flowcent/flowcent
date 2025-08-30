@@ -195,6 +195,16 @@ class AccountViewModel(
                     }
                 }
             }
+
+            is UserAction.UpdateAccountDurationType -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            accountDurationType = action.accountDurationType
+                        )
+                    }
+                }
+            }
         }
     }
 

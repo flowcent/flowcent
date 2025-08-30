@@ -1,5 +1,7 @@
 package com.aiapp.flowcent
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -97,6 +99,7 @@ fun App(
 
     AppTheme {
         Scaffold(
+            modifier = Modifier.fillMaxSize().imePadding(),
             containerColor = Color.Transparent,
             topBar = {
                 GetTopBarForRoute(

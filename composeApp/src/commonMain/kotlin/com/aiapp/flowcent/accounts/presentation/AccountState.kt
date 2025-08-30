@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.accounts.presentation
 
 import com.aiapp.flowcent.accounts.domain.model.Account
+import com.aiapp.flowcent.accounts.domain.model.AccountDurationType
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.core.domain.model.Transaction
 import com.aiapp.flowcent.core.presentation.platform.DeviceContact
@@ -21,4 +22,5 @@ data class AccountState(
     val currentUserProfile: User? = null,
     val accountDescription: String = "",
     val selectedIconId: Int = 1111,
+    val accountDurationType: AccountDurationType = AccountDurationType.PERMANENT
 )

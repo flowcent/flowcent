@@ -108,7 +108,6 @@ fun NoAccountCard(
                     btnText = "Get Started Now",
                     textColor = Color.White,
                     onClick = { onClick() },
-                    style = ButtonStyle.PRIMARY,
                     bgColor = Color(0xFF000000)
                 )
             }

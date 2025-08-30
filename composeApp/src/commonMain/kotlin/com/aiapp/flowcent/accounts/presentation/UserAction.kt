@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.accounts.presentation
 
 import com.aiapp.flowcent.accounts.domain.model.Account
+import com.aiapp.flowcent.accounts.domain.model.AccountDurationType
 import com.aiapp.flowcent.auth.data.model.User
 import kotlinx.datetime.LocalDate
 
@@ -22,4 +23,5 @@ sealed interface UserAction {
     data class GetUsersDailyTransaction(val uid: String) : UserAction
     data class UpdateAccountDescription(val accountDescription: String) : UserAction
     data class SelectAccountIcon(val id: Int) : UserAction
+    data class UpdateAccountDurationType(val accountDurationType: AccountDurationType) : UserAction
 }

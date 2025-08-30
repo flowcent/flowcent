@@ -22,4 +22,6 @@ sealed interface UserAction {
     data object NavigateToChatScreen : UserAction
     data object NavigateToBack : UserAction
     data class SendVoiceToChat(val message: String) : UserAction
+    data class EditExpenseItem(val expenseItem: ExpenseItem) : UserAction
+    data class DeleteExpenseItem(val expenseItem: ExpenseItem, val messageId: String) : UserAction
 }

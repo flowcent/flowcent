@@ -21,6 +21,7 @@ import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -202,6 +203,27 @@ class ChatViewModel(
                     _uiEvent.send(UiEvent.NavigateToBack)
                 }
             }
+
+            is UserAction.DeleteExpenseItem -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        val messages = currentState.messages.map { message ->
+                            if (message.id == action.messageId) {
+                                val updatedItems = message.expenseItems.toMutableList()
+                                updatedItems.remove(action.expenseItem)
+                                message.copy(expenseItems = updatedItems)
+                            } else {
+                                message
+                            }
+                        }
+                        currentState.copy(messages = messages)
+                    }
+                }
+            }
+
+            is UserAction.EditExpenseItem -> {
+                viewModelScope.launch {}
+            }
         }
     }
 
@@ -325,6 +347,7 @@ class ChatViewModel(
                 }
 
             } else {
+                delay(5000)
                 val chatResult = Json.decodeFromString<ChatResult>(hasInvalidPrompt)
                 _chatState.update { currentState ->
                     val updatedMessages = currentState.messages.map { msg ->
@@ -368,6 +391,7 @@ class ChatViewModel(
     private fun sendMessage(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val userMessage = ChatMessage(text = text, isUser = true)
+
             val botLoadingMessageId = getUuid()
 
             val botLoadingMessage = ChatMessage(

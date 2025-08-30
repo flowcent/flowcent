@@ -20,13 +20,13 @@ internal val LightColorScheme = lightColorScheme(
     primaryContainer = Colors.Blue100,     // Circle background, selected icon
     onPrimaryContainer = Colors.Blue900,   // Icon inside selected container
 
-    background = Color.White,       // Screen background
+    background = Color(0xFFF2F2F7),       // Screen background
     surface = Color.White,          // Card backgrounds (if used)
-    surfaceVariant = Colors.Gray100,       // Input fields, unselected icons
+    surfaceVariant = Color.White,       // Input fields, unselected icons
     onSurface = Colors.Black900,        // Main text
     onSurfaceVariant = Colors.Gray600,     // Secondary/supporting text
-    outlineVariant = Colors.Gray300,
-    tertiaryContainer =  Colors.Gray600
+    outlineVariant = Colors.LightOutline,
+    tertiaryContainer = Colors.Gray600
 )
 
 internal val DarkColorScheme = darkColorScheme(
@@ -46,11 +46,11 @@ internal val DarkColorScheme = darkColorScheme(
 
     background = Color(0xFF121212),       // Screen background
     surface = Color(0xFF1E1E1E),          // Cards, sections
-    surfaceVariant = Color(0xFF2C2C2C),   // Input fields, unselected icons
+    surfaceVariant = Color(0xFF1C1C1E),   // Input fields, unselected icons
 
     onSurface = Color.White,              // Main text
     onSurfaceVariant = Color(0xFFB0B0B0), // Secondary text
 
-    outlineVariant = Color(0xFF3C3C3C),
-    tertiaryContainer =  Colors.Gray600
+    outlineVariant = Color(0xFF2C2C2E),
+    tertiaryContainer = Colors.Gray600
 )
