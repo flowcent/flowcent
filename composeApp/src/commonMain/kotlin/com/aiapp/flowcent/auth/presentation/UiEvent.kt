@@ -17,4 +17,6 @@ sealed interface UiEvent {
         val primaryBtnText: String = "",
         val secondaryBtnText: String = ""
     ) : UiEvent
+
+    data object HideDialog : UiEvent
 }

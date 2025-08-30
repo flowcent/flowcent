@@ -13,6 +13,8 @@
 		DE612B9F2E19B92B005BA844 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		DE612BB92E1AE52E005BA844 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = DE612BB82E1AE52E005BA844 /* GoogleSignIn */; };
 		DE612BBB2E1AE52E005BA844 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DE612BBA2E1AE52E005BA844 /* GoogleSignInSwift */; };
+		DE6625422E5F6AE200AFFC7C /* PurchasesHybridCommon in Frameworks */ = {isa = PBXBuildFile; productRef = DE6625412E5F6AE200AFFC7C /* PurchasesHybridCommon */; };
+		DE6625442E5F6AE200AFFC7C /* PurchasesHybridCommonUI in Frameworks */ = {isa = PBXBuildFile; productRef = DE6625432E5F6AE200AFFC7C /* PurchasesHybridCommonUI */; };
 		DEC76B212E011DDF0039F567 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = DEC76B202E011DDF0039F567 /* FirebaseAI */; };
 		DEC76B232E011DDF0039F567 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DEC76B222E011DDF0039F567 /* FirebaseAnalytics */; };
 		DEC76B252E011DDF0039F567 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = DEC76B242E011DDF0039F567 /* FirebaseAppCheck */; };
@@ -64,11 +66,13 @@
 				DEC76B232E011DDF0039F567 /* FirebaseAnalytics in Frameworks */,
 				DEC76B292E011DDF0039F567 /* FirebaseAuth in Frameworks */,
 				DE612BBB2E1AE52E005BA844 /* GoogleSignInSwift in Frameworks */,
+				DE6625442E5F6AE200AFFC7C /* PurchasesHybridCommonUI in Frameworks */,
 				DEC76B252E011DDF0039F567 /* FirebaseAppCheck in Frameworks */,
 				DEC76B2D2E011DDF0039F567 /* FirebaseCrashlytics in Frameworks */,
 				DE612BB92E1AE52E005BA844 /* GoogleSignIn in Frameworks */,
 				DEC76B212E011DDF0039F567 /* FirebaseAI in Frameworks */,
 				DEC76B312E011DDF0039F567 /* FirebaseFirestore in Frameworks */,
+				DE6625422E5F6AE200AFFC7C /* PurchasesHybridCommon in Frameworks */,
 				DEC76B2B2E011DDF0039F567 /* FirebaseCore in Frameworks */,
 				DEC76B352E011DDF0039F567 /* FirebaseMLModelDownloader in Frameworks */,
 				DEC76B2F2E011DDF0039F567 /* FirebaseDatabase in Frameworks */,
@@ -176,6 +180,8 @@
 				DEC76B3A2E011DDF0039F567 /* FirebaseVertexAI */,
 				DE612BB82E1AE52E005BA844 /* GoogleSignIn */,
 				DE612BBA2E1AE52E005BA844 /* GoogleSignInSwift */,
+				DE6625412E5F6AE200AFFC7C /* PurchasesHybridCommon */,
+				DE6625432E5F6AE200AFFC7C /* PurchasesHybridCommonUI */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* FlowCent.app */;
@@ -209,6 +215,7 @@
 			packageReferences = (
 				DEC76B1F2E011DDF0039F567 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				DE612BB72E1AE52E005BA844 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				DE6625402E5F6AE200AFFC7C /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -409,7 +416,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 9L2RQZBK5K;
+				DEVELOPMENT_TEAM = 2QJ5V2F726;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -437,7 +444,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 9L2RQZBK5K;
+				DEVELOPMENT_TEAM = 2QJ5V2F726;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -490,6 +497,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		DE6625402E5F6AE200AFFC7C /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-hybrid-common";
+			requirement = {
+				kind = exactVersion;
+				version = 16.2.0;
+			};
+		};
 		DEC76B1F2E011DDF0039F567 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -510,6 +525,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DE612BB72E1AE52E005BA844 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		DE6625412E5F6AE200AFFC7C /* PurchasesHybridCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE6625402E5F6AE200AFFC7C /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */;
+			productName = PurchasesHybridCommon;
+		};
+		DE6625432E5F6AE200AFFC7C /* PurchasesHybridCommonUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE6625402E5F6AE200AFFC7C /* XCRemoteSwiftPackageReference "purchases-hybrid-common" */;
+			productName = PurchasesHybridCommonUI;
 		};
 		DEC76B202E011DDF0039F567 /* FirebaseAI */ = {
 			isa = XCSwiftPackageProductDependency;

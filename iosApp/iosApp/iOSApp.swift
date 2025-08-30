@@ -39,6 +39,7 @@ struct iOSApp: App {
     init() {
         FirebaseApp.configure()
         FirebaseAuthInitializer.shared.onApplicationStart()
+        RevenueCatInitializer.shared.initializeRevenueCat()
     }
     
     var body: some Scene {

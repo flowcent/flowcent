@@ -1,0 +1,42 @@
+package com.aiapp.flowcent.util
+
+object Labels {
+    const val LABEL_DURATION = "Duration"
+    const val LABEL_ACCOUNT_NAME = "Account Name"
+    const val LABEL_INITIAL_BALANCE = "Initial Balance"
+    const val LABEL_DESCRIPTION_OPTIONAL = "Description (Optional)"
+    const val LABEL_ADD_MEMBERS = "Add Members"
+    const val LABEL_CHOOSE_ICON = "Choose Icon"
+    const val BUTTON_CREATE_ACCOUNT = "Create Account"
+    const val LABEL_MONTHLY_BUDGET = "Monthly Budget"
+    const val LABEL_ESTIMATED_COST = "Estimated Cost"
+    const val PLACEHOLDER_ACCOUNT_NAME = "e.g., Family Expenses, Roommates"
+    const val PLACEHOLDER_MONTHLY_BUDGET = "What is your monthly budget? e.g., 80000"
+    const val PLACEHOLDER_ESTIMATED_COST = "What is your estimated cost? e.g., 20000"
+    const val PLACEHOLDER_DESCRIPTION = "What's this account for?"
+    const val PLACEHOLDER_INITIAL_BALANCE = "e.g., 1000"
+    const val PLACEHOLDER_PHONE_NUMBER = "e.g., +1234567890"
+    const val BUTTON_INVITE_MEMBERS = "Invite members"
+    const val BUTTON_ADD_MEMBER = "Add Member"
+    const val BUTTON_REMOVE_MEMBER = "Remove"
+    const val BUTTON_SAVE_CHANGES = "Save Changes"
+    const val BUTTON_CANCEL = "Cancel"
+    const val BUTTON_OK = "OK"
+    const val BUTTON_DELETE_ACCOUNT = "Delete Account"
+    const val BUTTON_EDIT_ACCOUNT = "Edit Account"
+    const val BUTTON_ADD_TRANSACTION = "Add Transaction"
+    const val BUTTON_EDIT_TRANSACTION = "Edit Transaction"
+    const val BUTTON_DELETE_TRANSACTION = "Delete Transaction"
+    const val BUTTON_ADD_CATEGORY = "Add Category"
+    const val BUTTON_EDIT_CATEGORY = "Edit Category"
+    const val BUTTON_DELETE_CATEGORY = "Delete Category"
+    const val TERMS_CREATE_ACCOUNT =
+        "By Creating an account, you agree to our Terms of Service and Privacy Policy"
+    const val LABEL_CREATE_SHARED_ACCOUNT = "Create Shared Account"
+    const val SUBTITLE_CREATE_SHARED_ACCOUNT =
+        "Share expenses with family, friends, or roommates.\nTrack spending together and split costs easily."
+    const val LABEL_MONTHLY_SPRINT = "Monthly Sprint"
+    const val LABEL_SHORT_TERM = "Short Term"
+    const val LABEL_ADD_INITIAL_MEMBERS = "Add Initial Members"
+
+}

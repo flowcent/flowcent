@@ -1,20 +1,19 @@
 package com.aiapp.flowcent.chat.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.core.presentation.components.AppCustomButton
-import com.aiapp.flowcent.core.presentation.components.ButtonStyle
+import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -25,29 +24,31 @@ fun PromptSave(
     onClickSave: () -> Unit = {},
     onClickDiscard: () -> Unit = {},
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         AppCustomButton(
+            btnText = "Save",
             onClick = { onClickSave() },
-            btnText = if (selectionType == AccountSelectionType.SHARED) "Update $selectedAccountName" else "Save Into Personal",
-            bgColor = MaterialTheme.colorScheme.secondary,
-            textColor = Color.White,
-            style = ButtonStyle.OUTLINED
+            textColor = MaterialTheme.colorScheme.onPrimary,
+            bgColor = MaterialTheme.colorScheme.primary,
+            shouldFillMaxWidth = false,
+            modifier = Modifier.weight(1f)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(Modifier.width(16.dp))
+
 
         AppCustomButton(
-            onClick = { onClickDiscard() },
             btnText = "Discard",
-            bgColor = MaterialTheme.colorScheme.secondary,
+            onClick = { onClickDiscard() },
             textColor = Color.White,
-            style = ButtonStyle.OUTLINED
+            bgColor = Colors.Red300,
+            shouldFillMaxWidth = false,
+            modifier = Modifier.weight(1f)
         )
     }
 }

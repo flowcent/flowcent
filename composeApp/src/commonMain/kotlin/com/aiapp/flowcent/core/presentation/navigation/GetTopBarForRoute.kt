@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
 import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
@@ -32,7 +31,7 @@ fun GetTopBarForRoute(navController: NavHostController, route: String) {
         AppNavRoutes.Accounts.route -> AppBar(navController = navController, title = "Shared")
         AppNavRoutes.Auth.route -> null
         AppNavRoutes.Chat.route -> AppBar(navController = navController, title = "Chat")
-        ChatNavRoutes.ChatScreen.route -> AppBar(navController = navController, title = "Chat")
+        ChatNavRoutes.ChatListScreen.route -> AppBar(navController = navController, title = "Chat")
         ChatNavRoutes.VoiceAssistantScreen.route -> AppBar(navController = navController, title = "Marcus")
         AuthNavRoutes.ProfileScreen.route -> AppBar(navController = navController, title = "Profile")
         AccountsNavRoutes.AccountsHomeScreen.route -> AppBar(navController = navController, title = "Accounts")
@@ -76,6 +75,6 @@ private fun AppBar(
             actions = { actions }
         )
 
-        Divider(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.outlineVariant))
+//        Divider(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.outlineVariant))
     }
 }

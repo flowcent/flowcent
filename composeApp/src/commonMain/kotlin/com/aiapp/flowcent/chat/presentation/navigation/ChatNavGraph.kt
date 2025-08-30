@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.screen.BaseScreen
-import com.aiapp.flowcent.chat.presentation.screen.ChatScreen
+import com.aiapp.flowcent.chat.presentation.screen.ChatListScreen
 import com.aiapp.flowcent.chat.presentation.screen.VoiceAssistantScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
@@ -27,9 +27,9 @@ fun NavGraphBuilder.addChatGraph(
 ) {
     navigation(
         route = AppNavRoutes.Chat.route,
-        startDestination = ChatNavRoutes.ChatScreen.route
+        startDestination = ChatNavRoutes.ChatListScreen.route
     ) {
-        addAnimatedComposable(route = ChatNavRoutes.ChatScreen.route) { navBackStackEntry ->
+        addAnimatedComposable(route = ChatNavRoutes.ChatListScreen.route) { navBackStackEntry ->
             val chatNavGraphEntry = remember(navBackStackEntry) {
                 navController.getBackStackEntry(AppNavRoutes.Chat.route)
             }
@@ -58,7 +58,7 @@ fun NavGraphBuilder.addChatGraph(
                 permissionsVM = permissionVM,
                 fcPermissionsState = fcPermissionsState,
             ) { modifier, chatViewModel, chatState ->
-                ChatScreen(
+                ChatListScreen(
                     modifier = modifier,
                     chatState = chatState,
                     viewModel = chatViewModel,

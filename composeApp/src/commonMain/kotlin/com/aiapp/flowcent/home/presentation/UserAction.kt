@@ -1,6 +1,5 @@
 package com.aiapp.flowcent.home.presentation
 
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 import kotlinx.datetime.LocalDate
 
 sealed interface UserAction {
@@ -10,5 +9,4 @@ sealed interface UserAction {
     data object FetchUserUId: UserAction
     data object NavigateToProfile: UserAction
     data object NavigateToInsights: UserAction
-    data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
 }

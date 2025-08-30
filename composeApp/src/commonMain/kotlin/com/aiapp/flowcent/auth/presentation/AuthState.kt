@@ -19,4 +19,5 @@ data class AuthState(
     val savingTarget: Double = 0.0,
     val user: User? = null,
     val hasUserSignedIn: Boolean = false,
+    val showPaymentSheet: Boolean = false,
 )

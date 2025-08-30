@@ -15,31 +15,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -52,8 +42,6 @@ import com.aiapp.flowcent.auth.presentation.component.TermsAndConditionsText
 import com.aiapp.flowcent.core.Spacing
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.LabeledInputField
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
-import com.aiapp.flowcent.core.presentation.platform.rememberConnectivityObserver
 import com.aiapp.flowcent.core.utils.PRIVACY_POLICY_URL
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.apple.AppleButtonMode
@@ -74,20 +62,6 @@ fun SignUpScreen(
     var rememberMe by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-
-    val connectivityObserver = rememberConnectivityObserver()
-
-    // Observe general connectivity
-    val status by connectivityObserver.observe()
-        .collectAsState(initial = ConnectivityObserver.Status.Initializing)
-
-    // Observe mobile data status
-    val isMobileData by connectivityObserver.isMobileDataEnabled()
-        .collectAsState(initial = false)
-
-    LaunchedEffect(key1 = status) {
-        authViewModel.onAction(UserAction.CheckInternet(status = status))
-    }
 
     Box(
         modifier = Modifier

@@ -176,15 +176,16 @@ object ChatUtil {
                 userText.lowercase() in listOf(
                     "hello",
                     "hi.",
+                    "hi",
                     "hey",
                     "yo",
                     "bro",
                     "brother",
                     "dude",
                     "buddy"
-                ) -> "Hi, I'm Expi. How can I help you?"
+                ) -> "Hi, I'm Marcus. How can I help you?"
 
-                else -> "Hi, I'm Expi. I could not understand your message. I can help you record financial transactions. Please phrase your questions like this: I just paid $$800 house rent, Just got my salary which is $$8000. Add it, Had dinner that cost $$16.97"
+                else -> "I could not understand your message. I can help you record financial transactions. Please phrase your questions like this: I just paid $$800 house rent, Just got my salary which is $$8000. Add it, Had dinner that cost $$16.97"
             }
             println("Sohan genericAnswer -> $genericAnswer")
             return """{"answer": "$genericAnswer", "data": []}"""

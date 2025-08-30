@@ -10,6 +10,6 @@ class AndroidPlatform : Platform {
 
 actual fun getPlatform(): Platform = AndroidPlatform()
 
-actual fun onApplicationStartPlatformSpecific() {
+actual fun onApplicationStartPlatformSpecific() {}
 
-}
+actual fun getRevenueCatApiKey(): String = "goog_dRdNUdOohmCKJvNfRvfLhvufUya"

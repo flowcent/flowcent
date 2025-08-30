@@ -8,21 +8,20 @@ import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.checkInvalidExpense
+import com.aiapp.flowcent.chat.domain.utils.getTransactionId
 import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.domain.utils.Resource
+import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
-import com.aiapp.flowcent.core.domain.utils.Resource
-import com.aiapp.flowcent.chat.domain.utils.getTransactionId
-import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
-import com.aiapp.flowcent.core.utils.DialogType
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -175,18 +174,6 @@ class ChatViewModel(
                 }
             }
 
-            is UserAction.CheckInternet -> {
-                viewModelScope.launch {
-                    if (action.status == ConnectivityObserver.Status.Unavailable) {
-                        _uiEvent.send(
-                            UiEvent.ShowDialog(
-                                dialogType = DialogType.NO_INTERNET
-                            )
-                        )
-                    }
-                }
-            }
-
             UserAction.NavigateToVoiceScreen -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.NavigateToVoice)
@@ -215,6 +202,27 @@ class ChatViewModel(
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.NavigateToBack)
                 }
+            }
+
+            is UserAction.DeleteExpenseItem -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        val messages = currentState.messages.map { message ->
+                            if (message.id == action.messageId) {
+                                val updatedItems = message.expenseItems.toMutableList()
+                                updatedItems.remove(action.expenseItem)
+                                message.copy(expenseItems = updatedItems)
+                            } else {
+                                message
+                            }
+                        }
+                        currentState.copy(messages = messages)
+                    }
+                }
+            }
+
+            is UserAction.EditExpenseItem -> {
+                viewModelScope.launch {}
             }
         }
     }
@@ -339,6 +347,7 @@ class ChatViewModel(
                 }
 
             } else {
+                delay(5000)
                 val chatResult = Json.decodeFromString<ChatResult>(hasInvalidPrompt)
                 _chatState.update { currentState ->
                     val updatedMessages = currentState.messages.map { msg ->
@@ -382,6 +391,7 @@ class ChatViewModel(
     private fun sendMessage(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val userMessage = ChatMessage(text = text, isUser = true)
+
             val botLoadingMessageId = getUuid()
 
             val botLoadingMessage = ChatMessage(

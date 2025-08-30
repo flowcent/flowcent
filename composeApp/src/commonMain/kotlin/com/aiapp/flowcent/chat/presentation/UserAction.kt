@@ -2,7 +2,6 @@ package com.aiapp.flowcent.chat.presentation
 
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
-import com.aiapp.flowcent.core.presentation.platform.ConnectivityObserver
 
 sealed interface UserAction {
     data class SendMessage(val text: String) : UserAction
@@ -19,9 +18,10 @@ sealed interface UserAction {
     data class UpdateAllCheckedItems(val expenseItems: List<ExpenseItem>) : UserAction
     data class UpdateCheckedItem(val isChecked: Boolean, val expenseItem: ExpenseItem) : UserAction
     data class UpdateListening(val isListening: Boolean) : UserAction
-    data class CheckInternet(val status: ConnectivityObserver.Status) : UserAction
     data object NavigateToVoiceScreen : UserAction
     data object NavigateToChatScreen : UserAction
     data object NavigateToBack : UserAction
     data class SendVoiceToChat(val message: String) : UserAction
+    data class EditExpenseItem(val expenseItem: ExpenseItem) : UserAction
+    data class DeleteExpenseItem(val expenseItem: ExpenseItem, val messageId: String) : UserAction
 }

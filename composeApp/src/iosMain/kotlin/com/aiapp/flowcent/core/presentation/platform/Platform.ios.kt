@@ -10,5 +10,6 @@ class IOSPlatform : Platform {
 
 actual fun getPlatform(): Platform = IOSPlatform()
 
-actual fun onApplicationStartPlatformSpecific() {
-}
+actual fun onApplicationStartPlatformSpecific() {}
+
+actual fun getRevenueCatApiKey(): String = "appl_your_api_key"

@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.accounts.domain.model.AccountDurationType
 import com.aiapp.flowcent.accounts.domain.model.MemberRole
 import com.aiapp.flowcent.accounts.presentation.AccountState
 import com.aiapp.flowcent.accounts.presentation.AccountViewModel
@@ -50,9 +51,11 @@ import com.aiapp.flowcent.accounts.presentation.components.SelectableIconRow
 import com.aiapp.flowcent.accounts.presentation.getAccountIcons
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.LabeledInputField
+import com.aiapp.flowcent.core.presentation.components.ToggleSelector
 import com.aiapp.flowcent.core.presentation.extension.dottedBorder
 import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
+import com.aiapp.flowcent.util.Labels
 import dev.icerock.moko.permissions.PermissionState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -144,7 +147,7 @@ fun AddAccountScreen(
 
             // Title
             Text(
-                text = "Create Shared Account",
+                text = Labels.LABEL_CREATE_SHARED_ACCOUNT,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -153,7 +156,7 @@ fun AddAccountScreen(
 
             // Subtitle
             Text(
-                text = "Share expenses with family, friends, or roommates.\nTrack spending together and split costs easily.",
+                text = Labels.SUBTITLE_CREATE_SHARED_ACCOUNT,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -161,11 +164,33 @@ fun AddAccountScreen(
 
             Spacer(Modifier.height(24.dp))
 
+            Text(
+                text = Labels.LABEL_DURATION,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.align(Alignment.Start)
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            ToggleSelector(
+                shape = RoundedCornerShape(16.dp),
+                options = listOf(
+                    AccountDurationType.PERMANENT to Labels.LABEL_MONTHLY_SPRINT,
+                    AccountDurationType.TEMPORARY to Labels.LABEL_SHORT_TERM
+                ), selectedOption = state.accountDurationType, onOptionSelected = { type ->
+                    viewModel.onAction(UserAction.UpdateAccountDurationType(type))
+                }, modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+            )
+
+
+            Spacer(Modifier.height(24.dp))
+
             // Account Name
 
             LabeledInputField(
-                label = "Account Name",
-                placeholder = "e.g., Family Expenses, Roommates",
+                label = Labels.LABEL_ACCOUNT_NAME,
+                placeholder = Labels.PLACEHOLDER_ACCOUNT_NAME,
                 value = state.accountName,
                 onValueChange = { accountName ->
                     viewModel.onAction(UserAction.UpdateAccountName(accountName))
@@ -177,8 +202,10 @@ fun AddAccountScreen(
 
             // Opening Balance
             LabeledInputField(
-                label = "Initial Balance",
-                placeholder = "What's your initial balance?",
+                label = if (state.accountDurationType == AccountDurationType.PERMANENT)
+                    Labels.LABEL_MONTHLY_BUDGET else Labels.LABEL_ESTIMATED_COST,
+                placeholder = if (state.accountDurationType == AccountDurationType.PERMANENT)
+                    Labels.PLACEHOLDER_MONTHLY_BUDGET else Labels.PLACEHOLDER_ESTIMATED_COST,
                 isNumeric = true,
                 value = if (state.acInitialBalance > 0.0) {
                     if (state.acInitialBalance % 1.0 == 0.0) {
@@ -196,8 +223,8 @@ fun AddAccountScreen(
 
             // Description
             LabeledInputField(
-                label = "Description (Optional)",
-                placeholder = "What's this account for?",
+                label = Labels.LABEL_DESCRIPTION_OPTIONAL,
+                placeholder = Labels.PLACEHOLDER_DESCRIPTION,
                 value = state.accountDescription,
                 onValueChange = { description ->
                     viewModel.onAction(UserAction.UpdateAccountDescription(description))
@@ -215,7 +242,7 @@ fun AddAccountScreen(
             ) {
                 // Title
                 Text(
-                    text = "Add Initial Members",
+                    text = Labels.LABEL_ADD_INITIAL_MEMBERS,
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.align(Alignment.Start)
@@ -239,8 +266,7 @@ fun AddAccountScreen(
                                 initial = user.localUserName,
                                 role = MemberRole.MEMBER.displayName,
                                 canRemove = true,
-                                onRemove = { viewModel.onAction(UserAction.OnRemoveMember(user)) }
-                            )
+                                onRemove = { viewModel.onAction(UserAction.OnRemoveMember(user)) })
                         }
                     }
                 }
@@ -266,7 +292,7 @@ fun AddAccountScreen(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "Invite members",
+                            text = Labels.BUTTON_INVITE_MEMBERS,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -278,7 +304,7 @@ fun AddAccountScreen(
 
             // Icon Picker
             Text(
-                text = "Choose Icon",
+                text = Labels.LABEL_CHOOSE_ICON,
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.align(Alignment.Start)
@@ -291,9 +317,10 @@ fun AddAccountScreen(
                 selectedIconId = state.selectedIconId,
                 onIconSelected = { id ->
                     viewModel.onAction(UserAction.SelectAccountIcon(id))
-                }
-            )
+                })
             Spacer(Modifier.height(8.dp))
+
+
         }
 
 
@@ -311,7 +338,7 @@ fun AddAccountScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
             ) {
                 AppButton(
-                    text = "Create Account",
+                    text = Labels.BUTTON_CREATE_ACCOUNT,
                     textColor = MaterialTheme.colorScheme.onPrimary,
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     onClick = {
@@ -321,7 +348,7 @@ fun AddAccountScreen(
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text = "By Creating an account, you agree to our Terms of Service and Privacy Policy",
+                    text = Labels.TERMS_CREATE_ACCOUNT,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.align(Alignment.Start)

@@ -41,7 +41,6 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ChatInput(
-    modifier: Modifier = Modifier,
     state: ChatState,
     isListening: Boolean = false,
     onUpdateText: (text: String) -> Unit = {},
@@ -80,7 +79,7 @@ fun ChatInput(
 
 
     Row(
-        modifier = modifier
+        modifier = Modifier
             .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -113,12 +112,12 @@ fun ChatInput(
                     }
                 },
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.onBackground,
+                    cursorColor = MaterialTheme.colorScheme.primary,
                     focusedTextColor = MaterialTheme.colorScheme.onBackground
                 ),
                 textStyle = MaterialTheme.typography.bodyMedium

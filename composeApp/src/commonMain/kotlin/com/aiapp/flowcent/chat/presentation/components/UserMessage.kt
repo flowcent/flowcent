@@ -22,34 +22,35 @@ import com.aiapp.flowcent.core.Spacing
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 
 @Composable
-fun UserMessage(text: String) {
+fun UserMessage(avatarName: String = "Flowcent", text: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
     ) {
-
-        NameInitial(
-            text = "TH",
-            textSize = 16.sp,
-            size = 40.dp,
-            modifier = Modifier.padding(start = 12.dp)
-        )
-
-        Spacer(modifier = Modifier.width(12.dp))
 
 
         Column(
-            modifier = Modifier.background(Color(0xFF2C2C2E), shape = RoundedCornerShape(12.dp))
-                .padding(12.dp),
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            ).padding(12.dp),
         ) {
             Text(
                 text = text,
-                color = Color.White,
-                modifier = Modifier.padding(12.dp),
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 14
             )
         }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        NameInitial(
+            text = avatarName,
+            textSize = 16.sp,
+            size = 40.dp,
+            modifier = Modifier.padding(start = 12.dp)
+        )
 
     }
 }

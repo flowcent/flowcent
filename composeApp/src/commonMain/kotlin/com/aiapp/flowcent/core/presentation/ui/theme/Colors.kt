@@ -20,7 +20,7 @@ object Colors {
     val DarkOnBackground = Color(0xFFFFFFFF) // Pure white for contrast
 
 
-    val ExpenseColor = Color(0xFFFF375F)
+    val ExpenseColor = Color(0xFFDC2626)
     val IncomeColor = Color(0xFF4CAF50)
 
     val GradientOne = Color(0xFF5EE0C9)
@@ -42,5 +42,7 @@ object Colors {
     val Gray600 = Color(0xFF9A9A9E) // Secondary text
 
     val Red300 = Color(0xFFE57373)
+
+    val LightOutline = Color(0xFFF3F4F6)
 
 }

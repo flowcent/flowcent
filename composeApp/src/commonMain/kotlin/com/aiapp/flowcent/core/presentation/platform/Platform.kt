@@ -8,3 +8,7 @@ interface Platform {
 expect fun getPlatform(): Platform
 
 expect fun onApplicationStartPlatformSpecific()
+
+expect fun getRevenueCatApiKey(): String
+
+

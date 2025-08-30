@@ -146,3 +146,42 @@ fun ShimmerAccount(modifier: Modifier = Modifier) {
         )
     }
 }
+
+
+@Composable
+fun ShimmerChat(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .fillMaxWidth(0.5f)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .fillMaxWidth(0.3f)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .width(60.dp)
+                .height(24.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .shimmerEffect()
+        )
+    }
+}
