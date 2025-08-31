@@ -8,15 +8,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 
 
 @Composable
@@ -29,23 +27,14 @@ fun MicButton(
         modifier = Modifier
             .size(size)
             .clip(CircleShape)
-            .background(
-                Brush.radialGradient(
-                    listOf(
-                        Colors.GradientOne,
-                        Colors.GradientTwo,
-                        Colors.GradientOne,
-                        Colors.GradientTwo,
-                    )
-                )
-            )
+            .background(MaterialTheme.colorScheme.primary)
             .clickable { onClickMic() },
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Default.Mic,
             contentDescription = "Mic",
-            tint = Color.Black,
+            tint = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.size(iconSize)
         )
     }

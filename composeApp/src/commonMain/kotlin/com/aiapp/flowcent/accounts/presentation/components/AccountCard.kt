@@ -40,7 +40,7 @@ fun AccountCard(
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(12.dp))
             .border(
                 2.dp,
                 MaterialTheme.colorScheme.surfaceVariant,
