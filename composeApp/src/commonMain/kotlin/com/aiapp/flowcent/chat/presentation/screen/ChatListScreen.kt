@@ -76,6 +76,9 @@ fun ChatListScreen(
                 reverseLayout = true
             ) {
                 item {
+                    Spacer(Modifier.height(24.dp))
+                }
+                item {
                     if (chatState.messages.isEmpty()) {
                         BotMessageContent(
                             avatarName = "Marcus",

@@ -42,6 +42,7 @@ import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UserAction
 import com.aiapp.flowcent.chat.presentation.components.MicButton
+import com.aiapp.flowcent.core.presentation.animation.VoiceWaveAnimation
 import com.aiapp.flowcent.core.presentation.ui.theme.Colors
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.lucide_send
@@ -122,15 +123,7 @@ fun VoiceAssistantScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             // Animated glowing circle
-            Box(
-                modifier = Modifier
-                    .size(220.dp)
-                    .scale(scale)
-                    .background(
-                        brush = Brush.radialGradient(glowColors),
-                        shape = CircleShape
-                    )
-            )
+            VoiceWaveAnimation()
 
             Spacer(modifier = Modifier.height(60.dp))
 
