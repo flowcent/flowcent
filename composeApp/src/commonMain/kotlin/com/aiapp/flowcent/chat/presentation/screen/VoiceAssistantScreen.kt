@@ -91,7 +91,7 @@ fun VoiceAssistantScreen(
 
     fun onClose() {
         viewModel.onAction(UserAction.StopAudioPlayer)
-        viewModel.onAction(UserAction.UpdateVoiceText("", ""))
+        viewModel.onAction(UserAction.UpdateVoiceText(""))
     }
 
     Column(

@@ -8,7 +8,7 @@ sealed interface UserAction {
     data object StartAudioPlayer : UserAction
     data object StopAudioPlayer : UserAction
     data class UpdateText(val text: String) : UserAction
-    data class UpdateVoiceText(val originalText: String, val translatedText: String) : UserAction
+    data class UpdateVoiceText(val originalText: String) : UserAction
     data object CheckAudioPermission : UserAction
     data object SaveExpenseItemsToDb : UserAction
     data object DiscardExpenseItems : UserAction

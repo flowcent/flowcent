@@ -114,7 +114,7 @@ fun BaseScreen(
                 if (hasAudioPermission) {
                     coroutineScope.launch {
                         speechRecognizer.startListening().collect { text ->
-                            viewModel.onAction(UserAction.UpdateVoiceText(text, text))
+                            viewModel.onAction(UserAction.UpdateVoiceText(text))
                         }
                         viewModel.onAction(UserAction.UpdateListening(false))
                     }

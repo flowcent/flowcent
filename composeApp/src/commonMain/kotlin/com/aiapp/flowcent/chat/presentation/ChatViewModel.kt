@@ -77,8 +77,7 @@ class ChatViewModel(
                 viewModelScope.launch {
                     _chatState.update {
                         it.copy(
-                            originalVoiceText = action.originalText,
-                            translatedVoiceText = action.translatedText
+                            originalVoiceText = action.originalText
                         )
                     }
                 }
@@ -305,92 +304,73 @@ class ChatViewModel(
             val hasInvalidPrompt = checkInvalidExpense(prompt)
 
             if (hasInvalidPrompt.isEmpty()) {
-                val updatedPrompt = buildExpensePrompt(prompt)
-                val result = flowCentAi.generateContent(updatedPrompt)
-                result.onSuccess { chatResult ->
-                    _chatState.update { currentState ->
-                        val updatedMessages = currentState.messages.map { msg ->
-                            if (msg.id == botLoadingMessageId) {
-                                msg.copy(
-                                    text = chatResult.answer,
-                                    isBotMessageLoading = false, // Set loading to false
-                                    expenseItems = chatResult.data
-                                )
-                            } else {
-                                msg
-                            }
-                        }
-                        currentState.copy(
-                            messages = updatedMessages,
-                            isSendingMessage = false // Release the input field lock
-                        )
-                    }
-
-                }.onFailure { error ->
-                    _chatState.update { currentState ->
-                        val updatedMessages = currentState.messages.map { msg ->
-                            if (msg.id == botLoadingMessageId) {
-                                msg.copy(
-                                    text = error.message ?: "Something unexpected happened",
-                                    isBotMessageLoading = false,
-                                    expenseItems = emptyList() // Clear any partial data on error
-                                )
-                            } else {
-                                msg
-                            }
-                        }
-                        currentState.copy(
-                            messages = updatedMessages,
-                            isSendingMessage = false // Release the input field lock even on error
-                        )
-                    }
-                }
-
+                handleValidPrompt(prompt, botLoadingMessageId)
             } else {
-                delay(5000)
-                val chatResult = Json.decodeFromString<ChatResult>(hasInvalidPrompt)
-                _chatState.update { currentState ->
-                    val updatedMessages = currentState.messages.map { msg ->
-                        if (msg.id == botLoadingMessageId) {
-                            msg.copy(
-                                text = chatResult.answer,
-                                isBotMessageLoading = false, // Set loading to false
-                                expenseItems = chatResult.data
-                            )
-                        } else {
-                            msg
-                        }
-                    }
-                    currentState.copy(
-                        messages = updatedMessages,
-                        isSendingMessage = false // Release the input field lock
-                    )
-                }
+                handleInvalidPrompt(hasInvalidPrompt, botLoadingMessageId)
             }
         } catch (e: Exception) {
-            _chatState.update { currentState ->
-                val updatedMessages = currentState.messages.map { msg ->
-                    if (msg.id == botLoadingMessageId) {
+            updateChatStateWithError(botLoadingMessageId, e.message)
+        }
+    }
+
+    private suspend fun handleValidPrompt(prompt: String, botLoadingMessageId: String) {
+        val updatedPrompt = buildExpensePrompt(prompt)
+        val result = flowCentAi.generateContent(updatedPrompt)
+
+        result.onSuccess { chatResult ->
+            updateChatStateWithResult(botLoadingMessageId, chatResult)
+        }.onFailure { error ->
+            updateChatStateWithError(botLoadingMessageId, error.message)
+        }
+    }
+
+    private suspend fun handleInvalidPrompt(invalidPrompt: String, botLoadingMessageId: String) {
+        delay(5000) // Simulate response delay for invalid prompt
+        val chatResult = Json.decodeFromString<ChatResult>(invalidPrompt)
+        updateChatStateWithResult(botLoadingMessageId, chatResult)
+    }
+
+    private fun updateChatStateWithResult(messageId: String, chatResult: ChatResult) {
+        _chatState.update { currentState ->
+            currentState.copy(
+                messages = currentState.messages.map { msg ->
+                    if (msg.id == messageId) {
                         msg.copy(
-                            text = e.message ?: "Something unexpected happened",
+                            text = chatResult.answer,
+                            isBotMessageLoading = false,
+                            expenseItems = chatResult.data
+                        )
+                    } else msg
+                },
+                isSendingMessage = false
+            )
+        }
+    }
+
+    private fun updateChatStateWithError(messageId: String, errorMessage: String?) {
+        _chatState.update { currentState ->
+            currentState.copy(
+                messages = currentState.messages.map { msg ->
+                    if (msg.id == messageId) {
+                        msg.copy(
+                            text = errorMessage ?: "Something unexpected happened",
                             isBotMessageLoading = false,
                             expenseItems = emptyList()
                         )
-                    } else {
-                        msg
-                    }
-                }
-                currentState.copy(
-                    messages = updatedMessages,
-                    isSendingMessage = false
-                )
-            }
+                    } else msg
+                },
+                isSendingMessage = false
+            )
         }
     }
 
     private fun sendMessage(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val userMessage = ChatMessage(text = text, isUser = true)
+            val userMessage = ChatMessage(
+                id = getUuid(),
+                text = text,
+                isUser = true
+            )
 
             val botLoadingMessageId = getUuid()
 
