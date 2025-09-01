@@ -16,6 +16,7 @@ import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.compose.viewmodel.koinViewModel
@@ -37,6 +38,8 @@ fun NavGraphBuilder.addChatGraph(
                 viewModelStoreOwner = chatNavGraphEntry
             )
 
+            val subscriptionVM = koinViewModel<SubscriptionViewModel>()
+
             val factory = rememberPermissionsControllerFactory()
             val controller = remember(factory) {
                 factory.createPermissionsController()
@@ -57,11 +60,13 @@ fun NavGraphBuilder.addChatGraph(
                 speechRecognizer = speechRecognizer,
                 permissionsVM = permissionVM,
                 fcPermissionsState = fcPermissionsState,
-            ) { modifier, chatViewModel, chatState ->
+                subscriptionVM = subscriptionVM
+            ) { modifier, chatViewModel, chatState, subscriptionState ->
                 ChatListScreen(
                     modifier = modifier,
                     chatState = chatState,
                     viewModel = chatViewModel,
+                    subscriptionState = subscriptionState
                 )
             }
         }

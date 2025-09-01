@@ -39,16 +39,9 @@ import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.SubscriptionBadge
-import com.revenuecat.purchases.kmp.Purchases
-import com.revenuecat.purchases.kmp.PurchasesDelegate
-import com.revenuecat.purchases.kmp.datetime.allPurchaseInstants
-import com.revenuecat.purchases.kmp.models.CustomerInfo
-import com.revenuecat.purchases.kmp.models.PurchasesError
-import com.revenuecat.purchases.kmp.models.StoreProduct
-import com.revenuecat.purchases.kmp.models.StoreTransaction
+import com.aiapp.flowcent.subscription.presentation.component.RcPaywall
 import com.revenuecat.purchases.kmp.ui.revenuecatui.Paywall
 import com.revenuecat.purchases.kmp.ui.revenuecatui.PaywallOptions
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,30 +52,9 @@ fun ProfileScreen(
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
-    Purchases.sharedInstance.delegate = object : PurchasesDelegate {
-        override fun onCustomerInfoUpdated(customerInfo: CustomerInfo) {
-            Napier.e("Sohan → onCustomerInfoUpdated entitlements: ${customerInfo.entitlements.all}")
-            Napier.e("Sohan → onCustomerInfoUpdated activeSubscriptions: ${customerInfo.activeSubscriptions}")
-            Napier.e("Sohan → onCustomerInfoUpdated allPurchaseInstants: ${customerInfo.allPurchaseInstants}")
-        }
-
-        override fun onPurchasePromoProduct(
-            product: StoreProduct,
-            startPurchase: (onError: (error: PurchasesError, userCancelled: Boolean) -> Unit, onSuccess: (storeTransaction: StoreTransaction, customerInfo: CustomerInfo) -> Unit) -> Unit
-        ) {
-
-        }
-    }
-
-
     fun handleHideBottomSheet() {
         authViewModel.onAction(UserAction.ShowPaymentSheet(false))
     }
-
-    val options = remember {
-        PaywallOptions(dismissRequest = { handleHideBottomSheet() })
-    }
-
 
     LaunchedEffect(key1 = authState.showPaymentSheet) {
         if (authState.showPaymentSheet) {
@@ -212,12 +184,11 @@ fun ProfileScreen(
             containerColor = MaterialTheme.colorScheme.surface,
             modifier = Modifier.fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                Paywall(options)
-            }
+            RcPaywall(
+                onDismiss = {
+                    handleHideBottomSheet()
+                }
+            )
         }
     }
 }

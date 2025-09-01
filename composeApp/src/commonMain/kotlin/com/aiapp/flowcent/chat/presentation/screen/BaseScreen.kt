@@ -40,6 +40,8 @@ import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.utils.DialogType
+import com.aiapp.flowcent.subscription.presentation.SubscriptionState
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import com.aiapp.flowcent.util.ConnectivityManager
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
@@ -51,10 +53,18 @@ fun BaseScreen(
     speechRecognizer: SpeechRecognizer,
     permissionsVM: PermissionsViewModel,
     fcPermissionsState: FCPermissionState,
+    subscriptionVM: SubscriptionViewModel,
     modifier: Modifier = Modifier,
-    content: @Composable (modifier: Modifier, viewModel: ChatViewModel, state: ChatState) -> Unit
+    content: @Composable (
+        modifier: Modifier,
+        viewModel: ChatViewModel,
+        state: ChatState,
+        subscriptionState: SubscriptionState
+    ) -> Unit
 ) {
     val state by viewModel.chatState.collectAsState()
+
+    val subscriptionState by subscriptionVM.subscriptionState.collectAsState()
 
     val currentDestination by navController.currentBackStackEntryAsState()
     val currentRoute = currentDestination?.destination?.route
@@ -189,7 +199,7 @@ fun BaseScreen(
             }
         }
     ) {
-        content(modifier, viewModel, state)
+        content(modifier, viewModel, state, subscriptionState)
     }
 }
 

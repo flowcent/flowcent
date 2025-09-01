@@ -13,6 +13,7 @@ import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.splash.SplashViewModel
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.auth
@@ -28,6 +29,12 @@ private val auth: FirebaseAuth = Firebase.auth
 
 val sharedModule = module {
     //ViewModels
+    viewModel {
+        SubscriptionViewModel(
+            authRepository = AuthRepositoryImpl(firestore),
+            prefRepository = PrefRepositoryImpl(get()),
+        )
+    }
     viewModel {
         SplashViewModel(
             prefRepository = PrefRepositoryImpl(get()),

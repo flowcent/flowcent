@@ -21,6 +21,8 @@ import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UserAction
 import com.aiapp.flowcent.chat.presentation.components.ChatMessageItem
 import com.aiapp.flowcent.core.presentation.components.ToggleSelector
+import com.aiapp.flowcent.subscription.presentation.SubscriptionState
+import io.github.aakira.napier.Napier
 
 
 @Composable
@@ -28,7 +30,10 @@ fun ChatListScreen(
     modifier: Modifier = Modifier,
     chatState: ChatState,
     viewModel: ChatViewModel,
+    subscriptionState: SubscriptionState
 ) {
+
+    Napier.e("Sohan subscriptionState currentPlan ${subscriptionState.currentPlan}")
 
     val listState = rememberLazyListState()
 
