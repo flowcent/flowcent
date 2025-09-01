@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
+import com.aiapp.flowcent.chat.domain.model.ChatHistory
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.buildExpensePrompt
@@ -77,7 +78,7 @@ class ChatViewModel(
                 viewModelScope.launch {
                     _chatState.update {
                         it.copy(
-                            originalVoiceText = action.originalText
+                            originalVoiceText = action.textFromSpeech
                         )
                     }
                 }
@@ -173,27 +174,9 @@ class ChatViewModel(
                 }
             }
 
-            UserAction.NavigateToVoiceScreen -> {
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.NavigateToVoice)
-                }
-            }
-
             is UserAction.NavigateToChatScreen -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.NavigateToChat)
-                }
-            }
-
-            is UserAction.SendVoiceToChat -> {
-                viewModelScope.launch {
-                    _chatState.update { currentState ->
-                        currentState.copy(
-                            userText = action.message
-                        )
-                    }
-                    _uiEvent.send(UiEvent.NavigateToChat)
-                    onAction(UserAction.SendMessage(action.message))
                 }
             }
 
@@ -206,19 +189,21 @@ class ChatViewModel(
             is UserAction.DeleteExpenseItem -> {
                 viewModelScope.launch {
                     _chatState.update { currentState ->
-                        val messages = currentState.messages.map { message ->
-                            if (message.id == action.messageId) {
-                                val updatedItems = message.expenseItems.toMutableList()
-                                updatedItems.remove(action.expenseItem)
-                                message.copy(expenseItems = updatedItems)
-                            } else {
-                                message
+                        val updatedHistories = currentState.histories.map { history ->
+                            val updatedMessages = history.messages.map { message ->
+                                if (message.id == action.messageId && message is ChatMessage.ChatBotMessage) {
+                                    val updatedItems = message.expenseItems.toMutableList()
+                                    updatedItems.remove(action.expenseItem)
+                                    message.copy(expenseItems = updatedItems)
+                                } else message
                             }
+                            history.copy(messages = updatedMessages)
                         }
-                        currentState.copy(messages = messages)
+                        currentState.copy(histories = updatedHistories)
                     }
                 }
             }
+
 
             is UserAction.EditExpenseItem -> {
                 viewModelScope.launch {}
@@ -299,6 +284,20 @@ class ChatViewModel(
         )
     }
 
+    private suspend fun sendVoicePrompt(prompt: String, botLoadingMessageId: String) {
+        try {
+            val hasInvalidPrompt = checkInvalidExpense(prompt)
+
+            if (hasInvalidPrompt.isEmpty()) {
+                handleValidPrompt(prompt, botLoadingMessageId)
+            } else {
+                handleInvalidPrompt(hasInvalidPrompt, botLoadingMessageId)
+            }
+        } catch (e: Exception) {
+            updateChatStateWithError(botLoadingMessageId, e.message)
+        }
+    }
+
     private suspend fun sendPrompt(prompt: String, botLoadingMessageId: String) {
         try {
             val hasInvalidPrompt = checkInvalidExpense(prompt)
@@ -332,66 +331,94 @@ class ChatViewModel(
 
     private fun updateChatStateWithResult(messageId: String, chatResult: ChatResult) {
         _chatState.update { currentState ->
-            currentState.copy(
-                messages = currentState.messages.map { msg ->
-                    if (msg.id == messageId) {
+            val updatedHistories = currentState.histories.map { history ->
+                val updatedMessages = history.messages.map { msg ->
+                    if (msg.id == messageId && msg is ChatMessage.ChatBotMessage) {
                         msg.copy(
                             text = chatResult.answer,
-                            isBotMessageLoading = false,
+                            isLoading = false,
                             expenseItems = chatResult.data
                         )
                     } else msg
-                },
+                }
+                history.copy(messages = updatedMessages)
+            }
+
+            currentState.copy(
+                histories = updatedHistories,
                 isSendingMessage = false
             )
         }
     }
+
 
     private fun updateChatStateWithError(messageId: String, errorMessage: String?) {
         _chatState.update { currentState ->
-            currentState.copy(
-                messages = currentState.messages.map { msg ->
-                    if (msg.id == messageId) {
+            val updatedHistories = currentState.histories.map { history ->
+                val updatedMessages = history.messages.map { msg ->
+                    if (msg.id == messageId && msg is ChatMessage.ChatBotMessage) {
                         msg.copy(
                             text = errorMessage ?: "Something unexpected happened",
-                            isBotMessageLoading = false,
+                            isLoading = false,
                             expenseItems = emptyList()
                         )
                     } else msg
-                },
+                }
+                history.copy(messages = updatedMessages)
+            }
+
+            currentState.copy(
+                histories = updatedHistories,
                 isSendingMessage = false
             )
         }
     }
 
+
     private fun sendMessage(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val userMessage = ChatMessage(
+            val userMessage = ChatMessage.ChatUserMessage(
                 id = getUuid(),
-                text = text,
-                isUser = true
+                text = text
             )
 
             val botLoadingMessageId = getUuid()
-
-            val botLoadingMessage = ChatMessage(
+            val botLoadingMessage = ChatMessage.ChatBotMessage(
                 id = botLoadingMessageId,
                 text = "Thinking...",
-                isUser = false,
-                isBotMessageLoading = true
+                isLoading = true
             )
 
             _chatState.update { currentState ->
+                val updatedHistories = if (currentState.histories.isEmpty()) {
+                    // No history exists yet, create a new one
+                    listOf(
+                        ChatHistory(
+                            id = getUuid(),
+                            messages = listOf(userMessage, botLoadingMessage)
+                        )
+                    )
+                } else {
+                    // Append to the last history section
+                    val lastHistory = currentState.histories.last()
+                    val newHistory = lastHistory.copy(
+                        messages = lastHistory.messages + userMessage + botLoadingMessage
+                    )
+                    currentState.histories.dropLast(1) + newHistory
+                }
+
                 currentState.copy(
-                    messages = currentState.messages + userMessage + botLoadingMessage,
+                    histories = updatedHistories,
                     isSendingMessage = true,
                     userText = "",
                     showAccounts = false
                 )
             }
+
             sendPrompt(text, botLoadingMessageId)
         }
     }
+
 
     @OptIn(ExperimentalUuidApi::class)
     private fun getUuid(): String {

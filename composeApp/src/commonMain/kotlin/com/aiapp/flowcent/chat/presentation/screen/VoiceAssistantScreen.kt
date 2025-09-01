@@ -86,7 +86,6 @@ fun VoiceAssistantScreen(
     }
 
     fun onSend() {
-        viewModel.onAction(UserAction.SendVoiceToChat(chatState.originalVoiceText))
     }
 
     fun onClose() {

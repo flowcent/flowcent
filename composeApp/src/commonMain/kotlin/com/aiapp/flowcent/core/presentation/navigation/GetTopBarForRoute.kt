@@ -51,12 +51,6 @@ fun GetTopBarForRoute(navController: NavHostController, route: String) {
             imagePainter = painterResource(Res.drawable.marcusUpdate)
         )
 
-        ChatNavRoutes.VoiceAssistantScreen.route -> AppBar(
-            navController = navController,
-            title = "Marcus",
-            imagePainter = painterResource(Res.drawable.marcusUpdate)
-        )
-
         AuthNavRoutes.ProfileScreen.route -> AppBar(
             navController = navController,
             title = "Profile"

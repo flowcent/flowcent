@@ -3,11 +3,12 @@ package com.aiapp.flowcent.chat.presentation
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
+import com.aiapp.flowcent.chat.domain.model.ChatHistory
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 
 data class ChatState(
-    val messages: List<ChatMessage> = emptyList(),
+    val histories: List<ChatHistory> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
     val answer: String = "",

@@ -66,41 +66,41 @@ fun NavGraphBuilder.addChatGraph(
             }
         }
 
-        addAnimatedComposable(route = ChatNavRoutes.VoiceAssistantScreen.route) { navBackStackEntry ->
-            val chatNavGraphEntry = remember(navBackStackEntry) {
-                navController.getBackStackEntry(AppNavRoutes.Chat.route)
-            }
-            val viewModel = koinViewModel<ChatViewModel>(
-                viewModelStoreOwner = chatNavGraphEntry
-            )
-
-            val factory = rememberPermissionsControllerFactory()
-            val controller = remember(factory) {
-                factory.createPermissionsController()
-            }
-
-            BindEffect(controller)
-
-            val permissionVM = viewModel {
-                PermissionsViewModel(controller)
-            }
-
-            val fcPermissionsState by permissionVM.state.collectAsState()
-
-            BaseScreen(
-                navController = navController,
-                viewModel = viewModel,
-                modifier = modifier,
-                speechRecognizer = speechRecognizer,
-                permissionsVM = permissionVM,
-                fcPermissionsState = fcPermissionsState,
-            ) { modifier, chatViewModel, chatState ->
-                VoiceAssistantScreen(
-                    modifier = modifier,
-                    chatState = chatState,
-                    viewModel = chatViewModel,
-                )
-            }
-        }
+//        addAnimatedComposable(route = ChatNavRoutes.VoiceAssistantScreen.route) { navBackStackEntry ->
+//            val chatNavGraphEntry = remember(navBackStackEntry) {
+//                navController.getBackStackEntry(AppNavRoutes.Chat.route)
+//            }
+//            val viewModel = koinViewModel<ChatViewModel>(
+//                viewModelStoreOwner = chatNavGraphEntry
+//            )
+//
+//            val factory = rememberPermissionsControllerFactory()
+//            val controller = remember(factory) {
+//                factory.createPermissionsController()
+//            }
+//
+//            BindEffect(controller)
+//
+//            val permissionVM = viewModel {
+//                PermissionsViewModel(controller)
+//            }
+//
+//            val fcPermissionsState by permissionVM.state.collectAsState()
+//
+//            BaseScreen(
+//                navController = navController,
+//                viewModel = viewModel,
+//                modifier = modifier,
+//                speechRecognizer = speechRecognizer,
+//                permissionsVM = permissionVM,
+//                fcPermissionsState = fcPermissionsState,
+//            ) { modifier, chatViewModel, chatState ->
+//                VoiceAssistantScreen(
+//                    modifier = modifier,
+//                    chatState = chatState,
+//                    viewModel = chatViewModel,
+//                )
+//            }
+//        }
     }
 }

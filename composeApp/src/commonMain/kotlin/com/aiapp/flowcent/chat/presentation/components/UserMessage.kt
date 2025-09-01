@@ -22,9 +22,9 @@ import com.aiapp.flowcent.core.Spacing
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 
 @Composable
-fun UserMessage(avatarName: String = "Flowcent", text: String) {
+fun UserMessage(modifier: Modifier = Modifier,avatarName: String = "Flowcent", text: String) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
 

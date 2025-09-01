@@ -36,7 +36,6 @@ import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.event.EventHandler
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
 import com.aiapp.flowcent.core.presentation.components.NoInternet
-import com.aiapp.flowcent.core.presentation.navigation.GetTopBarForRoute
 import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
@@ -62,8 +61,24 @@ fun BaseScreen(
 
     var hasAudioPermission: Boolean by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
     val isNetworkConnected by ConnectivityManager.connectivityStatus.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.onAction(UserAction.CheckAudioPermission)
+    }
+
+    LaunchedEffect(key1 = fcPermissionsState.audioPermissionState) {
+        hasAudioPermission = when (fcPermissionsState.audioPermissionState) {
+            PermissionState.NotDetermined -> false
+            PermissionState.NotGranted -> false
+            PermissionState.Granted -> true
+            PermissionState.Denied -> false
+            PermissionState.DeniedAlways -> false
+            null -> false
+        }
+    }
 
     LaunchedEffect(key1 = isNetworkConnected) {
         showDialog = if (isNetworkConnected) {
@@ -77,26 +92,6 @@ fun BaseScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.onAction(UserAction.CheckAudioPermission)
-    }
-
-
-    LaunchedEffect(key1 = fcPermissionsState.audioPermissionState) {
-        hasAudioPermission = when (fcPermissionsState.audioPermissionState) {
-            PermissionState.NotDetermined -> false
-
-            PermissionState.NotGranted -> false
-
-            PermissionState.Granted -> true
-
-            PermissionState.Denied -> false
-
-            PermissionState.DeniedAlways -> false
-
-            null -> false
-        }
-    }
 
     fun handleEvent(
         event: UiEvent,
@@ -131,7 +126,6 @@ fun BaseScreen(
                 }
             }
 
-            UiEvent.NavigateToVoice -> navController.navigate(ChatNavRoutes.VoiceAssistantScreen.route)
             UiEvent.NavigateToChat -> navController.navigate(ChatNavRoutes.ChatListScreen.route)
             UiEvent.NavigateToBack -> navController.popBackStack()
         }
@@ -186,7 +180,7 @@ fun BaseScreen(
                             viewModel.onAction(UserAction.UpdateText(it))
                         },
                         onClickMic = {
-                            viewModel.onAction(UserAction.NavigateToVoiceScreen)
+
                         }
                     ) {
                         viewModel.onAction(UserAction.SendMessage(state.userText))

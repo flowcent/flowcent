@@ -18,7 +18,6 @@ sealed interface UiEvent {
         val secondaryBtnText: String = ""
     ) : UiEvent
 
-    data object NavigateToVoice : UiEvent
     data object NavigateToChat : UiEvent
     data object NavigateToBack : UiEvent
 }
