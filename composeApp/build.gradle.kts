@@ -44,7 +44,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "Flowcent"
             isStatic = true
             linkerOpts.add("-framework")
             linkerOpts.add("Network")
@@ -138,8 +138,8 @@ android {
         applicationId = "com.aiapp.flowcent"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 6
-        versionName = "1.0"
+        versionCode = 7
+        versionName = "1.0.0"
     }
     packaging {
         resources {
