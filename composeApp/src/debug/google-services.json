@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "161046411397",
+    "project_id": "flowcent-dev",
+    "storage_bucket": "flowcent-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:161046411397:android:b838bd201560ce986311ec",
+        "android_client_info": {
+          "package_name": "com.aiapp.flowcent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "161046411397-a68664i9auvvumg178o1rgnocofb237d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aiapp.flowcent",
+            "certificate_hash": "1172cc2cba466a24161d48c45806b5e59584db7f"
+          }
+        },
+        {
+          "client_id": "161046411397-71cjns5cfjge3inb8gu9rep0b0nc2d8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU0Rxi_AnfuldyVfL6o6cdx0QiV1_Ie0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "161046411397-71cjns5cfjge3inb8gu9rep0b0nc2d8e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "161046411397-fr6m6cfpd5dqn41ij5h6cgjkro0ih4dk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aiapp.flowcent.FlowCent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

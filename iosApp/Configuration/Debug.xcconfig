@@ -1,0 +1,12 @@
+//
+//  Debug.xcconfig
+//  iosApp
+//
+//  Created by Sohan on 7/6/25.
+//  Copyright © 2025 orgName. All rights reserved.
+//
+TEAM_ID=
+BUNDLE_ID=com.aiapp.flowcent.FlowCent
+APP_NAME=FlowCent
+GOOGLE_SERVICE=$(SRCROOT)/Firebase/Debug/GoogleService-Info.plist
+
