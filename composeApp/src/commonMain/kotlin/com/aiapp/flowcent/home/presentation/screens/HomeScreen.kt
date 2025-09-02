@@ -6,7 +6,6 @@ package com.aiapp.flowcent.home.presentation.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,8 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,6 +47,8 @@ import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import com.aiapp.flowcent.home.presentation.components.InsightsHighlightBox
 import com.aiapp.flowcent.home.presentation.components.RingChart
+import com.aiapp.flowcent.subscription.presentation.PurchaseUserAction
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_notification
 import kotlinx.datetime.Clock
@@ -61,7 +60,8 @@ import org.jetbrains.compose.resources.painterResource
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
-    homeState: HomeState
+    homeState: HomeState,
+    subscriptionVM: SubscriptionViewModel,
 ) {
     val allTransactions = homeState.latestTransactions.flatten()
     val listState = rememberLazyListState()
@@ -86,6 +86,17 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchUserUId)
+    }
+
+    LaunchedEffect(key1 = homeState.user?.flowCentUserId) {
+        if (homeState.user != null && homeState.user.flowCentUserId.isNotEmpty()) {
+            subscriptionVM.onAction(
+                PurchaseUserAction.RegisterPurchaseUserId(
+                    homeState.user.uid,
+                    homeState.user.flowCentUserId
+                )
+            )
+        }
     }
 
 

@@ -14,6 +14,7 @@ import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.home.presentation.screens.BaseScreen
 import com.aiapp.flowcent.home.presentation.screens.HomeScreen
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.addHomeGraph(
@@ -33,6 +34,8 @@ fun NavGraphBuilder.addHomeGraph(
                 viewModelStoreOwner = homeNavGraphEntry
             )
 
+            val subscriptionVM = koinViewModel<SubscriptionViewModel>()
+
             BaseScreen(
                 navController = navController,
                 viewModel = viewModel,
@@ -41,7 +44,8 @@ fun NavGraphBuilder.addHomeGraph(
                 HomeScreen(
                     modifier = modifier,
                     homeViewModel = homeViewModel,
-                    homeState = state
+                    homeState = state,
+                    subscriptionVM = subscriptionVM
                 )
             }
         }

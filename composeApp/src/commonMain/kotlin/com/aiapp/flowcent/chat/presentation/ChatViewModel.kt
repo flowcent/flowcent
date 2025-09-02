@@ -3,13 +3,14 @@ package com.aiapp.flowcent.chat.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
+import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatHistory
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.domain.model.ChatResult
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.buildExpensePrompt
 import com.aiapp.flowcent.chat.domain.utils.ChatUtil.checkInvalidExpense
-import com.aiapp.flowcent.chat.domain.utils.getTransactionId
+import com.aiapp.flowcent.core.utils.getTransactionId
 import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
@@ -38,6 +39,7 @@ class ChatViewModel(
     private val expenseRepository: ExpenseRepository,
     private val prefRepository: PrefRepository,
     private val accountRepository: AccountRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _chatState = MutableStateFlow(ChatState())

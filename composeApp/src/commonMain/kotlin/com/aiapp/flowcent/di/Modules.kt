@@ -55,7 +55,8 @@ val sharedModule = module {
                 firestore
             ),
             prefRepository = PrefRepositoryImpl(get()),
-            accountRepository = AccountRepositoryImpl(firestore)
+            accountRepository = AccountRepositoryImpl(firestore),
+            authRepository = AuthRepositoryImpl(firestore)
         )
     }
     viewModel {

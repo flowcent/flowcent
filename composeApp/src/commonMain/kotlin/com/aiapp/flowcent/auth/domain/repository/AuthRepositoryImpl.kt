@@ -3,13 +3,13 @@ package com.aiapp.flowcent.auth.domain.repository
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.domain.utils.Resource
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.AuthResult
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.auth
-import dev.gitlive.firebase.firestore.Filter
 import dev.gitlive.firebase.firestore.FirebaseFirestore
-import dev.gitlive.firebase.firestore.WhereConstraint
+import io.github.aakira.napier.Napier
 
 class AuthRepositoryImpl(
     firestore: FirebaseFirestore,
@@ -107,6 +107,47 @@ class AuthRepositoryImpl(
             Resource.Success(result)
         } catch (ex: Exception) {
             Resource.Error(ex.message ?: "Sign up failed")
+        }
+    }
+
+    override suspend fun updateUserField(uid: String, field: String, value: Any): Resource<String> {
+        return try {
+            userCollection
+                .document(uid)
+                .update(mapOf(field to value))
+            Resource.Success("Sohan User field $field updated successfully")
+        } catch (ex: Exception) {
+            Resource.Error(ex.message.toString())
+        }
+    }
+
+    override suspend fun updateUserSubscription(
+        uid: String,
+        currentPlan: String,
+        currentPlanId: String,
+        expiryDate: Long,
+        revenueCatDeviceId: String,
+        revenueCatAppUserId: String
+    ): Resource<String> {
+        return try {
+            val updates = mapOf(
+                "currentPlan" to currentPlan,
+                "currentPlanId" to currentPlanId,
+                "currentPlanExpiryDate" to expiryDate,
+                "updatedAt" to DateTimeUtils.getCurrentTimeInMilli(),
+                "updatedBy" to uid,
+                "revenueCatDeviceId" to revenueCatDeviceId,
+                "revenueCatAppUserId" to revenueCatAppUserId
+            )
+
+            userCollection
+                .document(uid)
+                .update(updates)
+
+            Resource.Success("User subscription updated successfully")
+        } catch (ex: Exception) {
+            Napier.e("Sohan Error in updating user subscription: ${ex.message}")
+            Resource.Error(ex.message.toString())
         }
     }
 }

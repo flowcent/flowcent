@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AccountMemberDto(
+    val flowCentUserId: String = "",
     val memberId: String = "",
     val memberFullName: String = "",
     val memberLocalUserName: String = "",

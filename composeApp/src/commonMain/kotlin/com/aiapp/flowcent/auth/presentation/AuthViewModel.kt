@@ -9,6 +9,7 @@ import com.aiapp.flowcent.core.domain.utils.Constants
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.core.utils.DialogType
+import com.aiapp.flowcent.core.utils.getFlowCentUserId
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
@@ -60,7 +61,8 @@ class AuthViewModel(
                         updatedAt = DateTimeUtils.getCurrentTimeInMilli(),
                         updatedBy = _state.value.firebaseUser?.uid ?: "",
                         localUserName = _state.value.username,
-                        savingTarget = _state.value.savingTarget
+                        savingTarget = _state.value.savingTarget,
+                        flowCentUserId = getFlowCentUserId(_state.value.phoneNumber)
                     )
                 )
             }

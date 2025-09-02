@@ -10,6 +10,7 @@ import com.aiapp.flowcent.auth.data.model.User
 
 fun AccountMemberDto.toAccountMember(): AccountMember {
     return AccountMember(
+        flowCentUserId = flowCentUserId,
         memberId = memberId,
         memberFullName = memberFullName,
         memberLocalUserName = memberLocalUserName,
@@ -22,6 +23,7 @@ fun AccountMemberDto.toAccountMember(): AccountMember {
 
 fun AccountMember.toAccountMemberDto(): AccountMemberDto {
     return AccountMemberDto(
+        flowCentUserId = flowCentUserId,
         memberId = memberId,
         memberFullName = memberFullName,
         memberLocalUserName = memberLocalUserName,
@@ -78,6 +80,7 @@ fun User.toAcMemberDto(
     val role = if (uid == acCreatorUid) MemberRole.ADMIN else MemberRole.MEMBER
 
     return AccountMemberDto(
+        flowCentUserId = flowCentUserId,
         memberId = uid,
         memberFullName = fullName,
         memberLocalUserName = localUserName,

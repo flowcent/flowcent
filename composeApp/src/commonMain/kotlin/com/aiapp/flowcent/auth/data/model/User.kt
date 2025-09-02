@@ -17,5 +17,14 @@ data class User(
     val updatedAt: Long = 0L,
     val updatedBy: String,
     val localUserName: String,
-    val savingTarget: Double = 0.0
+    val savingTarget: Double = 0.0,
+    val monthlyTransactionCount: Int = 0,
+    val monthlyAiChatsCount: Int = 0,
+    val sharedAccountCount: Int = 0,
+    val currentPlan: String = "",
+    val currentPlanId: String = "",
+    val currentPlanExpiryDate: Long = 0L,
+    val revenueCatDeviceId: String = "",
+    val revenueCatAppUserId: String = "",
+    val flowCentUserId: String = "",
 )

@@ -1,6 +1,7 @@
 package com.aiapp.flowcent.accounts.domain.model
 
 data class AccountMember(
+    val flowCentUserId: String = "",
     val memberId: String = "",
     val memberFullName: String = "",
     val memberLocalUserName: String = "",

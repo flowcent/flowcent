@@ -12,4 +12,14 @@ interface AuthRepository {
     suspend fun fetchMatchingUsers(phoneNumbers: List<String>): Resource<List<User>>
     suspend fun signInWithEmailAndPassword(email: String, password: String): Resource<AuthResult>
     suspend fun signUpWithEmailAndPassword(email: String, password: String): Resource<AuthResult>
+    suspend fun updateUserField(uid: String, field: String, value: Any): Resource<String>
+    suspend fun updateUserSubscription(
+        uid: String,
+        currentPlan: String,
+        currentPlanId: String,
+        expiryDate: Long,
+        revenueCatDeviceId: String,
+        revenueCatAppUserId: String
+    ): Resource<String>
+
 }
