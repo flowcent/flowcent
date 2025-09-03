@@ -181,6 +181,9 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             RcPaywall(
+                onUpdatePlan = {
+
+                },
                 onDismiss = {
                     handleHideBottomSheet()
                 }

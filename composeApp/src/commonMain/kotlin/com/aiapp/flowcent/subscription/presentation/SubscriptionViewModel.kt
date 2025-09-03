@@ -21,44 +21,33 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SubscriptionViewModel(
-    private val authRepository: AuthRepository,
-    private val prefRepository: PrefRepository
+    private val authRepository: AuthRepository, private val prefRepository: PrefRepository
 ) : ViewModel() {
     private val _subscriptionState = MutableStateFlow(SubscriptionState())
     val subscriptionState: StateFlow<SubscriptionState> = _subscriptionState
+
 
     fun onAction(action: PurchaseUserAction) {
         when (action) {
             PurchaseUserAction.CheckCurrentPlan -> {}
 
             is PurchaseUserAction.UpdateCurrentPlan -> {
-                Purchases.sharedInstance.delegate = object : PurchasesDelegate {
-                    override fun onCustomerInfoUpdated(customerInfo: CustomerInfo) {
-                        handleCustomerInfo(action.uid, customerInfo, true)
-                    }
-
-                    override fun onPurchasePromoProduct(
-                        product: StoreProduct, startPurchase: (
-                            onError: (error: PurchasesError, userCancelled: Boolean) -> Unit,
-                            onSuccess: (storeTransaction: StoreTransaction, customerInfo: CustomerInfo) -> Unit
-                        ) -> Unit
-                    ) {
-
+                viewModelScope.launch {
+                    if (_subscriptionState.value.uid.isNotEmpty()) {
+                        fetchUserProfile(_subscriptionState.value.uid, action.customerInfo)
+                    } else {
+                        prefRepository.uid.collect { uidFromDataStore ->
+                            _subscriptionState.update { currentState ->
+                                currentState.copy(uid = uidFromDataStore ?: "")
+                            }
+                            fetchUserProfile(uid = uidFromDataStore, action.customerInfo)
+                        }
                     }
                 }
-
             }
 
             is PurchaseUserAction.RegisterPurchaseUserId -> {
-                viewModelScope.launch {
-                    Purchases.sharedInstance.logIn(
-                        action.flowCentUserId, ::showError
-                    ) { customerInfo, created ->
-                        Napier.e("Sohan created $created")
-                        Napier.e("Sohan originalAppUserId ${customerInfo.originalAppUserId}")
-                        handleCustomerInfo(action.uid, customerInfo)
-                    }
-                }
+
             }
 
             is PurchaseUserAction.FetchMonthlyAIChatsCount -> TODO()
@@ -67,11 +56,19 @@ class SubscriptionViewModel(
         }
     }
 
+    private fun registerAppUserId(uid: String, flowCentUserId: String) {
+        Purchases.sharedInstance.logIn(
+            flowCentUserId, ::showError
+        ) { customerInfo, created ->
+            Napier.e("Sohan registerAppUserId created: $created")
+            handleCustomerInfo(uid, customerInfo, true);
+        }
+    }
+
     private fun handleCustomerInfo(
-        uid: String,
-        customerInfo: CustomerInfo,
-        requireUpdate: Boolean = false
+        uid: String, customerInfo: CustomerInfo, requireUpdate: Boolean = false
     ) {
+        Napier.e("Sohan → handleCustomerInfo originalAppUserId ${customerInfo.originalAppUserId}")
         val activeSubs = customerInfo.activeSubscriptions
         Napier.e("Sohan → Active subscriptions: $activeSubs")
 
@@ -94,13 +91,15 @@ class SubscriptionViewModel(
                 )
             }
 
-            updateUserCurrentPlan(
-                uid,
-                currentPlan.name,
-                "",
-                customerInfo.originalAppUserId,
-                customerInfo.originalAppUserId
-            )
+            if (requireUpdate) {
+                updateUserCurrentPlan(
+                    uid,
+                    currentPlan.name,
+                    "",
+                    customerInfo.originalAppUserId,
+                    customerInfo.originalAppUserId
+                )
+            }
         }
 
         Napier.e("Sohan Subscription currentPlan: $currentPlan")
@@ -137,24 +136,32 @@ class SubscriptionViewModel(
 
     }
 
-//    private suspend fun fetchUserProfile(uid: String?) {
-//        if (uid.isNullOrEmpty()) {
-//            Napier.e("Sohan 404 No User Found")
-//            return
-//        }
-//        when (val result = authRepository.fetchUserProfile(uid)) {
-//            is Resource.Error -> {
-//                println("Sohan Error in fetching user profile: ${result.message}")
-//            }
-//
-//            Resource.Loading -> {}
-//            is Resource.Success -> {
-//                _subscriptionState.update {
-//                    it.copy(
-//                        user = result.data,
-//                    )
-//                }
-//            }
-//        }
-//    }
+    private suspend fun fetchUserProfile(uid: String?, customerInfo: CustomerInfo) {
+        if (uid.isNullOrEmpty()) {
+            Napier.e("Sohan 404 No User Found")
+            return
+        }
+        when (val result = authRepository.fetchUserProfile(uid)) {
+            is Resource.Error -> {
+                println("Sohan Error in fetching user profile: ${result.message}")
+            }
+
+            Resource.Loading -> {}
+            is Resource.Success -> {
+                _subscriptionState.update {
+                    it.copy(
+                        user = result.data,
+                    )
+                }
+
+                result.data?.flowCentUserId?.let { flowCentUserId ->
+                    if (flowCentUserId.isNotEmpty() && flowCentUserId != customerInfo.originalAppUserId) {
+                        registerAppUserId(uid, result.data.flowCentUserId)
+                    }
+                } ?: run {
+                    handleCustomerInfo(uid, customerInfo, true);
+                }
+            }
+        }
+    }
 }

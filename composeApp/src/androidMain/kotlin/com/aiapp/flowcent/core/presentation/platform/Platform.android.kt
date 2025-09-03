@@ -12,4 +12,4 @@ actual fun getPlatform(): Platform = AndroidPlatform()
 
 actual fun onApplicationStartPlatformSpecific() {}
 
-actual fun getRevenueCatApiKey(): String = "goog_dRdNUdOohmCKJvNfRvfLhvufUya"
+actual fun getRevenueCatApiKey(): String = "goog_btMTTbPOzMyHggASyEHhELGRvzN"

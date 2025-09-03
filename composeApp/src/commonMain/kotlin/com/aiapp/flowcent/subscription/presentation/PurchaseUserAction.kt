@@ -1,10 +1,10 @@
 package com.aiapp.flowcent.subscription.presentation
 
-import com.aiapp.flowcent.subscription.domain.SubscriptionPlan
+import com.revenuecat.purchases.kmp.models.CustomerInfo
 
 sealed interface PurchaseUserAction {
     data object CheckCurrentPlan : PurchaseUserAction
-    data class UpdateCurrentPlan(val uid: String, val currentPlan: SubscriptionPlan) :
+    data class UpdateCurrentPlan(val customerInfo: CustomerInfo) :
         PurchaseUserAction
 
     data class RegisterPurchaseUserId(val uid: String, val flowCentUserId: String) :
