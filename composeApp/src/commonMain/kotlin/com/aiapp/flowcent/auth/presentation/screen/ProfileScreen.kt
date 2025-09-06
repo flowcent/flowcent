@@ -37,13 +37,18 @@ import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.SubscriptionBadge
+import com.aiapp.flowcent.subscription.presentation.PurchaseUserAction
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import com.aiapp.flowcent.subscription.presentation.component.RcPaywall
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier, authViewModel: AuthViewModel, authState: AuthState
+    modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel,
+    authState: AuthState,
+    subscriptionVM: SubscriptionViewModel
 ) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
@@ -181,8 +186,14 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             RcPaywall(
-                onUpdatePlan = {
-
+                onUpdatePlan = { customerInfo ->
+                    subscriptionVM.onAction(
+                        PurchaseUserAction.UpdateCurrentPlan(
+                            authState.uid,
+                            customerInfo,
+                            true
+                        )
+                    )
                 },
                 onDismiss = {
                     handleHideBottomSheet()

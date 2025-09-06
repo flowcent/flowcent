@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -49,8 +50,12 @@ import com.aiapp.flowcent.home.presentation.components.InsightsHighlightBox
 import com.aiapp.flowcent.home.presentation.components.RingChart
 import com.aiapp.flowcent.subscription.presentation.PurchaseUserAction
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil
+import com.revenuecat.purchases.kmp.Purchases
+import com.revenuecat.purchases.kmp.models.PurchasesError
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_notification
+import io.github.aakira.napier.Napier
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -63,6 +68,7 @@ fun HomeScreen(
     homeState: HomeState,
     subscriptionVM: SubscriptionViewModel,
 ) {
+    val subscriptionState by subscriptionVM.subscriptionState.collectAsState()
     val allTransactions = homeState.latestTransactions.flatten()
     val listState = rememberLazyListState()
     val isScrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 } }
@@ -89,13 +95,39 @@ fun HomeScreen(
     }
 
     LaunchedEffect(key1 = homeState.user?.flowCentUserId) {
+        fun showError(purchasesError: PurchasesError) {
+            Napier.e("Sohan registerAppUserId purchasesError: $purchasesError")
+        }
         if (homeState.user != null && homeState.user.flowCentUserId.isNotEmpty()) {
-            subscriptionVM.onAction(
-                PurchaseUserAction.RegisterPurchaseUserId(
-                    homeState.user.uid,
-                    homeState.user.flowCentUserId
-                )
-            )
+            Purchases.sharedInstance.logIn(
+                homeState.user.flowCentUserId, ::showError
+            ) { customerInfo, created ->
+
+                val activeEntitlement = SubscriptionUtil.getActiveEntitlement(customerInfo)
+
+                Napier.e("Sohan subscriptionState.currentPlanId ${subscriptionState.currentPlanId}")
+                Napier.e("Sohan active id ${activeEntitlement.entitlement?.productPlanIdentifier}")
+
+                if (activeEntitlement.entitlement != null) {
+                    if (subscriptionState.currentPlanId != activeEntitlement.entitlement.productPlanIdentifier) {
+                        subscriptionVM.onAction(
+                            PurchaseUserAction.UpdateCurrentPlan(
+                                homeState.uid,
+                                customerInfo,
+                                true
+                            )
+                        )
+                    } else {
+                        subscriptionVM.onAction(
+                            PurchaseUserAction.UpdateCurrentPlan(
+                                homeState.uid,
+                                customerInfo,
+                                false
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 

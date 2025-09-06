@@ -26,6 +26,12 @@ import com.aiapp.flowcent.core.presentation.navigation.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.GetTopBarForRoute
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
+import com.revenuecat.purchases.kmp.Purchases
+import com.revenuecat.purchases.kmp.PurchasesDelegate
+import com.revenuecat.purchases.kmp.models.CustomerInfo
+import com.revenuecat.purchases.kmp.models.PurchasesError
+import com.revenuecat.purchases.kmp.models.StoreProduct
+import com.revenuecat.purchases.kmp.models.StoreTransaction
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_chat
 import flowcent.composeapp.generated.resources.ic_chat_selected
@@ -62,13 +68,23 @@ fun App(
 
     var showBottomNav by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = currentRoute) {
-//        if (currentTopLevelRoute == AppNavRoutes.Home.route) {
-//            delay(300)
-//            showBottomNav = true
-//        } else {
-//            showBottomNav = false
+
+//    Purchases.sharedInstance.delegate = object : PurchasesDelegate {
+//        override fun onCustomerInfoUpdated(customerInfo: CustomerInfo) {
+//            Napier.e("Sohan onCustomerInfoUpdated entitlements all ${customerInfo.entitlements}")
+//            Napier.e("Sohan onCustomerInfoUpdated entitlements active ${customerInfo.entitlements["Lite"]?.isActive}")
 //        }
+//
+//        override fun onPurchasePromoProduct(
+//            product: StoreProduct, startPurchase: (
+//                onError: (error: PurchasesError, userCancelled: Boolean) -> Unit, onSuccess: (storeTransaction: StoreTransaction, customerInfo: CustomerInfo) -> Unit
+//            ) -> Unit
+//        ) {
+//
+//        }
+//    }
+
+    LaunchedEffect(key1 = currentRoute) {
         showBottomNav = currentTopLevelRoute == AppNavRoutes.Home.route
     }
 

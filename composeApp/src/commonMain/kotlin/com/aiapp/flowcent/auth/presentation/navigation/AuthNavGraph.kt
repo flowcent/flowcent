@@ -13,6 +13,7 @@ import com.aiapp.flowcent.auth.presentation.screen.SignInScreen
 import com.aiapp.flowcent.auth.presentation.screen.SignUpScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
+import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.addAuthGraph(
@@ -73,7 +74,6 @@ fun NavGraphBuilder.addAuthGraph(
                 viewModelStoreOwner = authNavGraphEntry
             )
 
-
             BaseScreen(
                 navController = navController,
                 viewModel = viewModel,
@@ -96,6 +96,8 @@ fun NavGraphBuilder.addAuthGraph(
                 viewModelStoreOwner = authNavGraphEntry
             )
 
+            val subscriptionVM = koinViewModel<SubscriptionViewModel>()
+
             BaseScreen(
                 navController = navController,
                 viewModel = viewModel,
@@ -104,7 +106,8 @@ fun NavGraphBuilder.addAuthGraph(
                 ProfileScreen(
                     modifier = modifier,
                     authViewModel = viewModel,
-                    authState = state
+                    authState = state,
+                    subscriptionVM = subscriptionVM
                 )
             }
         }

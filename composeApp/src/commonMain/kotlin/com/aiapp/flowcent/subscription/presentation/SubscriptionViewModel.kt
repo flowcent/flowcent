@@ -2,18 +2,21 @@ package com.aiapp.flowcent.subscription.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aiapp.flowcent.auth.data.model.Subscription
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils
 import com.aiapp.flowcent.subscription.domain.SubscriptionPlan
 import com.aiapp.flowcent.subscription.util.SubscriptionUtil
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil.FREE_ENTITLEMENT_ID
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil.LITE_ENTITLEMENT_ID
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil.PRO_ENTITLEMENT_ID
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil.getActiveEntitlement
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil.getLevelString
 import com.revenuecat.purchases.kmp.Purchases
-import com.revenuecat.purchases.kmp.PurchasesDelegate
 import com.revenuecat.purchases.kmp.models.CustomerInfo
-import com.revenuecat.purchases.kmp.models.PurchasesError
-import com.revenuecat.purchases.kmp.models.StoreProduct
-import com.revenuecat.purchases.kmp.models.StoreTransaction
+import com.revenuecat.purchases.kmp.models.EntitlementInfos
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,142 +29,77 @@ class SubscriptionViewModel(
     private val _subscriptionState = MutableStateFlow(SubscriptionState())
     val subscriptionState: StateFlow<SubscriptionState> = _subscriptionState
 
+    init {
+        viewModelScope.launch {
+            prefRepository.uid.collect { uidFromDataStore ->
+                _subscriptionState.update { currentState ->
+                    currentState.copy(uid = uidFromDataStore ?: "")
+                }
+            }
+        }
+    }
 
     fun onAction(action: PurchaseUserAction) {
         when (action) {
-            PurchaseUserAction.CheckCurrentPlan -> {}
-
             is PurchaseUserAction.UpdateCurrentPlan -> {
                 viewModelScope.launch {
-                    if (_subscriptionState.value.uid.isNotEmpty()) {
-                        fetchUserProfile(_subscriptionState.value.uid, action.customerInfo)
-                    } else {
-                        prefRepository.uid.collect { uidFromDataStore ->
-                            _subscriptionState.update { currentState ->
-                                currentState.copy(uid = uidFromDataStore ?: "")
-                            }
-                            fetchUserProfile(uid = uidFromDataStore, action.customerInfo)
-                        }
+                    val activeEntitlement = getActiveEntitlement(action.customerInfo)
+
+                    _subscriptionState.update {
+                        it.copy(
+                            currentSubscriptionPlan = activeEntitlement.plan,
+                            currentPlanId = activeEntitlement.entitlement?.productPlanIdentifier ?: "free"
+                        )
+                    }
+
+                    if (action.requireUpdate) {
+                        updateUserSubscription(
+                            action.uid,
+                            activeEntitlement.entitlement?.identifier ?: FREE_ENTITLEMENT_ID,
+                            activeEntitlement.plan,
+                            action.customerInfo
+                        )
                     }
                 }
             }
-
-            is PurchaseUserAction.RegisterPurchaseUserId -> {
-
-            }
-
-            is PurchaseUserAction.FetchMonthlyAIChatsCount -> TODO()
-            is PurchaseUserAction.FetchMonthlyTransactionCount -> TODO()
-            is PurchaseUserAction.FetchSharedAccountsCount -> TODO()
         }
     }
 
-    private fun registerAppUserId(uid: String, flowCentUserId: String) {
-        Purchases.sharedInstance.logIn(
-            flowCentUserId, ::showError
-        ) { customerInfo, created ->
-            Napier.e("Sohan registerAppUserId created: $created")
-            handleCustomerInfo(uid, customerInfo, true);
-        }
-    }
-
-    private fun handleCustomerInfo(
-        uid: String, customerInfo: CustomerInfo, requireUpdate: Boolean = false
-    ) {
-        Napier.e("Sohan → handleCustomerInfo originalAppUserId ${customerInfo.originalAppUserId}")
-        val activeSubs = customerInfo.activeSubscriptions
-        Napier.e("Sohan → Active subscriptions: $activeSubs")
-
-        val currentPlan = when {
-            activeSubs.contains(SubscriptionUtil.LITE_PREMIUM_MONTHLY_SUBSCRIPTION_IDENTIFIER) || activeSubs.contains(
-                SubscriptionUtil.LITE_PREMIUM_YEARLY_SUBSCRIPTION_IDENTIFIER
-            ) -> SubscriptionPlan.LITE
-
-            activeSubs.contains(SubscriptionUtil.PRO_PREMIUM_MONTHLY_SUBSCRIPTION_IDENTIFIER) || activeSubs.contains(
-                SubscriptionUtil.PRO_PREMIUM_YEARLY_SUBSCRIPTION_IDENTIFIER
-            ) -> SubscriptionPlan.PRO
-
-            else -> SubscriptionPlan.STANDARD
-        }
-
-        viewModelScope.launch {
-            _subscriptionState.update {
-                it.copy(
-                    currentPlan = currentPlan
-                )
-            }
-
-            if (requireUpdate) {
-                updateUserCurrentPlan(
-                    uid,
-                    currentPlan.name,
-                    "",
-                    customerInfo.originalAppUserId,
-                    customerInfo.originalAppUserId
-                )
-            }
-        }
-
-        Napier.e("Sohan Subscription currentPlan: $currentPlan")
-    }
-
-    private suspend fun updateUserCurrentPlan(
+    private suspend fun updateUserSubscription(
         uid: String,
-        currentPlan: String,
-        currentPlanId: String,
-        revenueCatDeviceId: String,
-        revenueCatAppUserId: String
+        id: String,
+        plan: SubscriptionPlan,
+        customerInfo: CustomerInfo,
     ) {
-        when (authRepository.updateUserSubscription(
-            uid = uid,
-            currentPlan = currentPlan,
-            expiryDate = DateTimeUtils.getCurrentTimeInMilli(),
-            currentPlanId = currentPlanId,
-            revenueCatDeviceId = revenueCatDeviceId,
-            revenueCatAppUserId = revenueCatAppUserId
-        )) {
-            is Resource.Error -> {
-                Napier.e("Sohan plan updated failed")
-            }
+        val entitlement = customerInfo.entitlements[id]
 
-            Resource.Loading -> {}
-            is Resource.Success<*> -> {
-                Napier.e("Sohan plan updated successfully")
-            }
-        }
-    }
+        val subscription = Subscription(
+            currentPlan = getLevelString(plan),
+            currentPlanId = entitlement?.productPlanIdentifier ?: "free",
+            currentEntitlementId = entitlement?.identifier ?: FREE_ENTITLEMENT_ID,
+            currentPlanStartDate = entitlement?.latestPurchaseDateMillis
+                ?: DateTimeUtils.getCurrentTimeInMilli(),
+            currentPlanExpiryDate = entitlement?.expirationDateMillis ?: 0L,
+            revenueCatDeviceId = customerInfo.originalAppUserId,
+            revenueCatAppUserId = Purchases.sharedInstance.appUserID,
+            willRenew = entitlement?.willRenew ?: false,
+            storeName = entitlement?.store?.name ?: "",
+        )
 
-    private fun showError(purchasesError: PurchasesError) {
-        Napier.e("Sohan → showError: $purchasesError")
-
-    }
-
-    private suspend fun fetchUserProfile(uid: String?, customerInfo: CustomerInfo) {
-        if (uid.isNullOrEmpty()) {
-            Napier.e("Sohan 404 No User Found")
-            return
-        }
-        when (val result = authRepository.fetchUserProfile(uid)) {
-            is Resource.Error -> {
-                println("Sohan Error in fetching user profile: ${result.message}")
-            }
-
-            Resource.Loading -> {}
+        val result = authRepository.updateUserSubscription(
+            uid,
+            subscription
+        )
+        when (result) {
             is Resource.Success -> {
-                _subscriptionState.update {
-                    it.copy(
-                        user = result.data,
-                    )
-                }
-
-                result.data?.flowCentUserId?.let { flowCentUserId ->
-                    if (flowCentUserId.isNotEmpty() && flowCentUserId != customerInfo.originalAppUserId) {
-                        registerAppUserId(uid, result.data.flowCentUserId)
-                    }
-                } ?: run {
-                    handleCustomerInfo(uid, customerInfo, true);
-                }
+                Napier.e("Sohan User subscription updated successfully")
             }
+
+            is Resource.Error -> {
+                Napier.e("Sohan Error in updating user subscription: ${result.message}")
+            }
+
+            Resource.Loading -> {}
         }
     }
 }

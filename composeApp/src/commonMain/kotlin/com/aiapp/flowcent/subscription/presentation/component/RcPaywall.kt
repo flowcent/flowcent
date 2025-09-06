@@ -20,15 +20,15 @@ fun RcPaywall(
     onUpdatePlan: (customerInfo: CustomerInfo) -> Unit,
     onDismiss: () -> Unit
 ) {
+
     Purchases.sharedInstance.delegate = object : PurchasesDelegate {
         override fun onCustomerInfoUpdated(customerInfo: CustomerInfo) {
-
+            onUpdatePlan(customerInfo)
         }
 
         override fun onPurchasePromoProduct(
-            product: StoreProduct, startPurchase: (
-                onError: (error: PurchasesError, userCancelled: Boolean) -> Unit, onSuccess: (storeTransaction: StoreTransaction, customerInfo: CustomerInfo) -> Unit
-            ) -> Unit
+            product: StoreProduct,
+            startPurchase: (onError: (error: PurchasesError, userCancelled: Boolean) -> Unit, onSuccess: (storeTransaction: StoreTransaction, customerInfo: CustomerInfo) -> Unit) -> Unit
         ) {
 
         }

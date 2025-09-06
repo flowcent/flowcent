@@ -33,8 +33,6 @@ fun ChatListScreen(
     subscriptionState: SubscriptionState
 ) {
 
-    Napier.e("Sohan subscriptionState currentPlan ${subscriptionState.currentPlan}")
-
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {

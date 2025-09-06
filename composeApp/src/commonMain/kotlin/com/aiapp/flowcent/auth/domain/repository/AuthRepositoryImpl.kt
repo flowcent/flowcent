@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.auth.domain.repository
 
+import com.aiapp.flowcent.auth.data.model.Subscription
 import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.core.domain.utils.Resource
@@ -10,6 +11,8 @@ import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.github.aakira.napier.Napier
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 
 class AuthRepositoryImpl(
     firestore: FirebaseFirestore,
@@ -48,9 +51,11 @@ class AuthRepositoryImpl(
             if (snapShot.exists) {
                 Resource.Success(snapShot.data(User.serializer()))
             } else {
-                return Resource.Error("User does not exist")
+                Resource.Error("User does not exist.")
             }
         } catch (ex: Exception) {
+            // Log the full exception for better debugging
+            Napier.e("Error fetching user profile", ex)
             Resource.Error(ex.message.toString())
         }
     }
@@ -123,26 +128,13 @@ class AuthRepositoryImpl(
 
     override suspend fun updateUserSubscription(
         uid: String,
-        currentPlan: String,
-        currentPlanId: String,
-        expiryDate: Long,
-        revenueCatDeviceId: String,
-        revenueCatAppUserId: String
+        subscription: Subscription
     ): Resource<String> {
         return try {
-            val updates = mapOf(
-                "currentPlan" to currentPlan,
-                "currentPlanId" to currentPlanId,
-                "currentPlanExpiryDate" to expiryDate,
-                "updatedAt" to DateTimeUtils.getCurrentTimeInMilli(),
-                "updatedBy" to uid,
-                "revenueCatDeviceId" to revenueCatDeviceId,
-                "revenueCatAppUserId" to revenueCatAppUserId
-            )
-
+            val userSubscription = mapOf("subscription" to subscription)
             userCollection
                 .document(uid)
-                .update(updates)
+                .update(userSubscription)
 
             Resource.Success("User subscription updated successfully")
         } catch (ex: Exception) {

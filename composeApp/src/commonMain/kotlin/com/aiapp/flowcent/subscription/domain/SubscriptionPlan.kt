@@ -1,7 +1,7 @@
 package com.aiapp.flowcent.subscription.domain
 
-enum class SubscriptionPlan {
-    LITE,
-    PRO,
-    STANDARD
+sealed class SubscriptionPlan {
+    object Pro : SubscriptionPlan()
+    object Lite : SubscriptionPlan()
+    object Free : SubscriptionPlan()
 }
