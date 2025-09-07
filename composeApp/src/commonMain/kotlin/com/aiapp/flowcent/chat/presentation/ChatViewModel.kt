@@ -244,7 +244,7 @@ class ChatViewModel(
         viewModelScope.launch {
             when (val result = authRepository.fetchUserProfile(uid)) {
                 is Resource.Error -> {
-                    println("Sohan Error in fetching user profile: ${result.message}")
+                    Napier.e("Sohan Error in fetching user profile: ${result.message}")
                 }
 
                 Resource.Loading -> {}
@@ -256,9 +256,6 @@ class ChatViewModel(
                             user.subscription.currentEntitlementId
                         )
                     )
-
-                    Napier.e("Sohan features?.maxTransactionsPerMonth ${features?.maxTransactionsPerMonth}")
-                    Napier.e("Sohan user.totalRecordCredits ${user.totalRecordCredits}")
 
                     val remainingCredits =
                         features?.maxTransactionsPerMonth?.let { maxTransactions ->
@@ -324,12 +321,12 @@ class ChatViewModel(
             _chatState.value.uid, createTransactionPayload(chatState.value.checkedExpenseItems)
         )) {
             is Resource.Success -> {
-                println("Sohan Expense saved successfully! ${result.data}")
+                Napier.e("Sohan Expense saved successfully! ${result.data}")
                 updateUserTotalRecords()
             }
 
             is Resource.Error -> {
-                println("Sohan Error saving expense: ${result.message}")
+                Napier.e("Sohan Error saving expense: ${result.message}")
             }
 
             Resource.Loading -> {
