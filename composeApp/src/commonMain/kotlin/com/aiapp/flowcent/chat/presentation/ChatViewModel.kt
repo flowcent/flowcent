@@ -3,7 +3,6 @@ package com.aiapp.flowcent.chat.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
-import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatHistory
@@ -20,6 +19,7 @@ import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
+import com.aiapp.flowcent.subscription.data.FeatureLimits
 import com.aiapp.flowcent.subscription.util.SubscriptionUtil
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +54,16 @@ class ChatViewModel(
     fun onAction(action: UserAction) {
         when (action) {
             is UserAction.SendMessage -> {
-                sendMessage(action.text)
+                val hasEnoughChatCredits = _chatState.value.remainingAiChatCredits > 0
+                if (hasEnoughChatCredits) {
+                    sendMessage(action.text)
+                } else {
+                    _chatState.update {
+                        it.copy(
+                            showSubscriptionSheet = true
+                        )
+                    }
+                }
             }
 
             UserAction.StartAudioPlayer -> {
@@ -250,28 +259,27 @@ class ChatViewModel(
                 Resource.Loading -> {}
                 is Resource.Success -> {
                     val user = result.data ?: return@launch
-
-                    val features = SubscriptionUtil.getSubscriptionFeatures(
-                        SubscriptionUtil.getSubscriptionPlan(
-                            user.subscription.currentEntitlementId
+                    val features = SubscriptionUtil
+                        .getSubscriptionFeatures(
+                            SubscriptionUtil.getSubscriptionPlan(user.subscription.currentEntitlementId)
                         )
-                    )
 
-                    val remainingCredits =
-                        features?.maxTransactionsPerMonth?.let { maxTransactions ->
-                            abs(maxTransactions - user.totalRecordCredits)
-                        } ?: 0
+                    val (remainingCredits, remainingAiChatCredits) = calculateRemainingCredits(
+                        user.totalRecordCredits,
+                        user.totalAiChatCredits,
+                        features
+                    )
 
                     _chatState.update {
                         it.copy(
                             user = user,
-                            remainingCredits = remainingCredits
+                            remainingCredits = remainingCredits,
+                            remainingAiChatCredits = remainingAiChatCredits
                         )
                     }
                 }
             }
         }
-
     }
 
 
@@ -371,20 +379,6 @@ class ChatViewModel(
         )
     }
 
-    private suspend fun sendVoicePrompt(prompt: String, botLoadingMessageId: String) {
-        try {
-            val hasInvalidPrompt = checkInvalidExpense(prompt)
-
-            if (hasInvalidPrompt.isEmpty()) {
-                handleValidPrompt(prompt, botLoadingMessageId)
-            } else {
-                handleInvalidPrompt(hasInvalidPrompt, botLoadingMessageId)
-            }
-        } catch (e: Exception) {
-            updateChatStateWithError(botLoadingMessageId, e.message)
-        }
-    }
-
     private suspend fun sendPrompt(prompt: String, botLoadingMessageId: String) {
         try {
             val hasInvalidPrompt = checkInvalidExpense(prompt)
@@ -405,8 +399,32 @@ class ChatViewModel(
 
         result.onSuccess { chatResult ->
             updateChatStateWithResult(botLoadingMessageId, chatResult)
+            updateUserTotalAiChatRecords()
         }.onFailure { error ->
             updateChatStateWithError(botLoadingMessageId, error.message)
+        }
+    }
+
+    private fun updateUserTotalAiChatRecords() {
+        viewModelScope.launch {
+            val credits = (_chatState.value.user?.totalAiChatCredits ?: 0) + 1
+
+            when (val result =
+                authRepository.updateTotalChatCredits(_chatState.value.uid, credits)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in updating user totalAiChatCredits: ${result.message}")
+                }
+
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in updating user totalAiChatCredits: ${result.data}")
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            user = currentState.user?.copy(totalAiChatCredits = credits)
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -504,6 +522,22 @@ class ChatViewModel(
 
             sendPrompt(text, botLoadingMessageId)
         }
+    }
+
+    private fun calculateRemainingCredits(
+        usedTransactions: Int,
+        usedAiChats: Int,
+        features: FeatureLimits?
+    ): Pair<Int, Int> {
+        val remainingTransactions = features?.maxTransactionsPerMonth
+            ?.let { it - usedTransactions }
+            ?.coerceAtLeast(0) ?: 0
+
+        val remainingAiChats = features?.maxAiChatsPerMonth
+            ?.let { it - usedAiChats }
+            ?.coerceAtLeast(0) ?: 0
+
+        return remainingTransactions to remainingAiChats
     }
 
 

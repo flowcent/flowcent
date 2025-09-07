@@ -15,7 +15,7 @@ object SubscriptionFeatures {
     val planLimits: Map<SubscriptionPlan, FeatureLimits> = mapOf(
         SubscriptionPlan.Free to FeatureLimits(
             maxTransactionsPerMonth = 50,
-            maxAiChatsPerMonth = 50,
+            maxAiChatsPerMonth = 8,
             maxSharedAccountsPerMonth = 1,
             canExportReports = false,
             aiAssistantEnabled = true
