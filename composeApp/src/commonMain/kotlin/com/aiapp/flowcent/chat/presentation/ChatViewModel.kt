@@ -262,7 +262,7 @@ class ChatViewModel(
 
                     val remainingCredits =
                         features?.maxTransactionsPerMonth?.let { maxTransactions ->
-                            abs(maxTransactions - 50)
+                            abs(maxTransactions - user.totalRecordCredits)
                         } ?: 0
 
                     _chatState.update {
@@ -325,6 +325,7 @@ class ChatViewModel(
         )) {
             is Resource.Success -> {
                 println("Sohan Expense saved successfully! ${result.data}")
+                updateUserTotalRecords()
             }
 
             is Resource.Error -> {
@@ -333,6 +334,28 @@ class ChatViewModel(
 
             Resource.Loading -> {
                 // Optionally handle loading state in UI
+            }
+        }
+    }
+
+    private fun updateUserTotalRecords() {
+        viewModelScope.launch {
+            val credits = (_chatState.value.user?.totalRecordCredits ?: 0) + 1
+            when (val result =
+                authRepository.updateTotalRecordCredits(_chatState.value.uid, credits)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in updating user totalRecordCredits: ${result.message}")
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in updating user totalRecordCredits: ${result.data}")
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            user = currentState.user?.copy(totalRecordCredits = credits)
+                        )
+                    }
+                }
             }
         }
     }

@@ -142,4 +142,32 @@ class AuthRepositoryImpl(
             Resource.Error(ex.message.toString())
         }
     }
+
+    override suspend fun updateTotalRecordCredits(uid: String, credits: Int): Resource<String> {
+        return try {
+            val totalRecordCredits = mapOf("totalRecordCredits" to credits)
+            userCollection
+                .document(uid)
+                .update(totalRecordCredits)
+
+            Resource.Success("User totalRecordCredits updated successfully")
+        } catch (ex: Exception) {
+            Napier.e("Sohan Error in updating user totalRecordCredits: ${ex.message}")
+            Resource.Error(ex.message.toString())
+        }
+    }
+
+    override suspend fun updateTotalChatCredits(uid: String, credits: Int): Resource<String> {
+        return try {
+            val totalAiChatCredits = mapOf("totalAiChatCredits" to credits)
+            userCollection
+                .document(uid)
+                .update(totalAiChatCredits)
+
+            Resource.Success("User totalAiChatCredits updated successfully")
+        } catch (ex: Exception) {
+            Napier.e("Sohan Error in updating user totalAiChatCredits: ${ex.message}")
+            Resource.Error(ex.message.toString())
+        }
+    }
 }

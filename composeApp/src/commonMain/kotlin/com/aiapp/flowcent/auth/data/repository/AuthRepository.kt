@@ -15,5 +15,6 @@ interface AuthRepository {
     suspend fun signUpWithEmailAndPassword(email: String, password: String): Resource<AuthResult>
     suspend fun updateUserField(uid: String, field: String, value: Any): Resource<String>
     suspend fun updateUserSubscription(uid: String, subscription: Subscription): Resource<String>
-
+    suspend fun updateTotalRecordCredits(uid: String, credits: Int): Resource<String>
+    suspend fun updateTotalChatCredits(uid: String, credits: Int): Resource<String>
 }
