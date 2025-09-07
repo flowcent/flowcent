@@ -212,7 +212,7 @@ class AccountViewModel(
         if (uid == null) return
         when (val result = authRepository.fetchUserProfile(uid)) {
             is Resource.Error -> {
-                println("Sohan Error in fetching user profile: ${result.message}")
+                Napier.e("Sohan Error in fetching user profile: ${result.message}")
             }
 
             Resource.Loading -> {}

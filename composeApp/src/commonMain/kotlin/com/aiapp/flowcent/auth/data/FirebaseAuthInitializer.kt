@@ -15,9 +15,6 @@ object FirebaseAuthInitializer {
         val serverId =
             if (platform.isDebug) GOOGLE_SIGN_IN_SERVER_ID_DEBUG else GOOGLE_SIGN_IN_SERVER_ID_PROD
 
-        println("Sohan serverId $serverId")
-        Napier.e("Sohan serverId $serverId")
-
         GoogleAuthProvider.Companion.create(
             credentials = GoogleAuthCredentials(
                 serverId = serverId

@@ -7,6 +7,7 @@ import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getStartAndEndTi
 import com.aiapp.flowcent.core.domain.utils.Resource
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import io.github.aakira.napier.Napier
 
 class ExpenseRepositoryImpl(
     firestore: FirebaseFirestore
@@ -27,7 +28,7 @@ class ExpenseRepositoryImpl(
 
             Resource.Success(addDocRef.id)
         } catch (e: Exception) {
-            println("Sohan error in adding doc: ${e.message}")
+            Napier.e("Sohan error in adding doc: ${e.message}")
             Resource.Error("Failed to save expense: ${e.message}")
         }
     }

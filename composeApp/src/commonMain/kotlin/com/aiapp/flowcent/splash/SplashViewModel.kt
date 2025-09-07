@@ -25,7 +25,6 @@ class SplashViewModel(
     private fun fetchUidFromStore() {
         viewModelScope.launch {
             val uidFromDataStore = prefRepository.uid.first()
-            println("Sohan shouldShowBottomNav  uidFromDataStore $uidFromDataStore")
             if (uidFromDataStore.isNullOrEmpty()) {
                 _state.update { currentState ->
                     currentState.copy(

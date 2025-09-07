@@ -110,7 +110,7 @@ class HomeViewModel(
         }
         when (val result = authRepository.fetchUserProfile(uid)) {
             is Resource.Error -> {
-                println("Sohan Error in fetching user profile: ${result.message}")
+                Napier.e("Sohan Error in fetching user profile: ${result.message}")
             }
 
             Resource.Loading -> {}
@@ -128,7 +128,7 @@ class HomeViewModel(
     }
 
     private suspend fun googleSignOut() {
-        println("Sohan Firebase.auth.currentUser ${Firebase.auth.currentUser}")
+        Napier.e("Sohan Firebase.auth.currentUser ${Firebase.auth.currentUser}")
         if (Firebase.auth.currentUser != null) {
             Firebase.auth.signOut()
         }
@@ -142,11 +142,11 @@ class HomeViewModel(
         viewModelScope.launch {
             when (val result = expenseRepository.totalAmount(uid)) {
                 is Resource.Error -> {
-                    println("Sohan Error in fetching total amount: ${result.message}")
+                    Napier.e("Sohan Error in fetching total amount: ${result.message}")
                 }
 
                 is Resource.Success -> {
-                    println("Sohan Success in fetching total amount: ${result.data}")
+                    Napier.e("Sohan Success in fetching total amount: ${result.data}")
                     _state.update {
                         it.copy(
                             userTotalSpent = result.data ?: 0.0
@@ -161,7 +161,6 @@ class HomeViewModel(
     }
 
     private fun fetchLatestTransactions(uid: String?) {
-        println("Sohan fetchLatestTransactions")
         if (uid.isNullOrEmpty()) {
             Napier.e("Sohan 404 No User Found")
             return
@@ -174,7 +173,7 @@ class HomeViewModel(
                         _state.value.selectedDate.toString()
                     )) {
                     is Resource.Error -> {
-                        println("Sohan Error in fetching expenses: ${result.message}")
+                        Napier.e("Sohan Error in fetching expenses: ${result.message}")
                         _state.update { it.copy(isLoading = false) }
                     }
 
@@ -189,13 +188,11 @@ class HomeViewModel(
                                 isLoading = false
                             )
                         }
-                        println("Sohan Success in fetching expenses: $expenseList")
-
-
+                        Napier.e("Sohan Success in fetching expenses: $expenseList")
                     }
                 }
             } catch (error: Exception) {
-                println("Sohan Exception  in fetching expenses: ${error.message}")
+                Napier.e("Sohan Exception  in fetching expenses: ${error.message}")
                 _state.update { it.copy(isLoading = false) }
             }
         }

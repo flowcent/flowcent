@@ -21,6 +21,5 @@ fun getAccountID(): String {
     }
 
     val accountID = "$UUID_PREFIX_ACCOUNT-$timestamp"
-    println("Generated Account ID: $accountID")
     return accountID
 }

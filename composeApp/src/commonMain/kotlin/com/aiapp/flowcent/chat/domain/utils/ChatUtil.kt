@@ -153,14 +153,10 @@ object ChatUtil {
         val numberMatch = expenseRegex.containsMatchIn(text)
         val keywordMatch = expenseKeywords.any { it in text.lowercase() }
 
-        println("Sohan numberMatch $numberMatch")
-        println("Sohan keywordMatch $keywordMatch")
-
         return numberMatch || keywordMatch
     }
 
     fun checkInvalidExpense(userText: String): String {
-        println("Sohan containsExpense(userText)-> ${containsExpense(userText)}")
         if (!containsExpense(userText)) {
             // No expense found — return generic JSON directly
             val genericAnswer = when {
@@ -187,7 +183,6 @@ object ChatUtil {
 
                 else -> "I could not understand your message. I can help you record financial transactions. Please phrase your questions like this: I just paid $800 house rent, Just got my salary which is $8000. Add it, Had dinner that cost $16.97"
             }
-            println("Sohan genericAnswer -> $genericAnswer")
             return """{"answer": "$genericAnswer", "data": []}"""
         } else {
             return ""

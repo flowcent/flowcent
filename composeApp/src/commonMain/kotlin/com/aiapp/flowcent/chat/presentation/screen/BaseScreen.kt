@@ -49,6 +49,7 @@ import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import com.aiapp.flowcent.subscription.presentation.component.RcPaywall
 import com.aiapp.flowcent.util.ConnectivityManager
 import dev.icerock.moko.permissions.PermissionState
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -149,7 +150,7 @@ fun BaseScreen(
                     }
                     viewModel.onAction(UserAction.UpdateListening(true))
                 } else {
-                    println("Sohan Microphone permission denied. Please enable it in app settings.")
+                    Napier.e("Sohan Microphone permission denied. Please enable it in app settings.")
                 }
             }
 

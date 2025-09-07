@@ -4,6 +4,7 @@
 
 package com.aiapp.flowcent.core.presentation.utils
 
+import io.github.aakira.napier.Napier
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -69,7 +70,7 @@ object DateTimeUtils {
             outputFormat.format(localDate)
 
         } catch (e: Exception) {
-            println("Error parsing date: ${e.message}")
+            Napier.e("Error parsing date: ${e.message}")
             null
         }
     }

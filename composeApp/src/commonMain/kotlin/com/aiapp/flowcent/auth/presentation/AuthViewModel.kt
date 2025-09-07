@@ -221,7 +221,6 @@ class AuthViewModel(
     }
 
     private fun fetchUserProfile(uid: String?) {
-        println("Sohan fetchUserProfile _state.value.uid ${_state.value.uid}")
         if (uid.isNullOrEmpty()) {
             Napier.e("Sohan 404 No User Found")
             return
@@ -229,12 +228,12 @@ class AuthViewModel(
         viewModelScope.launch {
             when (val result = authRepository.fetchUserProfile(uid)) {
                 is Resource.Error -> {
-                    println("Sohan Error in fetching user profile: ${result.message}")
+                    Napier.e("Sohan Error in fetching user profile: ${result.message}")
                 }
 
                 Resource.Loading -> {}
                 is Resource.Success -> {
-                    println("Sohan Success in fetching user profile: ${result.data?.localUserName}")
+                    Napier.e("Sohan Success in fetching user profile: ${result.data?.localUserName}")
                     _state.update {
                         it.copy(
                             user = result.data
@@ -419,7 +418,7 @@ class AuthViewModel(
                 is Resource.Loading -> {}
 
                 is Resource.Success -> {
-                    println("Sohan createNewUserToDb success ${result.data}")
+                    Napier.e("Sohan createNewUserToDb success ${result.data}")
                     setUserSignedIn(true)
                     saveUserUid(user.uid)
                     _uiEvent.send(UiEvent.NavigateToHome)
@@ -427,7 +426,7 @@ class AuthViewModel(
 
                 is Resource.Error -> {
                     setUserSignedIn(false)
-                    println("Sohan createNewUserToDb ${result.message}")
+                    Napier.e("Sohan createNewUserToDb ${result.message}")
                 }
             }
         }

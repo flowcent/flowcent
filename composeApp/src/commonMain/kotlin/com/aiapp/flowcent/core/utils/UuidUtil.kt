@@ -22,7 +22,6 @@ fun getTransactionId(): String {
     }
 
     val accountID = "$UUID_PREFIX_TRANSACTION-$timestamp"
-    println("Generated Account ID: $accountID")
     return accountID
 }
 

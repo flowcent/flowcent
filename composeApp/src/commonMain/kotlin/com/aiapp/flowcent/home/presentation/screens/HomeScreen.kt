@@ -167,7 +167,7 @@ fun HomeScreen(
         CalendarStrip(
             selectedDate = getCurrentDate(),
             onDateSelected = {
-                println("Sohan selected date: $it")
+                Napier.i("Sohan selected date: $it")
                 homeViewModel.onAction(UserAction.SetSelectedDate(it))
             },
             modifier = Modifier.padding(horizontal = Spacing.horizontalPadding)
