@@ -64,7 +64,7 @@ fun SubscriptionBadge(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Become a Flowcent Pro",
+                        text = "Explore Premium",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFFFD700)
@@ -72,17 +72,11 @@ fun SubscriptionBadge(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Upgrade to use unlimited transactions recording with AI voice and chat",
+                    text = "Upgrade to get more credits",
                     fontSize = 13.sp,
                     color = Color.White.copy(alpha = 0.9f)
                 )
             }
-            Text(
-                text = "See how",
-                fontSize = 13.sp,
-                color = Color.White.copy(alpha = 0.9f),
-                fontWeight = FontWeight.Medium
-            )
         }
     }
 }

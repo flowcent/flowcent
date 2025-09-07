@@ -11,7 +11,7 @@ object SubscriptionUtil {
     const val PRO_ENTITLEMENT_ID = "Pro"
     const val FREE_ENTITLEMENT_ID = "Free"
 
-    fun getFeaturesByUser(plan: SubscriptionPlan): FeatureLimits? {
+    fun getSubscriptionFeatures(plan: SubscriptionPlan): FeatureLimits? {
         return SubscriptionFeatures.planLimits[plan]
     }
 

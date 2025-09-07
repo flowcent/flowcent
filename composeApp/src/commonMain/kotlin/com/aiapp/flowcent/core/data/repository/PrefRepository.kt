@@ -8,4 +8,8 @@ interface PrefRepository {
     suspend fun saveUid(uid: String)
 
     suspend fun deleteUid()
+
+    suspend fun hasUpdatedLatestPlan()
+
+    suspend fun updateLatestPlanUpdateTime()
 }

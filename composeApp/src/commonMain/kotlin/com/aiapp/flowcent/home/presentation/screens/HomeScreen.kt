@@ -103,30 +103,14 @@ fun HomeScreen(
                 homeState.user.flowCentUserId, ::showError
             ) { customerInfo, created ->
 
-                val activeEntitlement = SubscriptionUtil.getActiveEntitlement(customerInfo)
-
-                Napier.e("Sohan subscriptionState.currentPlanId ${subscriptionState.currentPlanId}")
-                Napier.e("Sohan active id ${activeEntitlement.entitlement?.productPlanIdentifier}")
-
-                if (activeEntitlement.entitlement != null) {
-                    if (subscriptionState.currentPlanId != activeEntitlement.entitlement.productPlanIdentifier) {
-                        subscriptionVM.onAction(
-                            PurchaseUserAction.UpdateCurrentPlan(
-                                homeState.uid,
-                                customerInfo,
-                                true
-                            )
-                        )
-                    } else {
-                        subscriptionVM.onAction(
-                            PurchaseUserAction.UpdateCurrentPlan(
-                                homeState.uid,
-                                customerInfo,
-                                false
-                            )
-                        )
-                    }
-                }
+                //TODO - Make it run one time per one day 
+                subscriptionVM.onAction(
+                    PurchaseUserAction.UpdateCurrentPlan(
+                        homeState.uid,
+                        customerInfo,
+                        true
+                    )
+                )
             }
         }
     }
