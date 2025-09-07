@@ -27,5 +27,7 @@ data class ChatState(
     val checkedExpenseItems: List<ExpenseItem> = emptyList(),
     val user: User? = null,
     val voiceMessages: List<ChatMessage> = emptyList(),
+    val remainingCredits: Int = 0,
+    val showSubscriptionSheet: Boolean = false
 )
 

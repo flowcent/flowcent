@@ -17,6 +17,9 @@ import com.aiapp.flowcent.subscription.util.SubscriptionUtil.getLevelString
 import com.revenuecat.purchases.kmp.Purchases
 import com.revenuecat.purchases.kmp.models.CustomerInfo
 import com.revenuecat.purchases.kmp.models.EntitlementInfos
+import com.revenuecat.purchases.kmp.models.PurchasesError
+import com.revenuecat.purchases.kmp.models.PurchasesErrorCode
+import com.revenuecat.purchases.kmp.models.PurchasesException
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,22 +46,29 @@ class SubscriptionViewModel(
         when (action) {
             is PurchaseUserAction.UpdateCurrentPlan -> {
                 viewModelScope.launch {
-                    val activeEntitlement = getActiveEntitlement(action.customerInfo)
+                    try {
+                        val activeEntitlement = getActiveEntitlement(action.customerInfo)
 
-                    _subscriptionState.update {
-                        it.copy(
-                            currentSubscriptionPlan = activeEntitlement.plan,
-                            currentPlanId = activeEntitlement.entitlement?.productPlanIdentifier ?: "free"
-                        )
-                    }
+                        _subscriptionState.update {
+                            it.copy(
+                                currentSubscriptionPlan = activeEntitlement.plan,
+                                currentPlanId = activeEntitlement.entitlement?.productPlanIdentifier
+                                    ?: "free"
+                            )
+                        }
 
-                    if (action.requireUpdate) {
-                        updateUserSubscription(
-                            action.uid,
-                            activeEntitlement.entitlement?.identifier ?: FREE_ENTITLEMENT_ID,
-                            activeEntitlement.plan,
-                            action.customerInfo
-                        )
+                        if (action.requireUpdate) {
+                            updateUserSubscription(
+                                action.uid,
+                                activeEntitlement.entitlement?.identifier ?: FREE_ENTITLEMENT_ID,
+                                activeEntitlement.plan,
+                                action.customerInfo
+                            )
+                        }
+                    } catch (e: PurchasesException) {
+                        if (e.code == PurchasesErrorCode.NetworkError) {
+                            Napier.e("Sohan NetworkError in purchasing ${e.code}")
+                        }
                     }
                 }
             }

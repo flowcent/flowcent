@@ -22,4 +22,5 @@ sealed interface UserAction {
     data object NavigateToBack : UserAction
     data class EditExpenseItem(val expenseItem: ExpenseItem) : UserAction
     data class DeleteExpenseItem(val expenseItem: ExpenseItem, val messageId: String) : UserAction
+    data class ShowPaymentSheet(val sheetState: Boolean) : UserAction
 }

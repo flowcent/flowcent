@@ -23,6 +23,15 @@ object SubscriptionUtil {
         }
     }
 
+    fun getSubscriptionPlan(currentEntitlementId: String): SubscriptionPlan {
+        return when (currentEntitlementId) {
+            LITE_ENTITLEMENT_ID -> SubscriptionPlan.Lite
+            PRO_ENTITLEMENT_ID -> SubscriptionPlan.Pro
+            FREE_ENTITLEMENT_ID -> SubscriptionPlan.Free
+            else -> SubscriptionPlan.Free
+        }
+    }
+
 
     fun getActiveEntitlement(customerInfo: CustomerInfo): ActiveEntitlement {
         val entitlements = customerInfo.entitlements

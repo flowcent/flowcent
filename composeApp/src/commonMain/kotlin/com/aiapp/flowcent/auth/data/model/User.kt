@@ -23,4 +23,6 @@ data class User(
     val sharedAccountCount: Int = 0,
     val flowCentUserId: String = "",
     val subscription: Subscription = Subscription(),
+    val totalRecordCredits: Int = 0,
+    val totalAiChatCredits: Int = 0,
 )

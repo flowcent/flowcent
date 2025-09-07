@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,12 +43,15 @@ import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.utils.DialogType
+import com.aiapp.flowcent.subscription.presentation.PurchaseUserAction
 import com.aiapp.flowcent.subscription.presentation.SubscriptionState
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
+import com.aiapp.flowcent.subscription.presentation.component.RcPaywall
 import com.aiapp.flowcent.util.ConnectivityManager
 import dev.icerock.moko.permissions.PermissionState
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScreen(
     navController: NavHostController,
@@ -75,6 +81,8 @@ fun BaseScreen(
     var showDialog by remember { mutableStateOf<UiEvent.ShowDialog?>(null) }
     val isNetworkConnected by ConnectivityManager.connectivityStatus.collectAsState()
 
+    val subscriptionSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     LaunchedEffect(Unit) {
         viewModel.onAction(UserAction.CheckAudioPermission)
     }
@@ -100,6 +108,22 @@ fun BaseScreen(
                 dialogType = DialogType.NO_INTERNET
             )
         }
+    }
+
+    LaunchedEffect(key1 = state.showSubscriptionSheet) {
+        if (state.showSubscriptionSheet) {
+            coroutineScope.launch {
+                subscriptionSheetState.show()
+            }
+        } else {
+            coroutineScope.launch {
+                subscriptionSheetState.hide()
+            }
+        }
+    }
+
+    fun handleHideSubscriptionSheet() {
+        viewModel.onAction(UserAction.ShowPaymentSheet(false))
     }
 
 
@@ -200,6 +224,31 @@ fun BaseScreen(
         }
     ) {
         content(modifier, viewModel, state, subscriptionState)
+        if (state.showSubscriptionSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    handleHideSubscriptionSheet()
+                },
+                sheetState = subscriptionSheetState,
+                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                RcPaywall(
+                    onUpdatePlan = { customerInfo ->
+                        subscriptionVM.onAction(
+                            PurchaseUserAction.UpdateCurrentPlan(
+                                state.uid,
+                                customerInfo,
+                                true
+                            )
+                        )
+                    },
+                    onDismiss = {
+                        handleHideSubscriptionSheet()
+                    }
+                )
+            }
+        }
     }
 }
 

@@ -3,6 +3,7 @@ package com.aiapp.flowcent.chat.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
+import com.aiapp.flowcent.auth.data.model.User
 import com.aiapp.flowcent.auth.data.repository.AuthRepository
 import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatHistory
@@ -19,6 +20,7 @@ import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentTimeInMilli
+import com.aiapp.flowcent.subscription.util.SubscriptionUtil
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -31,6 +33,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import kotlin.math.abs
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -98,13 +101,21 @@ class ChatViewModel(
 
             is UserAction.SaveExpenseItemsToDb -> {
                 viewModelScope.launch {
-                    if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
-                        saveIntoSharedAccounts()
+                    val hasEnoughCredits = _chatState.value.remainingCredits > 0
+                    if (hasEnoughCredits) {
+                        if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
+                            saveIntoSharedAccounts()
+                        } else {
+                            //Personal finance
+                            saveIntoPersonal()
+                        }
                     } else {
-                        //Personal finance
-                        saveIntoPersonal()
+                        _chatState.update {
+                            it.copy(
+                                showSubscriptionSheet = true
+                            )
+                        }
                     }
-
                 }
             }
 
@@ -112,12 +123,14 @@ class ChatViewModel(
                 viewModelScope.launch {
                     if (_chatState.value.uid.isNotEmpty()) {
                         fetchSharedAccounts(_chatState.value.uid)
+                        fetchUserProfile(_chatState.value.uid)
                     } else {
                         prefRepository.uid.collect { uidFromDataStore ->
                             _chatState.update { currentState ->
                                 currentState.copy(uid = uidFromDataStore ?: "")
                             }
                             fetchSharedAccounts(uidFromDataStore)
+                            fetchUserProfile(uidFromDataStore)
                         }
                     }
                 }
@@ -210,8 +223,60 @@ class ChatViewModel(
             is UserAction.EditExpenseItem -> {
                 viewModelScope.launch {}
             }
+
+            is UserAction.ShowPaymentSheet -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            showSubscriptionSheet = action.sheetState
+                        )
+                    }
+                }
+            }
         }
     }
+
+    private fun fetchUserProfile(uid: String?) {
+        if (uid.isNullOrEmpty()) {
+            Napier.e("Sohan 404 No User Found")
+            return
+        }
+        viewModelScope.launch {
+            when (val result = authRepository.fetchUserProfile(uid)) {
+                is Resource.Error -> {
+                    println("Sohan Error in fetching user profile: ${result.message}")
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    val user = result.data ?: return@launch
+
+                    val features = SubscriptionUtil.getSubscriptionFeatures(
+                        SubscriptionUtil.getSubscriptionPlan(
+                            user.subscription.currentEntitlementId
+                        )
+                    )
+
+                    Napier.e("Sohan features?.maxTransactionsPerMonth ${features?.maxTransactionsPerMonth}")
+                    Napier.e("Sohan user.totalRecordCredits ${user.totalRecordCredits}")
+
+                    val remainingCredits =
+                        features?.maxTransactionsPerMonth?.let { maxTransactions ->
+                            abs(maxTransactions - 50)
+                        } ?: 0
+
+                    _chatState.update {
+                        it.copy(
+                            user = user,
+                            remainingCredits = remainingCredits
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+
 
     private fun fetchSharedAccounts(uid: String?) {
         if (uid.isNullOrEmpty()) return
