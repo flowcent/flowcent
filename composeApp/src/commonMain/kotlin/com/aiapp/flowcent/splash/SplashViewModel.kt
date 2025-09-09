@@ -25,7 +25,7 @@ class SplashViewModel(
     private fun fetchUidFromStore() {
         viewModelScope.launch {
             val uidFromDataStore = prefRepository.uid.first()
-            val seenOnboarding = prefRepository.hasSeenOnboarding.first()
+            val seenOnboarding = false
             if (uidFromDataStore.isNullOrEmpty()) {
                 _state.update { currentState ->
                     currentState.copy(
