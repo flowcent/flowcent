@@ -18,6 +18,7 @@ import com.aiapp.flowcent.chat.presentation.navigation.addChatGraph
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.home.presentation.navigation.addHomeGraph
 import com.aiapp.flowcent.insights.presentation.navigation.addInsightsGraph
+import com.aiapp.flowcent.onboarding.navigation.addOnboardingGraph
 import com.aiapp.flowcent.splash.navigation.addSplashGraph
 import dev.jordond.connectivity.Connectivity
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ fun AppNavGraph(
         startDestination = startDestination.route
     ) {
         addSplashGraph(navController, modifier)
+        addOnboardingGraph(navController)
         addAuthGraph(navController, modifier)
         addAccountsGraph(navController, modifier)
         addHomeGraph(navController, modifier)

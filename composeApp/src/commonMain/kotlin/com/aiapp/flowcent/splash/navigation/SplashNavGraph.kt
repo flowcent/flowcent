@@ -32,8 +32,14 @@ fun NavGraphBuilder.addSplashGraph(
                         popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
                     }
                 } else {
-                    navController.navigate(AppNavRoutes.Auth.route) {
-                        popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
+                    if (state.hasSeenOnboarding) {
+                        navController.navigate(AppNavRoutes.Auth.route) {
+                            popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate(AppNavRoutes.Onboarding.route) {
+                            popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
+                        }
                     }
                 }
             }

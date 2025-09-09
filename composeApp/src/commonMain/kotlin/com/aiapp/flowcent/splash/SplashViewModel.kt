@@ -25,11 +25,13 @@ class SplashViewModel(
     private fun fetchUidFromStore() {
         viewModelScope.launch {
             val uidFromDataStore = prefRepository.uid.first()
+            val seenOnboarding = prefRepository.hasSeenOnboarding.first()
             if (uidFromDataStore.isNullOrEmpty()) {
                 _state.update { currentState ->
                     currentState.copy(
                         isUiLoaded = true,
-                        shouldShowBottomNav = false
+                        shouldShowBottomNav = false,
+                        hasSeenOnboarding = seenOnboarding
                     )
                 }
             } else {
@@ -37,7 +39,8 @@ class SplashViewModel(
                     currentState.copy(
                         uid = uidFromDataStore,
                         isUiLoaded = true,
-                        shouldShowBottomNav = true
+                        shouldShowBottomNav = true,
+                        hasSeenOnboarding = seenOnboarding
                     )
                 }
             }

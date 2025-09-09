@@ -12,4 +12,8 @@ interface PrefRepository {
     suspend fun hasUpdatedLatestPlan()
 
     suspend fun updateLatestPlanUpdateTime()
+
+    // Onboarding
+    val hasSeenOnboarding: Flow<Boolean>
+    suspend fun setHasSeenOnboarding(seen: Boolean)
 }

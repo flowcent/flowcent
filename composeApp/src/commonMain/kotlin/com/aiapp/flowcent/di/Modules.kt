@@ -12,6 +12,7 @@ import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.core.domain.repository.ExpenseRepositoryImpl
 import com.aiapp.flowcent.core.domain.repository.PrefRepositoryImpl
 import com.aiapp.flowcent.home.presentation.HomeViewModel
+import com.aiapp.flowcent.onboarding.OnboardingViewModel
 import com.aiapp.flowcent.splash.SplashViewModel
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import dev.gitlive.firebase.Firebase
@@ -37,6 +38,11 @@ val sharedModule = module {
     }
     viewModel {
         SplashViewModel(
+            prefRepository = PrefRepositoryImpl(get()),
+        )
+    }
+    viewModel {
+        OnboardingViewModel(
             prefRepository = PrefRepositoryImpl(get()),
         )
     }
