@@ -56,7 +56,7 @@ fun UserOnboardingScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF2F2F7))
     ) {

@@ -1,5 +1,10 @@
 package com.aiapp.flowcent.core.presentation.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,7 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
@@ -38,6 +46,7 @@ fun AppButton(
     height: Dp = 48.dp,
     enabled: Boolean = true,
     isLoading: Boolean = false,
+    hasGradient: Boolean = false,
     clickCooldownMillis: Long = 1000, // 1 second default
     leadingIcon: (@Composable (() -> Unit))? = null
 ) {
@@ -53,34 +62,79 @@ fun AppButton(
         }
     }
 
-    Button(
-        onClick = { safeClick() },
-        modifier = modifier
-            .fillMaxWidth()
-            .height(height),
-        shape = shape,
-        enabled = enabled && !isLoading,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
-            disabledBackgroundColor = disabledBgColor
-        )
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(20.dp),
-                color = textColor,
-                strokeWidth = 2.dp
-            )
-        } else {
-            if (leadingIcon != null) {
-                leadingIcon()
-                Spacer(modifier = Modifier.width(8.dp))
+    if (hasGradient) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(height)
+                .clip(shape)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        listOf(
+                            Color(0xFF5769F2),
+                            Color(0xFF8442EC),
+                            Color(0xFF9036E9)
+                        )
+                    )
+                )
+                .clickable(
+                    enabled = enabled && !isLoading,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { safeClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = textColor,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (leadingIcon != null) {
+                        leadingIcon()
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text(
+                        text = text,
+                        style = textStyle,
+                        color = textColor
+                    )
+                }
             }
-            Text(
-                text = text,
-                style = textStyle,
-                color = textColor
+        }
+    } else {
+        // Normal Material Button
+        Button(
+            onClick = { safeClick() },
+            modifier = modifier
+                .fillMaxWidth()
+                .height(height),
+            shape = shape,
+            enabled = enabled && !isLoading,
+            colors = ButtonDefaults.buttonColors(
+                contentColor = backgroundColor,
+                disabledContentColor = disabledBgColor
             )
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = textColor,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                if (leadingIcon != null) {
+                    leadingIcon()
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text(
+                    text = text,
+                    style = textStyle,
+                    color = textColor
+                )
+            }
         }
     }
 }
