@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun LabeledInputField(
-    label: String,
+    label: String = "",
     labelSize: TextUnit = MaterialTheme.typography.labelMedium.fontSize,
     placeholder: String,
     value: String,
@@ -35,21 +36,28 @@ fun LabeledInputField(
     singleLine: Boolean = true,
     maxLines: Int = 1,
     isNumeric: Boolean = false,
-    // New parameters for icon and password functionality
+    hasGapBetweenLabelAndInput: Boolean = false,
+    gapBetweenLabelAndInput: Dp = 24.dp,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Label
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = labelSize
-            ),
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        if (label.isNotEmpty()) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = labelSize
+                ),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        if (hasGapBetweenLabelAndInput) {
+            Spacer(modifier.height(gapBetweenLabelAndInput))
+        }
 
         // BasicTextField with decorationBox for layout control
         BasicTextField(
