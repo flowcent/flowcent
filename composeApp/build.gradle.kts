@@ -114,6 +114,7 @@ kotlin {
             implementation(libs.purchases.result)
             implementation(libs.connectivity.compose.device)
             implementation(libs.connectivity.compose.http)
+            implementation(libs.kottie)
         }
 
         iosMain.dependencies {

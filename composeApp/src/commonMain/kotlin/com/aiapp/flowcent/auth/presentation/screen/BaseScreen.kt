@@ -126,7 +126,7 @@ private fun handleEvent(
 ) {
     when (event) {
         UiEvent.NavigateToHome -> navController.navigate(AppNavRoutes.Home.route)
-        UiEvent.NavigateToBasicIntro -> navController.navigate(AuthNavRoutes.BasicIntroScreen.route)
+        UiEvent.NavigateToBasicIntro -> navController.navigate(AppNavRoutes.UserOnboarding.route)
         UiEvent.NavigateToSignIn -> navController.navigate(AuthNavRoutes.SignInScreen.route)
         UiEvent.NavigateToSignUp -> navController.navigate(AuthNavRoutes.SignUpScreen.route)
         is UiEvent.ShowDialog -> onShowDialog(event)

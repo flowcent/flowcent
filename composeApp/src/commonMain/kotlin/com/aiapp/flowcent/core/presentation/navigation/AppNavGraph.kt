@@ -5,10 +5,6 @@
 package com.aiapp.flowcent.core.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,8 +16,7 @@ import com.aiapp.flowcent.home.presentation.navigation.addHomeGraph
 import com.aiapp.flowcent.insights.presentation.navigation.addInsightsGraph
 import com.aiapp.flowcent.onboarding.navigation.addOnboardingGraph
 import com.aiapp.flowcent.splash.navigation.addSplashGraph
-import dev.jordond.connectivity.Connectivity
-import kotlinx.coroutines.launch
+import com.aiapp.flowcent.userOnboarding.navigation.addUserObNavGraph
 
 @Composable
 fun AppNavGraph(
@@ -41,5 +36,6 @@ fun AppNavGraph(
         addHomeGraph(navController, modifier)
         addChatGraph(navController, modifier, speechRecognizer)
         addInsightsGraph(navController, modifier)
+        addUserObNavGraph(navController, modifier)
     }
 }
