@@ -151,7 +151,7 @@ fun ShimmerAccount(modifier: Modifier = Modifier) {
 @Composable
 fun ShimmerChat(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(16.dp),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

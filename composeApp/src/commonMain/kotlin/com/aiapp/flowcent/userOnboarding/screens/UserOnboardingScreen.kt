@@ -1,4 +1,3 @@
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -6,7 +5,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import com.aiapp.flowcent.userOnboarding.UserAction
 import com.aiapp.flowcent.userOnboarding.UserObViewModel
 import com.aiapp.flowcent.userOnboarding.UserOnboardingState
 import com.aiapp.flowcent.userOnboarding.components.FirstOnBoarding
@@ -43,7 +42,6 @@ fun UserOnboardingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F2F7))
     ) {
         HorizontalPager(
             state = pagerState,
@@ -59,7 +57,7 @@ fun UserOnboardingScreen(
                     if (pagerState.currentPage < pages.size - 1) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     } else {
-                        // Onboarding finished, handle navigation to the main screen
+                        viewModel.onAction(UserAction.NavigateToChatOnboard)
                     }
                 }
             },

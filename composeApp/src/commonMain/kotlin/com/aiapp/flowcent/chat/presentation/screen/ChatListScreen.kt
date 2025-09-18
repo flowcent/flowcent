@@ -74,7 +74,7 @@ fun ChatListScreen(
                 onOptionSelected = {
                     viewModel.onAction(UserAction.UpdateAccountSelectionType(it))
                 },
-                backgroundColor = MaterialTheme.colorScheme.surface,
+                backgroundColor = MaterialTheme.colorScheme.background,
                 modifier = Modifier
                     .fillMaxWidth()
             )

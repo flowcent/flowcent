@@ -22,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,7 +92,7 @@ private fun AppBar(
         TopAppBar(
             title = {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (imagePainter != null) {
                         Image(
@@ -121,7 +122,12 @@ private fun AppBar(
                     }
                 } else null
             },
-            actions = { actions }
+            actions = { actions?.invoke() },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                navigationIconContentColor = MaterialTheme.colorScheme.inverseSurface,
+                actionIconContentColor = MaterialTheme.colorScheme.inverseSurface
+            )
         )
 
 //        Divider(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.outlineVariant))

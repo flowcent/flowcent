@@ -83,6 +83,14 @@ val sharedModule = module {
     }
 
     viewModel {
-        UserObViewModel()
+        UserObViewModel(
+            flowCentAi = get(),
+            expenseRepository = ExpenseRepositoryImpl(
+                firestore
+            ),
+            prefRepository = PrefRepositoryImpl(get()),
+            authRepository = AuthRepositoryImpl(firestore),
+            accountRepository = AccountRepositoryImpl(firestore),
+        )
     }
 }

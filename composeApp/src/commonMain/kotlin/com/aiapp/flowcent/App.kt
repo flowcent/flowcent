@@ -3,7 +3,6 @@ package com.aiapp.flowcent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,7 +17,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aiapp.flowcent.auth.presentation.navigation.AuthNavRoutes
 import com.aiapp.flowcent.core.domain.model.NavItem
 import com.aiapp.flowcent.core.presentation.navigation.AppNavGraph
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
@@ -26,12 +24,6 @@ import com.aiapp.flowcent.core.presentation.navigation.BottomNavigationBar
 import com.aiapp.flowcent.core.presentation.navigation.GetTopBarForRoute
 import com.aiapp.flowcent.core.presentation.platform.SpeechRecognizer
 import com.aiapp.flowcent.core.presentation.ui.theme.AppTheme
-import com.revenuecat.purchases.kmp.Purchases
-import com.revenuecat.purchases.kmp.PurchasesDelegate
-import com.revenuecat.purchases.kmp.models.CustomerInfo
-import com.revenuecat.purchases.kmp.models.PurchasesError
-import com.revenuecat.purchases.kmp.models.StoreProduct
-import com.revenuecat.purchases.kmp.models.StoreTransaction
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_chat
 import flowcent.composeapp.generated.resources.ic_chat_selected
@@ -40,7 +32,6 @@ import flowcent.composeapp.generated.resources.ic_home_selected
 import flowcent.composeapp.generated.resources.ic_share_accounts
 import flowcent.composeapp.generated.resources.ic_share_accounts_selected
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

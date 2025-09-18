@@ -12,6 +12,7 @@ import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.userOnboarding.UserObViewModel
 import com.aiapp.flowcent.userOnboarding.screens.BaseScreen
+import com.aiapp.flowcent.userOnboarding.screens.ChatOnboardScreen
 import com.aiapp.flowcent.userOnboarding.screens.UserWelcomeScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -61,6 +62,28 @@ fun NavGraphBuilder.addUserObNavGraph(
                 modifier = modifier
             ) { modifier, userObViewModel, state ->
                 UserOnboardingScreen(
+                    modifier = modifier,
+                    viewModel = userObViewModel,
+                    state = state
+                )
+            }
+        }
+
+        addAnimatedComposable(route = UserObNavRoutes.ChatOnboardScreen.route) { navBackStackEntry ->
+            val userObNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.UserOnboarding.route)
+            }
+
+            val viewModel = koinViewModel<UserObViewModel>(
+                viewModelStoreOwner = userObNavGraphEntry
+            )
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier
+            ) { modifier, userObViewModel, state ->
+                ChatOnboardScreen(
                     modifier = modifier,
                     viewModel = userObViewModel,
                     state = state

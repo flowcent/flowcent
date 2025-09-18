@@ -6,23 +6,14 @@ import androidx.compose.ui.graphics.Color
 
 
 internal val LightColorScheme = lightColorScheme(
-//    primary = Colors.LightPrimary,
-//    onPrimary = Colors.LightOnPrimary,
-//    background = Colors.LightBackground,
-//    onBackground = Colors.LightOnBackground,
-//    surface = Colors.LightSurface,
-//    onSurface = Colors.LightPrimary,
-//    secondary = Colors.LightSecondary,
-//    onSecondary = Colors.LightOnBackground
-
     primary = Colors.Blue500,              // Skip text, toggle ON
     onPrimary = Color.White,        // Icon inside blue circle
     primaryContainer = Colors.Blue100,     // Circle background, selected icon
     onPrimaryContainer = Colors.Blue900,   // Icon inside selected container
 
-    background = Color(0xFFF2F2F7),       // Screen background
-    surface = Color.White,          // Card backgrounds (if used)
-    surfaceVariant = Color.White,       // Input fields, unselected icons
+    background = Color.White,       // Screen background
+    surface = Color(0xFFF2F2F7),          // Card backgrounds (if used)
+    surfaceVariant = Color(0xFFF2F2F7),       // Input fields, unselected icons
     onSurface = Colors.Black900,        // Main text
     onSurfaceVariant = Colors.Gray600,     // Secondary/supporting text
     outlineVariant = Colors.LightOutline,
@@ -30,15 +21,6 @@ internal val LightColorScheme = lightColorScheme(
 )
 
 internal val DarkColorScheme = darkColorScheme(
-//    primary = Colors.DarkPrimary,
-//    onPrimary = Colors.DarkOnPrimary,
-//    background = Colors.DarkBackground,
-//    onBackground = Colors.DarkOnBackground,
-//    surface = Colors.DarkSurface,
-//    onSurface = Colors.DarkOnBackground,
-//    secondary = Colors.DarkSecondary,
-//    onSecondary = Colors.DarkOnBackground
-
     primary = Color(0xFF2979FF),          // Blue accents (Skip, toggle ON)
     onPrimary = Color.White,              // Icon/text on blue
     primaryContainer = Colors.Blue100,     // Circle background, selected icon

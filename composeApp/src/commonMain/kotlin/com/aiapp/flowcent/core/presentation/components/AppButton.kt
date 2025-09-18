@@ -114,8 +114,8 @@ fun AppButton(
             shape = shape,
             enabled = enabled && !isLoading,
             colors = ButtonDefaults.buttonColors(
-                contentColor = backgroundColor,
-                disabledContentColor = disabledBgColor
+                backgroundColor = backgroundColor,
+                disabledBackgroundColor = disabledBgColor
             )
         ) {
             if (isLoading) {

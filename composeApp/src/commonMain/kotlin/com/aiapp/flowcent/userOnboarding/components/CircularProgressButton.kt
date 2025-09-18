@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,14 +36,16 @@ fun CircularProgressButton(
             progress = { animatedProgress },
             modifier = Modifier.size(64.dp),
             strokeWidth = 3.dp,
-            color = Color(0xFF6A5AE0),
+            color = MaterialTheme.colorScheme.primary,
             trackColor = Color(0xFFE0E0E0)
         )
         Box(
             modifier = Modifier
                 .size(52.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF6A5AE0)),
+                .background(
+                    MaterialTheme.colorScheme.primary
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(
