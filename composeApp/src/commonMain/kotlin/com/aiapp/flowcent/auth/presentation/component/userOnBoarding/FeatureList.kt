@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.components
+package com.aiapp.flowcent.auth.presentation.component.userOnBoarding
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.userOnboarding.screens.FeatureItem
+import com.aiapp.flowcent.auth.presentation.screen.FeatureItem
 
 @Composable
 fun FeatureList(features: List<FeatureItem>) {

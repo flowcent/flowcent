@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.components
+package com.aiapp.flowcent.auth.presentation.component.userOnBoarding
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.screens
+package com.aiapp.flowcent.auth.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Handshake
+import androidx.compose.material.icons.filled.PartyMode
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,10 +29,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.auth.presentation.AuthViewModel
+import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
-import com.aiapp.flowcent.userOnboarding.UserAction
-import com.aiapp.flowcent.userOnboarding.UserObViewModel
-import com.aiapp.flowcent.userOnboarding.components.FeatureList
+import com.aiapp.flowcent.auth.presentation.component.userOnBoarding.FeatureList
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.applogo
 import org.jetbrains.compose.resources.painterResource
@@ -43,22 +46,22 @@ data class FeatureItem(
 @Composable
 fun UserWelcomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: UserObViewModel
+    viewModel: AuthViewModel
 ) {
     val features = listOf(
         FeatureItem(
-            icon = Icons.Default.Phone,
-            iconBackground = Color(0xFF3B82F6),
-            title = "Verify your phone number",
+            icon = Icons.Default.WavingHand,
+            iconBackground = Color(0xffe8a40e),
+            title = "Let's get introduced",
         ),
         FeatureItem(
             icon = Icons.Default.Chat,
             iconBackground = Color(0xFFA855F7),
-            title = "Chat with AI about expenses",
+            title = "Chat with AI about expenses and earnings",
         ),
         FeatureItem(
             icon = Icons.Default.Group,
-            iconBackground = Color(0xFF22C55E),
+            iconBackground = Color(0xFF3B82F6),
             title = "Create shared account",
         )
     )

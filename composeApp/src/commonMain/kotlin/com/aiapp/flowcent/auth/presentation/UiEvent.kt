@@ -3,11 +3,7 @@ package com.aiapp.flowcent.auth.presentation
 import com.aiapp.flowcent.core.utils.DialogType
 
 sealed interface UiEvent {
-    data object NavigateToHome : UiEvent
-    data object NavigateToBasicIntro : UiEvent
-    data object NavigateToSignIn : UiEvent
-    data object NavigateToSignUp : UiEvent
-
+    data class Navigate(val route: String) : UiEvent
     data class ShowDialog(
         val dialogType: DialogType,
         val iconRes: Int? = null,

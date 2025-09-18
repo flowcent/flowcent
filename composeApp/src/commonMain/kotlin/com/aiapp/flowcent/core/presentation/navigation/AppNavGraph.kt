@@ -16,7 +16,6 @@ import com.aiapp.flowcent.home.presentation.navigation.addHomeGraph
 import com.aiapp.flowcent.insights.presentation.navigation.addInsightsGraph
 import com.aiapp.flowcent.onboarding.navigation.addOnboardingGraph
 import com.aiapp.flowcent.splash.navigation.addSplashGraph
-import com.aiapp.flowcent.userOnboarding.navigation.addUserObNavGraph
 
 @Composable
 fun AppNavGraph(
@@ -36,6 +35,5 @@ fun AppNavGraph(
         addHomeGraph(navController, modifier)
         addChatGraph(navController, modifier, speechRecognizer)
         addInsightsGraph(navController, modifier)
-        addUserObNavGraph(navController, modifier)
     }
 }

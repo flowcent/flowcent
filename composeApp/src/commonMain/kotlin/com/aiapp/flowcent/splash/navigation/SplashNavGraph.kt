@@ -26,26 +26,26 @@ fun NavGraphBuilder.addSplashGraph(
         }
 
         LaunchedEffect(key1 = state.isUiLoaded) {
-//            if (state.isUiLoaded) {
-//                if (state.uid.isNotEmpty()) {
-//                    navController.navigate(AppNavRoutes.Home.route) {
-//                        popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
-//                    }
-//                } else {
-//                    if (state.hasSeenOnboarding) {
-//                        navController.navigate(AppNavRoutes.Auth.route) {
-//                            popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
-//                        }
-//                    } else {
-//                        navController.navigate(AppNavRoutes.Onboarding.route) {
-//                            popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
-//                        }
-//                    }
-//                }
-//            }
-            if(state.isUiLoaded){
-                navController.navigate(AppNavRoutes.UserOnboarding.route)
+            if (state.isUiLoaded) {
+                if (state.uid.isNotEmpty()) {
+                    navController.navigate(AppNavRoutes.Home.route) {
+                        popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
+                    }
+                } else {
+                    if (state.hasSeenOnboarding) {
+                        navController.navigate(AppNavRoutes.Auth.route) {
+                            popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate(AppNavRoutes.Onboarding.route) {
+                            popUpTo(AppNavRoutes.Splash.route) { inclusive = true }
+                        }
+                    }
+                }
             }
+//            if(state.isUiLoaded){
+//                navController.navigate(AppNavRoutes.UserOnboarding.route)
+//            }
         }
 
         SplashScreen(

@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.components
+package com.aiapp.flowcent.auth.presentation.component.userOnBoarding
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -34,15 +34,15 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.chat.presentation.components.MicButton
-import com.aiapp.flowcent.userOnboarding.UserOnboardingState
 import flowcent.composeapp.generated.resources.Res
 import flowcent.composeapp.generated.resources.ic_send
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ChatOnBoardInput(
-    state: UserOnboardingState,
+    state: AuthState,
     isListening: Boolean = false,
     onUpdateText: (text: String) -> Unit = {},
     onClickMic: () -> Unit = {},

@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.screens
+package com.aiapp.flowcent.auth.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,17 +23,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aiapp.flowcent.auth.presentation.AuthState
+import com.aiapp.flowcent.auth.presentation.AuthViewModel
+import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.AppButton
-import com.aiapp.flowcent.userOnboarding.UserAction
-import com.aiapp.flowcent.userOnboarding.UserObViewModel
-import com.aiapp.flowcent.userOnboarding.UserOnboardingState
-import com.aiapp.flowcent.userOnboarding.components.ChatOnBoardInput
+import com.aiapp.flowcent.auth.presentation.component.userOnBoarding.ChatOnBoardInput
+import com.aiapp.flowcent.auth.presentation.component.userOnBoarding.ChatOnboardItem
 
 @Composable
 fun ChatOnboardScreen(
     modifier: Modifier = Modifier,
-    viewModel: UserObViewModel,
-    state: UserOnboardingState
+    viewModel: AuthViewModel,
+    state: AuthState
 ) {
     val listState = rememberLazyListState()
 
@@ -45,7 +46,7 @@ fun ChatOnboardScreen(
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.onAction(UserAction.ResetAllState)
+            viewModel.onAction(UserAction.ResetChatState)
         }
     }
 
@@ -64,8 +65,9 @@ fun ChatOnboardScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AppButton(
+                        isLoading = state.saveButtonLoading,
                         onClick = {
-
+                            viewModel.onAction(UserAction.CreateNewUser)
                         },
                         height = 60.dp,
                         text = "Save it",
@@ -134,7 +136,6 @@ fun ChatOnboardScreen(
                         ChatOnboardItem(
                             message = message,
                             state = state,
-                            viewModel = viewModel,
                             modifier = itemModifier
                         )
                     }

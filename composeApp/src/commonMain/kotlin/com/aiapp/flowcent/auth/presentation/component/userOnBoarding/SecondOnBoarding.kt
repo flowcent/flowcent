@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.components
+package com.aiapp.flowcent.auth.presentation.component.userOnBoarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.core.presentation.components.LabeledInputField
 
 @Composable
-fun SecondOnBoarding() {
+fun SecondOnBoarding(
+    modifier: Modifier = Modifier,
+    currentBalance: Double = 0.0,
+    savingGoal: Double = 0.0,
+    onUpdateCurrentBalance: (String) -> Unit,
+    onUpdateSavingGoal: (String) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,8 +78,16 @@ fun SecondOnBoarding() {
             label = "Current Balance",
             placeholder = "$0",
             isNumeric = true,
-            value = "",
-            onValueChange = { },
+            value = if (currentBalance > 0.0) {
+                if (currentBalance % 1.0 == 0.0) {
+                    currentBalance.toInt().toString()
+                } else {
+                    currentBalance.toString()
+                }
+            } else "",
+            onValueChange = {
+                onUpdateCurrentBalance(it)
+            },
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -82,8 +96,16 @@ fun SecondOnBoarding() {
             label = "Monthly Saving Goal",
             placeholder = "$0",
             isNumeric = true,
-            value = "",
-            onValueChange = { },
+            value = if (savingGoal > 0.0) {
+                if (savingGoal % 1.0 == 0.0) {
+                    savingGoal.toInt().toString()
+                } else {
+                    savingGoal.toString()
+                }
+            } else "",
+            onValueChange = {
+                onUpdateSavingGoal(it)
+            },
         )
     }
 }

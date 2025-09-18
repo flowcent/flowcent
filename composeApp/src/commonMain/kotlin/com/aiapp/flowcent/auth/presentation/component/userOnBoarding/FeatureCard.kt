@@ -1,4 +1,4 @@
-package com.aiapp.flowcent.userOnboarding.components
+package com.aiapp.flowcent.auth.presentation.component.userOnBoarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.userOnboarding.screens.FeatureItem
+import com.aiapp.flowcent.auth.presentation.screen.FeatureItem
 
 @Composable
 fun FeatureCard(item: FeatureItem) {

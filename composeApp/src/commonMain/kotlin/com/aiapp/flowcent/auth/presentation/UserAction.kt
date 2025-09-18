@@ -31,4 +31,10 @@ sealed interface UserAction {
     ) : UserAction
 
     data class ShowPaymentSheet(val sheetState: Boolean) : UserAction
+
+    data object NavigateToUserOnboard : UserAction
+    data object NavigateToChatOnboard : UserAction
+    data class UpdateText(val text: String) : UserAction
+    data class SendMessage(val text: String) : UserAction
+    data object ResetChatState : UserAction
 }

@@ -15,7 +15,6 @@ import com.aiapp.flowcent.home.presentation.HomeViewModel
 import com.aiapp.flowcent.onboarding.OnboardingViewModel
 import com.aiapp.flowcent.splash.SplashViewModel
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
-import com.aiapp.flowcent.userOnboarding.UserObViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.auth
@@ -70,6 +69,10 @@ val sharedModule = module {
         AuthViewModel(
             authRepository = AuthRepositoryImpl(firestore, auth),
             prefRepository = PrefRepositoryImpl(get()),
+            expenseRepository = ExpenseRepositoryImpl(
+                firestore
+            ),
+            flowCentAi = get(),
         )
     }
 
@@ -79,18 +82,6 @@ val sharedModule = module {
             prefRepository = PrefRepositoryImpl(get()),
             authRepository = AuthRepositoryImpl(firestore),
             contactFetcher = get()
-        )
-    }
-
-    viewModel {
-        UserObViewModel(
-            flowCentAi = get(),
-            expenseRepository = ExpenseRepositoryImpl(
-                firestore
-            ),
-            prefRepository = PrefRepositoryImpl(get()),
-            authRepository = AuthRepositoryImpl(firestore),
-            accountRepository = AccountRepositoryImpl(firestore),
         )
     }
 }

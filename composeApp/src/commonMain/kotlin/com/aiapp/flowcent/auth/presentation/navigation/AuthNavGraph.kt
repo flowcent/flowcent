@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.auth.presentation.navigation
 
+import UserOnboardingScreen
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
@@ -14,6 +15,8 @@ import com.aiapp.flowcent.auth.presentation.screen.SignUpScreen
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
+import com.aiapp.flowcent.auth.presentation.screen.ChatOnboardScreen
+import com.aiapp.flowcent.auth.presentation.screen.UserWelcomeScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.addAuthGraph(
@@ -36,10 +39,10 @@ fun NavGraphBuilder.addAuthGraph(
                 navController = navController,
                 viewModel = viewModel,
                 modifier = modifier,
-            ) { modifier, viewModel, state ->
+            ) { modifier, authViewModel, state ->
                 SignInScreen(
                     modifier = modifier,
-                    authViewModel = viewModel,
+                    authViewModel = authViewModel,
                     authState = state,
                 )
             }
@@ -57,10 +60,10 @@ fun NavGraphBuilder.addAuthGraph(
                 navController = navController,
                 viewModel = viewModel,
                 modifier = modifier,
-            ) { modifier, viewModel, state ->
+            ) { modifier, authViewModel, state ->
                 SignUpScreen(
                     modifier = modifier,
-                    authViewModel = viewModel,
+                    authViewModel = authViewModel,
                     authState = state,
                 )
             }
@@ -78,10 +81,10 @@ fun NavGraphBuilder.addAuthGraph(
                 navController = navController,
                 viewModel = viewModel,
                 modifier = modifier,
-            ) { modifier, viewModel, state ->
+            ) { modifier, authViewModel, state ->
                 BasicIntroScreen(
                     modifier = modifier,
-                    authViewModel = viewModel,
+                    authViewModel = authViewModel,
                     authState = state
                 )
             }
@@ -90,7 +93,7 @@ fun NavGraphBuilder.addAuthGraph(
 
         addAnimatedComposable(route = AuthNavRoutes.ProfileScreen.route) { navBackStackEntry ->
             val authNavGraphEntry = remember(navBackStackEntry) {
-                navController.getBackStackEntry(AppNavRoutes.Home.route)
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
             }
             val viewModel = koinViewModel<AuthViewModel>(
                 viewModelStoreOwner = authNavGraphEntry
@@ -102,12 +105,76 @@ fun NavGraphBuilder.addAuthGraph(
                 navController = navController,
                 viewModel = viewModel,
                 modifier = modifier,
-            ) { modifier, viewModel, state ->
+            ) { modifier, authViewModel, state ->
                 ProfileScreen(
                     modifier = modifier,
-                    authViewModel = viewModel,
+                    authViewModel = authViewModel,
                     authState = state,
                     subscriptionVM = subscriptionVM
+                )
+            }
+        }
+
+        addAnimatedComposable(route = AuthNavRoutes.UserWelcomeScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, authViewModel, _ ->
+                UserWelcomeScreen(
+                    modifier = modifier,
+                    viewModel = authViewModel
+                )
+            }
+        }
+
+
+        addAnimatedComposable(route = AuthNavRoutes.UserOnboardingScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, authViewModel, state ->
+                UserOnboardingScreen(
+                    modifier = modifier,
+                    viewModel = authViewModel,
+                    state = state
+                )
+            }
+        }
+
+
+        addAnimatedComposable(route = AuthNavRoutes.ChatOnboardScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, authViewModel, state ->
+                ChatOnboardScreen(
+                    modifier = modifier,
+                    viewModel = authViewModel,
+                    state = state
                 )
             }
         }
