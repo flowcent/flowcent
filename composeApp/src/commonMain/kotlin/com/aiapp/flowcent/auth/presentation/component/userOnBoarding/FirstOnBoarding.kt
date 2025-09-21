@@ -27,6 +27,7 @@ import com.aiapp.flowcent.core.presentation.components.LabeledInputField
 fun FirstOnBoarding(
     modifier: Modifier = Modifier,
     name: String = "",
+    errorMessage: String? = null,
     onUpdateName: (String) -> Unit
 ) {
     Column(
@@ -79,5 +80,14 @@ fun FirstOnBoarding(
                 onUpdateName(text)
             },
         )
+
+        if (errorMessage != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }

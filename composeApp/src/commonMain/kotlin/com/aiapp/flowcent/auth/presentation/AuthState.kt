@@ -28,5 +28,6 @@ data class AuthState(
     val expenseItems: List<ExpenseItem> = emptyList(),
     val isListening: Boolean = false,
     val showSaveButton: Boolean = false,
-    val saveButtonLoading: Boolean = false
+    val saveButtonLoading: Boolean = false,
+    val inputErrors: Map<String, String> = emptyMap()
 )

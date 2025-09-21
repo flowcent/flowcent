@@ -16,6 +16,8 @@ import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.navigation.addAnimatedComposable
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import com.aiapp.flowcent.auth.presentation.screen.ChatOnboardScreen
+import com.aiapp.flowcent.auth.presentation.screen.ChatWelcomeScreen
+import com.aiapp.flowcent.auth.presentation.screen.CongratsScreen
 import com.aiapp.flowcent.auth.presentation.screen.UserWelcomeScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -175,6 +177,51 @@ fun NavGraphBuilder.addAuthGraph(
                     modifier = modifier,
                     viewModel = authViewModel,
                     state = state
+                )
+            }
+        }
+
+        addAnimatedComposable(route = AuthNavRoutes.ChatWelcomeScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, authViewModel, state ->
+                ChatWelcomeScreen(
+                    modifier = modifier,
+                    viewModel = authViewModel,
+                )
+            }
+        }
+
+
+        addAnimatedComposable(route = AuthNavRoutes.CongratsScreen.route) { navBackStackEntry ->
+            val authNavGraphEntry = remember(navBackStackEntry) {
+                navController.getBackStackEntry(AppNavRoutes.Auth.route)
+            }
+            val viewModel = koinViewModel<AuthViewModel>(
+                viewModelStoreOwner = authNavGraphEntry
+            )
+
+            val subscriptionVM = koinViewModel<SubscriptionViewModel>()
+
+            BaseScreen(
+                navController = navController,
+                viewModel = viewModel,
+                modifier = modifier,
+            ) { modifier, authViewModel, state ->
+                CongratsScreen(
+                    modifier = modifier,
+                    viewModel = authViewModel,
+                    state = state,
+                    subscriptionVM = subscriptionVM
                 )
             }
         }

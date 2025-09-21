@@ -50,14 +50,6 @@ fun AnimatedOnboarding() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        Image(
-//            painter = painterResource(Res.drawable.marcusUpdate),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .fillMaxWidth(0.8f)
-//                .aspectRatio(1f),
-//            contentScale = ContentScale.Fit
-//        )
         KottieAnimation(
             composition = botOnboardingComposition,
             progress = { botAnimationState.progress },
@@ -65,16 +57,18 @@ fun AnimatedOnboarding() {
         )
         Spacer(modifier = Modifier.height(48.dp))
         Text(
-            text = "Welcome",
+            text = "Meet your AI Assistant",
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "This is the first onboarding screen",
+            text = "Chat naturally about your daily \n" +
+                    "expenses and let AI automatically \n" +
+                    "categorize and track your spending",
             style = MaterialTheme.typography.bodyLarge.copy(
                 textAlign = TextAlign.Center,
                 color = Color.Gray

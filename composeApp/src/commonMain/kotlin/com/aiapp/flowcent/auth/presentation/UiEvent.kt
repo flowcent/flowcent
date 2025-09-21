@@ -4,6 +4,7 @@ import com.aiapp.flowcent.core.utils.DialogType
 
 sealed interface UiEvent {
     data class Navigate(val route: String) : UiEvent
+    data object NavigateBack: UiEvent
     data class ShowDialog(
         val dialogType: DialogType,
         val iconRes: Int? = null,

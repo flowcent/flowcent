@@ -1,5 +1,6 @@
 package com.aiapp.flowcent.auth.presentation.screen
 
+import ChatOnBoardTypingText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.auth.presentation.AuthState
 import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
-import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.auth.presentation.component.userOnBoarding.ChatOnBoardInput
 import com.aiapp.flowcent.auth.presentation.component.userOnBoarding.ChatOnboardItem
+import com.aiapp.flowcent.core.presentation.components.AppButton
 
 @Composable
 fun ChatOnboardScreen(
@@ -113,13 +114,28 @@ fun ChatOnboardScreen(
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
-                reverseLayout = true,
+                reverseLayout = state.histories.isNotEmpty(),
                 contentPadding = PaddingValues(
                     top = 50.dp,
                     start = 16.dp,
                     end = 16.dp
                 ),
             ) {
+                if (state.histories.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = 100.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            ChatOnBoardTypingText()
+                        }
+                    }
+                }
+
+
                 state.histories.forEach { history ->
                     itemsIndexed(
                         history.messages.reversed(),

@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -40,11 +41,13 @@ fun AppButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     text: String,
-    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(
+        fontWeight = FontWeight.Bold
+    ),
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = RoundedCornerShape(8.dp),
-    height: Dp = 48.dp,
+    height: Dp = 52.dp,
     enabled: Boolean = true,
     isLoading: Boolean = false,
     hasGradient: Boolean = false,

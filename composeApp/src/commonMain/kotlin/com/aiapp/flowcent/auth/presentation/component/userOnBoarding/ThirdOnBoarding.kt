@@ -30,6 +30,7 @@ import com.aiapp.flowcent.core.presentation.components.countryCodePicker.model.C
 fun ThirdOnBoarding(
     modifier: Modifier = Modifier,
     phoneNumber: String = "",
+    errorMessage: String? = null,
     onPhoneNumberChange: (String) -> Unit,
     onCountrySelected: (CountryDetails) -> Unit,
 ) {
@@ -98,5 +99,14 @@ fun ThirdOnBoarding(
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
             )
         )
+
+        if (errorMessage != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }

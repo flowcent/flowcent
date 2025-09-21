@@ -128,5 +128,6 @@ private fun handleEvent(
         is UiEvent.Navigate -> navController.navigate(event.route)
         is UiEvent.ShowDialog -> onShowDialog(event)
         UiEvent.HideDialog -> {}
+        UiEvent.NavigateBack -> navController.popBackStack()
     }
 }

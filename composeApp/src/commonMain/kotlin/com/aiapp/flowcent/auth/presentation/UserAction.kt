@@ -37,4 +37,8 @@ sealed interface UserAction {
     data class UpdateText(val text: String) : UserAction
     data class SendMessage(val text: String) : UserAction
     data object ResetChatState : UserAction
+    data object NavigateToChatWelcome : UserAction
+    data class UpdateInputErrors(val errors: Map<String, String>) : UserAction
+    data object NavigateToHome : UserAction
+    data object NavigateBack : UserAction
 }

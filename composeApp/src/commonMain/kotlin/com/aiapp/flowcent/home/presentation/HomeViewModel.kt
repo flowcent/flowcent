@@ -106,11 +106,13 @@ class HomeViewModel(
     private suspend fun fetchUserProfile(uid: String?) {
         if (uid.isNullOrEmpty()) {
             Napier.e("Sohan 404 No User Found")
+            onAction(UserAction.NavigateToAuth)
             return
         }
         when (val result = authRepository.fetchUserProfile(uid)) {
             is Resource.Error -> {
                 Napier.e("Sohan Error in fetching user profile: ${result.message}")
+                onAction(UserAction.NavigateToAuth)
             }
 
             Resource.Loading -> {}

@@ -28,6 +28,8 @@ fun SecondOnBoarding(
     modifier: Modifier = Modifier,
     currentBalance: Double = 0.0,
     savingGoal: Double = 0.0,
+    currentBalanceError: String? = null,
+    savingTargetError: String? = null,
     onUpdateCurrentBalance: (String) -> Unit,
     onUpdateSavingGoal: (String) -> Unit,
 ) {
@@ -90,6 +92,15 @@ fun SecondOnBoarding(
             },
         )
 
+        if (currentBalanceError != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = currentBalanceError,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         LabeledInputField(
@@ -107,5 +118,14 @@ fun SecondOnBoarding(
                 onUpdateSavingGoal(it)
             },
         )
+
+        if (savingTargetError != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = savingTargetError,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }

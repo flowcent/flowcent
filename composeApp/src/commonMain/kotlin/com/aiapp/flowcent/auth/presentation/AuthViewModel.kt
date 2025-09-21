@@ -86,6 +86,7 @@ class AuthViewModel(
                         flowCentUserId = getFlowCentUserId(_state.value.phoneNumber)
                     )
                 )
+
             }
 
             UserAction.IsLoggedIn -> {}
@@ -201,9 +202,7 @@ class AuthViewModel(
             }
 
             is UserAction.SignInWithEmailPass -> signInWithEmailPass(
-                action.email,
-                action.password,
-                Constants.SIGN_IN_TYPE_EMAILPASS
+                action.email, action.password, Constants.SIGN_IN_TYPE_EMAILPASS
             )
 
             is UserAction.SignUpWithEMailPass -> {
@@ -258,6 +257,34 @@ class AuthViewModel(
                             userText = action.text
                         )
                     }
+                }
+            }
+
+            UserAction.NavigateToChatWelcome -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(AuthNavRoutes.ChatWelcomeScreen.route))
+                }
+            }
+
+            is UserAction.UpdateInputErrors -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            inputErrors = action.errors
+                        )
+                    }
+                }
+            }
+
+            UserAction.NavigateToHome -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Home.route))
+                }
+            }
+
+            UserAction.NavigateBack -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateBack)
                 }
             }
         }
@@ -354,15 +381,12 @@ class AuthViewModel(
                         UiEvent.ShowDialog(
                             dialogType = DialogType.ERROR,
                             title = "Sign In Failed",
-                            body = if (result.message
-                                    .contentEquals(
-                                        "The supplied auth credential is incorrect, malformed or has expired.",
-                                        ignoreCase = true
-                                    )
-                            )
-                                "The email or password is incorrect, or has expired."
-                            else
-                                "Sorry! Something went wrong. Please try again later",
+                            body = if (result.message.contentEquals(
+                                    "The supplied auth credential is incorrect, malformed or has expired.",
+                                    ignoreCase = true
+                                )
+                            ) "The email or password is incorrect, or has expired."
+                            else "Sorry! Something went wrong. Please try again later",
                         )
                     )
                 }
@@ -385,10 +409,7 @@ class AuthViewModel(
 
 
     private fun signUpWithEmailPass(
-        email: String,
-        password: String,
-        confirmPassword: String,
-        signInType: String
+        email: String, password: String, confirmPassword: String, signInType: String
     ) {
         viewModelScope.launch {
             setLoaderOn(signInType)
@@ -401,8 +422,7 @@ class AuthViewModel(
                     )
                 )
             }
-            when (val result =
-                authRepository.signUpWithEmailAndPassword(email, password)) {
+            when (val result = authRepository.signUpWithEmailAndPassword(email, password)) {
                 is Resource.Error -> {
                     Napier.e("Sohan result.message ${result.message}")
                     setLoaderOff(signInType)
@@ -410,15 +430,12 @@ class AuthViewModel(
                         UiEvent.ShowDialog(
                             dialogType = DialogType.ERROR,
                             title = "Sign In Failed",
-                            body = if (result.message
-                                    .contentEquals(
-                                        "The supplied auth credential is incorrect, malformed or has expired.",
-                                        ignoreCase = true
-                                    )
-                            )
-                                "The email or password is incorrect, or has expired."
-                            else
-                                "Sorry! Something went wrong. Please try again later",
+                            body = if (result.message.contentEquals(
+                                    "The supplied auth credential is incorrect, malformed or has expired.",
+                                    ignoreCase = true
+                                )
+                            ) "The email or password is incorrect, or has expired."
+                            else "Sorry! Something went wrong. Please try again later",
                         )
                     )
                 }
@@ -637,7 +654,7 @@ class AuthViewModel(
             )) {
                 is Resource.Success -> {
                     Napier.e("Sohan Expense saved successfully! ${result.data}")
-                    _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Home.route))
+                    _uiEvent.send(UiEvent.Navigate(AuthNavRoutes.CongratsScreen.route))
                 }
 
                 is Resource.Error -> {
