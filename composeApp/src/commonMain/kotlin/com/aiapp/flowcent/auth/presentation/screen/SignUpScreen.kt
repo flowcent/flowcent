@@ -141,7 +141,7 @@ fun SignUpScreen(
                     }
                 )
 
-                Spacer(Modifier.height(Spacing.medium))
+                Spacer(Modifier.height(Spacing.xxLarge))
 
                 //Terms and condition
                 TermsAndConditionsText(
@@ -166,7 +166,7 @@ fun SignUpScreen(
                     isLoading = authState.isEmailSignInProcessing
                 )
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
 
                 // Or with Divider
                 Row(
@@ -188,7 +188,7 @@ fun SignUpScreen(
                     )
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
 
                 GoogleButtonUiContainerFirebase(
                     linkAccount = false,
@@ -215,7 +215,7 @@ fun SignUpScreen(
                     ) { this.onClick() }
                 }
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(32.dp))
 
                 AppleSignInButton(
                     modifier = Modifier.fillMaxWidth()

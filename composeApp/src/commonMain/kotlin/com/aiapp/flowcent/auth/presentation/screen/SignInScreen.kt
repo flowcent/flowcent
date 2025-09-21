@@ -149,7 +149,7 @@ fun SignInScreen(
                     }
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
 
                 // Sign In Button
                 AppButton(
@@ -166,7 +166,7 @@ fun SignInScreen(
                     isLoading = authState.isEmailSignInProcessing
                 )
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
 
                 // Or with Divider
                 Row(
@@ -188,7 +188,7 @@ fun SignInScreen(
                     )
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
 
                 GoogleButtonUiContainerFirebase(
                     linkAccount = false,
@@ -215,7 +215,7 @@ fun SignInScreen(
                     ) { this.onClick() }
                 }
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(32.dp))
 
                 AppleSignInButton(
                     modifier = Modifier.fillMaxWidth()
