@@ -60,11 +60,13 @@ fun UserOnboardingScreen(
             savingGoal = state.savingTarget,
             currentBalanceError = state.inputErrors["initialBalance"],
             savingTargetError = state.inputErrors["savingTarget"],
-            onUpdateCurrentBalance = {
-                viewModel.onAction(UserAction.UpdateInitialBalance(it.toDouble()))
+            onUpdateCurrentBalance = { newValue ->
+                val parsed = newValue.toDoubleOrNull() ?: 0.0
+                viewModel.onAction(UserAction.UpdateInitialBalance(parsed))
             },
-            onUpdateSavingGoal = {
-                viewModel.onAction(UserAction.UpdateSavingTarget(it.toDouble()))
+            onUpdateSavingGoal = { newValue ->
+                val parsed = newValue.toDoubleOrNull() ?: 0.0
+                viewModel.onAction(UserAction.UpdateSavingTarget(parsed))
             })
     }, OnboardingPage {
         ThirdOnBoarding(
