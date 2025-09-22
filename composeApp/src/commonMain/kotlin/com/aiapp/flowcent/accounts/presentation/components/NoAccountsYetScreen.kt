@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FoodBank
+import androidx.compose.material.icons.filled.GroupAdd
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,8 +41,8 @@ fun NoAccountsYetScreen(
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
-                    imageVector = Icons.Default.FoodBank,
-                    contentDescription = "Bank Icon",
+                    imageVector = Icons.Default.GroupAdd,
+                    contentDescription = "Groups Add",
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
                 )
@@ -72,24 +74,24 @@ fun NoAccountsYetScreen(
         // Step 1
         StepCard(
             number = "1",
-            title = "Connect Your Bank",
-            description = "Link your bank account securely with bank-level encryption"
+            title = "Create a shared account",
+            description = "Manage group expenses together, stress-free"
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         // Step 2
         StepCard(
             number = "2",
-            title = "Verify Your Identity",
-            description = "Quick verification process to keep your account safe"
+            title = "Add members from contacts",
+            description = "From dinner to trips, manage your expenses with your friends"
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         // Step 3
         StepCard(
             number = "3",
-            title = "Start Tracking",
-            description = "View balances, transactions, and insights instantly"
+            title = "Start tracking",
+            description = "View balances, contributions, and insights instantly"
         )
 
         Spacer(modifier = Modifier.height(32.dp))
