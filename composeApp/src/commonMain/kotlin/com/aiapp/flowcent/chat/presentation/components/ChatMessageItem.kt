@@ -12,7 +12,6 @@ import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.core.presentation.components.BotContentRow
-import com.aiapp.flowcent.core.presentation.components.ShimmerChat
 
 @Composable
 fun ChatMessageItem(
@@ -29,11 +28,26 @@ fun ChatMessageItem(
         }
 
         is ChatMessage.ChatBotMessage -> {
-            if (message.isLoading || message.isLoadingSave || message.isLoadingDiscard) {
-                BotMessageContent(
-                    avatarName = "Marcus", modifier = modifier.fillMaxWidth().padding(top = 16.dp)
+            if (message.isLoading) {
+                Column(
+                    modifier = modifier.fillMaxWidth().padding(top = 24.dp),
                 ) {
-                    ShimmerChat()
+                    BotContentRow(
+                        name = "Marcus",
+                        isLoading = true
+                    )
+                }
+            } else if (
+                message.isLoadingSave || message.isLoadingDiscard
+            ) {
+                Column(
+                    modifier = modifier.fillMaxWidth().padding(top = 24.dp),
+                ) {
+                    BotContentRow(
+                        name = "Marcus",
+                        isLoading = false,
+                        isLoadingButton = true
+                    )
                 }
 
             } else {
