@@ -122,12 +122,16 @@ class ChatViewModel(
                 viewModelScope.launch {
                     val hasEnoughCredits = _chatState.value.remainingCredits > 0
                     if (hasEnoughCredits) {
-//                        if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
+                        if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
 //                            saveIntoSharedAccounts()
-//                        } else {
-//                            saveIntoPersonal()
-//                        }
-                        saveIntoPersonal(action.msgId)
+                            _chatState.update {
+                                it.copy(
+                                    showAccountSheet = true
+                                )
+                            }
+                        } else {
+                            saveIntoPersonal(action.msgId)
+                        }
                     } else {
                         _chatState.update {
                             it.copy(
@@ -248,6 +252,16 @@ class ChatViewModel(
                     _chatState.update { currentState ->
                         currentState.copy(
                             showSubscriptionSheet = action.sheetState
+                        )
+                    }
+                }
+            }
+
+            is UserAction.ShowAccountSheet -> {
+                viewModelScope.launch {
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            showAccountSheet = action.sheetState
                         )
                     }
                 }

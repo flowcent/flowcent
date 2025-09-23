@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,9 +37,11 @@ import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
 import com.aiapp.flowcent.chat.presentation.UserAction
+import com.aiapp.flowcent.chat.presentation.components.AccountSelectorRow
 import com.aiapp.flowcent.chat.presentation.components.ChatInput
 import com.aiapp.flowcent.chat.presentation.event.EventHandler
 import com.aiapp.flowcent.chat.presentation.navigation.ChatNavRoutes
+import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.NoInternet
 import com.aiapp.flowcent.core.presentation.permission.FCPermissionState
 import com.aiapp.flowcent.core.presentation.permission.PermissionsViewModel
@@ -84,6 +88,9 @@ fun BaseScreen(
 
     val subscriptionSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val accountSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+
+
     LaunchedEffect(Unit) {
         viewModel.onAction(UserAction.CheckAudioPermission)
     }
@@ -125,6 +132,10 @@ fun BaseScreen(
 
     fun handleHideSubscriptionSheet() {
         viewModel.onAction(UserAction.ShowPaymentSheet(false))
+    }
+
+    fun handleHideAccountSheet() {
+        viewModel.onAction(UserAction.ShowAccountSheet(false))
     }
 
 
@@ -248,6 +259,57 @@ fun BaseScreen(
                         handleHideSubscriptionSheet()
                     }
                 )
+            }
+        }
+
+        if (state.showAccountSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    handleHideAccountSheet()
+                },
+                sheetState = accountSheetState,
+                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (state.sharedAccounts.isNotEmpty()) {
+                    AccountSelectorRow(
+                        accounts = state.sharedAccounts,
+                        selectedAccountId = state.selectedAccountId,
+                        onAccountSelected = { account ->
+                            viewModel.onAction(
+                                UserAction.SelectAccount(account.id, account.accountName)
+                            )
+                        }
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(24.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "No Accounts Found",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Please add an account to continue",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        AppButton(
+                            text = "Add Account",
+                            onClick = {
+
+                            }
+                        )
+
+                    }
+                }
+
             }
         }
     }

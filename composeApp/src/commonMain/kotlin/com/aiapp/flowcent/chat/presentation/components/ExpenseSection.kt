@@ -49,21 +49,6 @@ fun ExpenseSection(
                 },
             )
 
-            // Account selector for shared accounts
-//            if (chatState.selectionType == AccountSelectionType.SHARED &&
-//                chatState.sharedAccounts.isNotEmpty()
-//            ) {
-//                AccountSelectorRow(
-//                    accounts = chatState.sharedAccounts,
-//                    selectedAccountId = chatState.selectedAccountId,
-//                    onAccountSelected = { account ->
-//                        viewModel.onAction(
-//                            UserAction.SelectAccount(account.id, account.accountName)
-//                        )
-//                    }
-//                )
-//            }
-
             // Prompt save/discard
             PromptSave(
                 selectionType = chatState.selectionType,

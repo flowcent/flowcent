@@ -29,5 +29,6 @@ data class ChatState(
     val remainingCredits: Int = 0,
     val showSubscriptionSheet: Boolean = false,
     val remainingAiChatCredits: Int = 0,
+    val showAccountSheet: Boolean = false,
 )
 
