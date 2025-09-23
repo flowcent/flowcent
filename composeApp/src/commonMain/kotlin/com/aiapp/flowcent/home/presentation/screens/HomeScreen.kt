@@ -269,7 +269,7 @@ fun HomeScreen(
                     ShimmerSpendingCard(modifier = Modifier.animateItem())
                 }
             } else {
-                items(allTransactions, key = { it.title }) { transaction ->
+                items(allTransactions, key = { it.id }) { transaction ->
                     SpendingCard(
                         expenseItem = transaction,
                         modifier = Modifier.animateItem()

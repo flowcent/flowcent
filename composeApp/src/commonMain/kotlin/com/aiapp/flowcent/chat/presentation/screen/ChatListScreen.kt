@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -77,6 +78,11 @@ fun ChatListScreen(
                 backgroundColor = MaterialTheme.colorScheme.background,
                 modifier = Modifier
                     .fillMaxWidth()
+            )
+
+            Divider(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                thickness = 3.dp
             )
 
 

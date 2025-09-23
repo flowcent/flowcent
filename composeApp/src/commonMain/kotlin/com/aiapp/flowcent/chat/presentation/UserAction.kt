@@ -10,8 +10,8 @@ sealed interface UserAction {
     data class UpdateText(val text: String) : UserAction
     data object CheckAudioPermission : UserAction
     data class UpdateVoiceText(val textFromSpeech: String) : UserAction
-    data object SaveExpenseItemsToDb : UserAction
-    data object DiscardExpenseItems : UserAction
+    data class SaveExpenseItemsToDb(val msgId: String) : UserAction
+    data class DiscardExpenseItems(val msgId: String) : UserAction
     data object FetchUserUId : UserAction
     data class UpdateAccountSelectionType(val selectionType: AccountSelectionType) : UserAction
     data class SelectAccount(val accountDocumentId: String, val accountName: String) : UserAction

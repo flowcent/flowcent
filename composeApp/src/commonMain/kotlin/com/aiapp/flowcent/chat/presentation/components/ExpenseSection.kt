@@ -1,11 +1,14 @@
 package com.aiapp.flowcent.chat.presentation.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aiapp.flowcent.chat.domain.model.AccountSelectionType
 import com.aiapp.flowcent.chat.domain.model.ChatMessage
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
@@ -16,10 +19,16 @@ fun ExpenseSection(
     message: ChatMessage.ChatBotMessage,
     chatState: ChatState,
     viewModel: ChatViewModel,
-    modifier: Modifier = Modifier
 ) {
     if (message.expenseItems.isNotEmpty()) {
-        Column(modifier = modifier) {
+        val scrollState = rememberScrollState()
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .wrapContentHeight()
+                .heightIn(max = 320.dp)
+                .verticalScroll(scrollState)
+        ) {
             // Spending list
             SpendingList(
                 expenseItems = message.expenseItems,
@@ -38,31 +47,33 @@ fun ExpenseSection(
                         )
                     )
                 },
-                modifier = Modifier.padding(vertical = 8.dp)
             )
 
             // Account selector for shared accounts
-            if (chatState.selectionType == AccountSelectionType.SHARED &&
-                chatState.sharedAccounts.isNotEmpty()
-            ) {
-                AccountSelectorRow(
-                    accounts = chatState.sharedAccounts,
-                    selectedAccountId = chatState.selectedAccountId,
-                    onAccountSelected = { account ->
-                        viewModel.onAction(
-                            UserAction.SelectAccount(account.id, account.accountName)
-                        )
-                    }
-                )
-            }
+//            if (chatState.selectionType == AccountSelectionType.SHARED &&
+//                chatState.sharedAccounts.isNotEmpty()
+//            ) {
+//                AccountSelectorRow(
+//                    accounts = chatState.sharedAccounts,
+//                    selectedAccountId = chatState.selectedAccountId,
+//                    onAccountSelected = { account ->
+//                        viewModel.onAction(
+//                            UserAction.SelectAccount(account.id, account.accountName)
+//                        )
+//                    }
+//                )
+//            }
 
             // Prompt save/discard
             PromptSave(
                 selectionType = chatState.selectionType,
                 selectedAccountName = chatState.selectedAccountName,
-                onClickSave = { viewModel.onAction(UserAction.SaveExpenseItemsToDb) },
-                onClickDiscard = { viewModel.onAction(UserAction.DiscardExpenseItems) }
+                onClickSave = { viewModel.onAction(UserAction.SaveExpenseItemsToDb(message.id)) },
+                onClickDiscard = { viewModel.onAction(UserAction.DiscardExpenseItems(message.id)) }
             )
         }
     }
 }
+
+
+

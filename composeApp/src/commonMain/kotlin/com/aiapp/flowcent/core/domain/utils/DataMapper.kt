@@ -27,6 +27,7 @@ fun List<TransactionDto>.toTransactions(): List<Transaction> {
 
 fun ExpenseItemDto.toExpenseItem(): ExpenseItem {
     return ExpenseItem(
+        id = id,
         amount = amount,
         category = category,
         title = title,
@@ -37,6 +38,7 @@ fun ExpenseItemDto.toExpenseItem(): ExpenseItem {
 
 fun ExpenseItem.toExpenseItemDto(): ExpenseItemDto {
     return ExpenseItemDto(
+        id = id,
         amount = amount,
         category = category,
         title = title,

@@ -14,6 +14,10 @@ sealed class ChatMessage {
         override val id: String,
         val text: String,
         val expenseItems: List<ExpenseItem> = emptyList(),
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val isLoadingSave: Boolean = false,
+        val isLoadingDiscard: Boolean = false,
+        val hasSaved: Boolean = false,
+        val hasDiscarded: Boolean = false,
     ) : ChatMessage()
 }

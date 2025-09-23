@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExpenseItemDto(
+    val id: String = "",
     val amount: Double,
     val category: String,
     val title: String,

@@ -105,19 +105,29 @@ class ChatViewModel(
             }
 
             is UserAction.DiscardExpenseItems -> {
+                viewModelScope.launch {
+                    updateMessageDiscardState(action.msgId, true)
 
+                    delay(500)
+
+                    updateMessageDiscardState(
+                        msgId = action.msgId,
+                        isLoading = false,
+                        hasDiscarded = true
+                    )
+                }
             }
 
             is UserAction.SaveExpenseItemsToDb -> {
                 viewModelScope.launch {
                     val hasEnoughCredits = _chatState.value.remainingCredits > 0
                     if (hasEnoughCredits) {
-                        if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
-                            saveIntoSharedAccounts()
-                        } else {
-                            //Personal finance
-                            saveIntoPersonal()
-                        }
+//                        if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
+//                            saveIntoSharedAccounts()
+//                        } else {
+//                            saveIntoPersonal()
+//                        }
+                        saveIntoPersonal(action.msgId)
                     } else {
                         _chatState.update {
                             it.copy(
@@ -245,6 +255,27 @@ class ChatViewModel(
         }
     }
 
+    private fun updateMessageDiscardState(
+        msgId: String,
+        isLoading: Boolean,
+        hasDiscarded: Boolean = false
+    ) {
+        _chatState.update { currentState ->
+            val updatedHistories = currentState.histories.map { history ->
+                val updatedMessages = history.messages.map { msg ->
+                    if (msg.id == msgId && msg is ChatMessage.ChatBotMessage) {
+                        msg.copy(
+                            isLoadingDiscard = isLoading,
+                            hasDiscarded = hasDiscarded
+                        )
+                    } else msg
+                }
+                history.copy(messages = updatedMessages)
+            }
+            currentState.copy(histories = updatedHistories)
+        }
+    }
+
     private fun fetchUserProfile(uid: String?) {
         if (uid.isNullOrEmpty()) {
             Napier.e("Sohan 404 No User Found")
@@ -324,13 +355,14 @@ class ChatViewModel(
         }
     }
 
-    private suspend fun saveIntoPersonal() {
+    private suspend fun saveIntoPersonal(msgId: String) {
         when (val result = expenseRepository.saveExpenseItemsToDb(
             _chatState.value.uid, createTransactionPayload(chatState.value.checkedExpenseItems)
         )) {
             is Resource.Success -> {
                 Napier.e("Sohan Expense saved successfully! ${result.data}")
                 updateUserTotalRecords()
+                updateMessageSaveState(msgId = msgId, isLoading = false, hasSaved = true)
             }
 
             is Resource.Error -> {
@@ -338,8 +370,29 @@ class ChatViewModel(
             }
 
             Resource.Loading -> {
-                // Optionally handle loading state in UI
+                updateMessageSaveState(msgId = msgId, isLoading = true)
             }
+        }
+    }
+
+    private fun updateMessageSaveState(
+        msgId: String,
+        isLoading: Boolean,
+        hasSaved: Boolean = false
+    ) {
+        _chatState.update { currentState ->
+            val updatedHistories = currentState.histories.map { history ->
+                val updatedMessages = history.messages.map { msg ->
+                    if (msg.id == msgId && msg is ChatMessage.ChatBotMessage) {
+                        msg.copy(
+                            isLoadingSave = isLoading,
+                            hasSaved = hasSaved
+                        )
+                    } else msg
+                }
+                history.copy(messages = updatedMessages)
+            }
+            currentState.copy(histories = updatedHistories)
         }
     }
 
