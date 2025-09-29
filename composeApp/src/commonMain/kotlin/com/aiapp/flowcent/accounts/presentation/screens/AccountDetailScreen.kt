@@ -177,41 +177,41 @@ fun AccountDetailScreen(
                 )
             }
 
-            Column(
-                modifier = Modifier.clipToBounds().padding(vertical = 12.dp, horizontal = 16.dp)
-            ) {
-                AnimatedVisibility(
-                    visible = !isScrolled, enter = slideInVertically(
-                        initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
-                    ), exit = slideOutVertically(
-                        targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
-                    ) {
-                        RingChart(
-                            actual = 4500f, target = 8000f, modifier = Modifier.fillMaxWidth(),
-                            dailyAverage = 853.0f, previousMonthAverage = 1201.12f
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Spacer(Modifier.width(12.dp))
-
-//                            BalanceHighlightBox(
-//                                modifier = Modifier.weight(1f)
-//                            )
-                        }
-                    }
-                }
-            }
+//            Column(
+//                modifier = Modifier.clipToBounds().padding(vertical = 12.dp, horizontal = 16.dp)
+//            ) {
+//                AnimatedVisibility(
+//                    visible = !isScrolled, enter = slideInVertically(
+//                        initialOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+//                    ), exit = slideOutVertically(
+//                        targetOffsetY = { -it }, animationSpec = tween(durationMillis = 300)
+//                    )
+//                ) {
+//                    Column(
+//                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
+//                    ) {
+//                        RingChart(
+//                            actual = 4500f, target = 8000f, modifier = Modifier.fillMaxWidth(),
+//                            dailyAverage = 853.0f, previousMonthAverage = 1201.12f
+//                        )
+//
+//                        Spacer(Modifier.height(12.dp))
+//
+//                        Row(
+//                            modifier = Modifier.fillMaxWidth(),
+//                            horizontalArrangement = Arrangement.SpaceBetween,
+//                            verticalAlignment = Alignment.CenterVertically
+//                        ) {
+//
+//                            Spacer(Modifier.width(12.dp))
+//
+////                            BalanceHighlightBox(
+////                                modifier = Modifier.weight(1f)
+////                            )
+//                        }
+//                    }
+//                }
+//            }
 
 
             LazyColumn(

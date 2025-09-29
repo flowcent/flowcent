@@ -9,6 +9,7 @@ sealed interface UserAction {
     data object ClickAdd : UserAction
     data object FetchRegisteredPhoneNumbers : UserAction
     data class UpdateSheetState(val sheetState: Boolean) : UserAction
+    data class UpdateDatePickerSheerState(val sheetState: Boolean) : UserAction
     data class UpdateAccountName(val accountName: String) : UserAction
     data class UpdateAcInitialBalance(val initialBalance: Double) : UserAction
     data class OnUserCheckedChange(val user: User, val checked: Boolean) : UserAction

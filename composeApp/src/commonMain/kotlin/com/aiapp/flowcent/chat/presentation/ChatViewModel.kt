@@ -162,7 +162,19 @@ class ChatViewModel(
 
             is UserAction.UpdateAccountSelectionType -> {
                 _chatState.update { currentState ->
-                    currentState.copy(selectionType = action.selectionType)
+                    currentState.copy(
+                        selectionType = action.selectionType,
+                        selectedAccountId = if (action.selectionType == AccountSelectionType.SHARED &&
+                            currentState.sharedAccounts.size == 1
+                        )
+                            currentState.sharedAccounts[0].id
+                        else currentState.selectedAccountId,
+                        selectedAccountName = if (action.selectionType == AccountSelectionType.SHARED &&
+                            currentState.sharedAccounts.size == 1
+                        )
+                            currentState.sharedAccounts[0].accountName
+                        else currentState.selectedAccountName
+                    )
                 }
             }
 
@@ -386,6 +398,11 @@ class ChatViewModel(
 
             is Resource.Success -> {
                 Napier.e("Sohan Success in adding account transaction: ${result.data}")
+                _chatState.update {
+                    it.copy(
+                        showAccountSheet = false
+                    )
+                }
                 updateMessageSaveState(msgId = msgId, isLoading = false, hasSaved = true)
             }
         }

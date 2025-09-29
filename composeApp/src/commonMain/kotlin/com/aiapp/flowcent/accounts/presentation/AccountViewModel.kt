@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiapp.flowcent.accounts.data.model.AccountDto
 import com.aiapp.flowcent.accounts.data.repository.AccountRepository
+import com.aiapp.flowcent.accounts.domain.model.AccountDurationType
 import com.aiapp.flowcent.accounts.domain.utils.getAccountID
 import com.aiapp.flowcent.accounts.domain.utils.toAcMemberDtos
 import com.aiapp.flowcent.accounts.domain.utils.toMemberIds
@@ -200,11 +201,45 @@ class AccountViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            accountDurationType = action.accountDurationType
+                            accountDurationType = action.accountDurationType,
+                            showDatePicker = action.accountDurationType == AccountDurationType.TEMPORARY
                         )
                     }
                 }
             }
+
+            is UserAction.UpdateDatePickerSheerState -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            showDatePicker = action.sheetState
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun fetchTotalMonthlyAmount(accountDocId: String) {
+        when (val result = accountRepository.totalMonthlyAmount(accountDocId)) {
+            is Resource.Error -> {
+                Napier.e("Sohan Error in fetching total monthly amount: ${result.message}")
+            }
+
+            Resource.Loading -> {}
+            is Resource.Success -> {
+                _state.update { currentState ->
+                    val updatedAccounts = currentState.accounts.map { account ->
+                        if (account.id == accountDocId) {
+                            account.copy(totalMonthlyExpense = result.data ?: 0.0)
+                        } else account
+                    }
+
+                    currentState.copy(accounts = updatedAccounts)
+                }
+            }
+
+
         }
     }
 
@@ -329,6 +364,10 @@ class AccountViewModel(
                             isAcCreationLoading = false,
                             accounts = result.data ?: emptyList()
                         )
+                    }
+
+                    result.data?.map {
+                        fetchTotalMonthlyAmount(it.id)
                     }
                 }
             }

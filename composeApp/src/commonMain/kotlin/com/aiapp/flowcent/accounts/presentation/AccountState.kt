@@ -11,6 +11,7 @@ data class AccountState(
     val accounts: List<Account> = emptyList(),
     val matchingUsers: List<User> = emptyList(),
     val showSheet: Boolean = false,
+    val showDatePicker: Boolean = false,
     val accountName: String = "",
     val acInitialBalance: Double = 0.0,
     val selectedUsers: List<User> = emptyList(),

@@ -23,4 +23,6 @@ interface AccountRepository {
         uid: String,
         dateString: String
     ): Resource<List<TransactionDto>>
+
+    suspend fun totalMonthlyAmount(accountDocumentId: String): Resource<Double>
 }

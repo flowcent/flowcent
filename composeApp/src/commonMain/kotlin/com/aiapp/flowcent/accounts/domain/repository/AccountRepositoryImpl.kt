@@ -6,6 +6,7 @@ import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.domain.utils.toAccounts
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.data.model.TransactionDto
+import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentMonthStartAndEndMillis
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getStartAndEndTimeMillis
 import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.Direction
@@ -119,6 +120,26 @@ class AccountRepositoryImpl(
                 document.data(TransactionDto.serializer())
             }
             Resource.Success(accountTransactions)
+        } catch (ex: Exception) {
+            Napier.e("Sohan getAccountTransactions error: ${ex.message}")
+            Resource.Error(ex.message.toString())
+        }
+    }
+
+    override suspend fun totalMonthlyAmount(accountDocumentId: String): Resource<Double> {
+        return try {
+            val (start, end) = getCurrentMonthStartAndEndMillis()
+            val accountTransactionsRef = getTransactionsCollection(accountDocumentId)
+            val accountTransactionsQuery =
+                accountTransactionsRef
+                    .where { "createdAt" greaterThanOrEqualTo start }
+                    .where { "createdAt" lessThanOrEqualTo end }
+                    .orderBy("createdAt", Direction.DESCENDING).get()
+
+            val total = accountTransactionsQuery.documents.sumOf {
+                it.data(TransactionDto.serializer()).totalAmount
+            }
+            Resource.Success(total)
         } catch (ex: Exception) {
             Napier.e("Sohan getAccountTransactions error: ${ex.message}")
             Resource.Error(ex.message.toString())

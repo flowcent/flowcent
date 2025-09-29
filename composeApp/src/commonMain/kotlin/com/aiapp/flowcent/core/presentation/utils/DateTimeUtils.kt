@@ -80,7 +80,6 @@ object DateTimeUtils {
     }
 
 
-
     fun getStartAndEndTimeMillis(dateString: String): Pair<Long, Long> {
         val localDate = LocalDate.parse(dateString) // e.g. "2025-08-04"
         val timeZone = TimeZone.currentSystemDefault()
@@ -96,6 +95,27 @@ object DateTimeUtils {
 
         return startMillis to endMillis
     }
+
+
+    fun getCurrentMonthStartAndEndMillis(): Pair<Long, Long> {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val timeZone = TimeZone.currentSystemDefault()
+
+        // Start of the month
+        val startDate = LocalDate(today.year, today.monthNumber, 1)
+        val startMillis = startDate.atStartOfDayIn(timeZone).toEpochMilliseconds()
+
+        // End of the month: last day at 23:59:59.999
+        val firstDayNextMonth = if (today.monthNumber == 12) LocalDate(today.year + 1, 1, 1)
+        else LocalDate(today.year, today.monthNumber + 1, 1)
+        val lastDayOfMonth = firstDayNextMonth.minus(1, DateTimeUnit.DAY)
+        val endLocalTime = LocalTime(23, 59, 59, 999_000_000)
+        val endMillis =
+            lastDayOfMonth.atTime(endLocalTime).toInstant(timeZone).toEpochMilliseconds()
+
+        return startMillis to endMillis
+    }
+
 }
 
 

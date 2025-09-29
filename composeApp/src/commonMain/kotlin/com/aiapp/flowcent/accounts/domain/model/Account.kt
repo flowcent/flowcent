@@ -17,5 +17,6 @@ data class Account(
     val totalAddition: Double = 0.0,
     val updatedAt: Long = 0L,
     val updatedBy: String = "",
-    val accountIconId: Int = 1111
+    val accountIconId: Int = 1111,
+    val totalMonthlyExpense: Double = 0.0,
 )

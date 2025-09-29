@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun AnimatedRoundedProgressBar(
-    targetProgress: Float,
+    targetProgress: Float, // expects percentage like 2f for 2%
     progressColor: Color,
     trackColor: Color = Color.LightGray.copy(alpha = 0.3f),
     delayMillis: Long = 300,
@@ -26,8 +26,9 @@ fun AnimatedRoundedProgressBar(
 
     LaunchedEffect(targetProgress) {
         delay(delayMillis)
+        val targetFraction = (targetProgress / 100f).coerceIn(0f, 1f)
         progressAnim.animateTo(
-            targetValue = targetProgress.coerceIn(0f, 1f),
+            targetValue = targetFraction,
             animationSpec = tween(durationMillis = durationMillis)
         )
     }

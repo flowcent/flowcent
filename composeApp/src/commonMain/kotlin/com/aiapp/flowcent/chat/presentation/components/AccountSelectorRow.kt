@@ -25,6 +25,7 @@ fun AccountSelectorRow(
     ) {
         itemsIndexed(accounts) { _, account ->
             AccountOptionCard(
+                members = account.members ?: emptyList(),
                 title = account.accountName,
                 selected = selectedAccountId == account.id,
                 onSelected = { onAccountSelected(account) }

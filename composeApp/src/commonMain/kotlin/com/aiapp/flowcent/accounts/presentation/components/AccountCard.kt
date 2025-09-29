@@ -135,7 +135,7 @@ fun AccountCard(
                 }
 
                 Text(
-                    text = "${(progress * 100).toInt()}% used",
+                    text = "$progress% used",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

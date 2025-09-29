@@ -301,6 +301,8 @@ fun BaseScreen(
                                 }
                             )
 
+                            Spacer(modifier = Modifier.height(32.dp))
+
                             AppButton(
                                 text = "Update ${state.selectedAccountName}",
                                 onClick = {

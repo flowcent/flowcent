@@ -118,7 +118,7 @@ fun AddMembersSheetContent(
                     Text(
                         "Your potential group members",
                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                        modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp)
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
                     )
                 }
 
@@ -156,6 +156,8 @@ fun AddMembersSheetContent(
                     phoneNumber = contact.phoneNumber,
                     onInviteClick = {}
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

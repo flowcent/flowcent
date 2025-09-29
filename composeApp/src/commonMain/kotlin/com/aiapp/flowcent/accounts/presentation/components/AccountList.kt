@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aiapp.flowcent.accounts.domain.model.Account
 import com.aiapp.flowcent.accounts.presentation.randomColor
+import com.aiapp.flowcent.accounts.presentation.util.calculateUsedPercentage
 
 @Composable
 fun AccountList(
@@ -28,9 +29,12 @@ fun AccountList(
             items(accounts) { account ->
                 AccountCard(
                     account = account,
-                    totalMonthlyExpense = 0.0,
+                    totalMonthlyExpense = account.totalMonthlyExpense,
                     budget = account.initialBalance.toString(),
-                    progress = 0.85f,
+                    progress = calculateUsedPercentage(
+                        account.totalMonthlyExpense,
+                        account.initialBalance
+                    ),
                     progressColor = randomColor(),
                     onClickItem = {
                         onAccountClick(account)

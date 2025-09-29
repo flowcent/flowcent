@@ -78,12 +78,15 @@ fun AddAccountScreen(
     fcPermissionState: FCPermissionState
 ) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val datePickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
     var hasContactPermission: Boolean by remember { mutableStateOf(false) }
 
     // The state for the DateRangePicker, created unconditionally
     val dateRangePickerState = rememberDateRangePickerState()
+
+    Napier.e("Sohan dateRangePickerState : ${dateRangePickerState.selectedStartDateMillis}")
 
     LaunchedEffect(key1 = Unit) {
         permissionVm.provideOrRequestContactPermission()
@@ -130,14 +133,18 @@ fun AddAccountScreen(
         viewModel.onAction(UserAction.UpdateSheetState(false))
     }
 
+    fun handleHideDatePickerSheet() {
+        viewModel.onAction(UserAction.UpdateDatePickerSheerState(false))
+    }
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
             modifier = Modifier.fillMaxWidth().weight(1f)
-                .padding(horizontal = 20.dp, vertical = 20.dp),
-//                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = 20.dp, vertical = 20.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Big Icon Circle
@@ -190,29 +197,13 @@ fun AddAccountScreen(
                 options = listOf(
                     AccountDurationType.PERMANENT to Labels.LABEL_MONTHLY_SPRINT,
                     AccountDurationType.TEMPORARY to Labels.LABEL_SHORT_TERM
-                ), selectedOption = state.accountDurationType, onOptionSelected = { type ->
+                ),
+                selectedOption = state.accountDurationType,
+                onOptionSelected = { type ->
                     viewModel.onAction(UserAction.UpdateAccountDurationType(type))
-                }, modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             )
-
-            if(state.accountDurationType == AccountDurationType.TEMPORARY){
-                Spacer(Modifier.height(24.dp))
-                AnimatedVisibility(
-                    visible = state.accountDurationType == AccountDurationType.TEMPORARY,
-                    enter = fadeIn(animationSpec = tween(400)) + expandVertically(animationSpec = tween(400)),
-                    exit = fadeOut(animationSpec = tween(400)) + shrinkVertically(animationSpec = tween(400))
-                ) {
-                    // Embed the DateRangePicker directly
-                    DateRangePicker(
-                        state = dateRangePickerState,
-                        modifier = Modifier.padding(top = 8.dp),
-                        // Hide the dialog-specific title and headline
-                        title = null,
-                        headline = null,
-                        showModeToggle = true // Hide the input/calendar toggle
-                    )
-                }
-            }
 
 
             Spacer(Modifier.height(24.dp))
@@ -399,9 +390,47 @@ fun AddAccountScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             ) {
                 AddMembersSheetContent(
-                    state = state, viewModel = viewModel, onDoneClick = {
+                    state = state,
+                    viewModel = viewModel,
+                    onDoneClick = {
                         handleHideBottomSheet()
                     })
+            }
+        }
+
+        if (state.showDatePicker) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    handleHideDatePickerSheet()
+                },
+                sheetState = datePickerSheetState,
+                modifier = Modifier.padding(top = 200.dp),
+                containerColor = MaterialTheme.colorScheme.surface
+            ) {
+                AnimatedVisibility(
+                    visible = state.accountDurationType == AccountDurationType.TEMPORARY,
+                    enter = fadeIn(animationSpec = tween(400)) + expandVertically(
+                        animationSpec = tween(
+                            400
+                        )
+                    ),
+                    exit = fadeOut(animationSpec = tween(400)) + shrinkVertically(
+                        animationSpec = tween(
+                            400
+                        )
+                    )
+                ) {
+
+                    DateRangePicker(
+                        state = dateRangePickerState,
+                        modifier = Modifier.padding(top = 8.dp),
+                        // Hide the dialog-specific title and headline
+                        title = null,
+                        headline = null,
+                        showModeToggle = true // Hide the input/calendar toggle
+                    )
+
+                }
             }
         }
     }

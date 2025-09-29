@@ -29,6 +29,7 @@ fun AvatarGroup(
     members: List<String>,
     avatarSize: Dp = 28.dp,
     textSize: TextUnit = 12.sp,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.End,
     modifier: Modifier = Modifier
 ) {
     val visibleMembers = members.take(4)
@@ -40,7 +41,7 @@ fun AvatarGroup(
             .fillMaxWidth()
             .height(avatarSize),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = horizontalArrangement
     ) {
         Box(
             modifier = Modifier.width(
