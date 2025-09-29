@@ -30,5 +30,6 @@ data class ChatState(
     val showSubscriptionSheet: Boolean = false,
     val remainingAiChatCredits: Int = 0,
     val showAccountSheet: Boolean = false,
+    val msgIdForAccount: String = ""
 )
 

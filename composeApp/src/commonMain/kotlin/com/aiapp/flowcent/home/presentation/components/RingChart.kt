@@ -28,31 +28,41 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.core.presentation.animation.fadeInAndScale
 import com.aiapp.flowcent.core.presentation.utils.asCurrency
 
 @Composable
 fun RingChart(
-    spent: Float,
-    budget: Float,
+    actual: Float,
+    target: Float,
     dailyAverage: Float,
     previousMonthAverage: Float?,
+    label: String = "Spend",
+    labelStyle: TextStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = FontWeight.SemiBold
+    ),
+    valueColor: Color = Color(0xFFFF375F),
+    valueColorBackground: Color = Color(0XFFFF8A8A),
+    ringSize: Dp = 100.dp,
+    horizontalGap: Dp = 32.dp,
     modifier: Modifier = Modifier,
 ) {
     val progress = remember { Animatable(0f) }
     val isSystemInDarkTheme = isSystemInDarkTheme()
 
-    LaunchedEffect(spent, budget) {
+    LaunchedEffect(actual, target) {
         progress.animateTo(
-            targetValue = if (budget > 0) spent / budget else 0f,
+            targetValue = if (target > 0) actual / target else 0f,
             animationSpec = tween(durationMillis = 1000)
         )
     }
 
-    val animatedSpent = (progress.value * budget).toInt()
+    val animatedSpent = (progress.value * target).toInt()
 
     val subTextColor = if (isSystemInDarkTheme) Color.Gray else Color.DarkGray
     val diff = previousMonthAverage?.let { dailyAverage - it }
@@ -75,12 +85,12 @@ fun RingChart(
             .fadeInAndScale()
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 32.dp, vertical = 24.dp),
+            .padding(horizontal = horizontalGap, vertical = 24.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(100.dp),
+                .size(ringSize),
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
@@ -88,7 +98,7 @@ fun RingChart(
 
                 // Background Ring
                 drawArc(
-                    color = Color(if (isSystemInDarkTheme) 0xFF2C2C2E else 0xFFF2F2F7),
+                    color = valueColorBackground,
                     startAngle = -90f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -98,7 +108,7 @@ fun RingChart(
                 // Progress Ring
                 drawArc(
                     brush = Brush.linearGradient(
-                        listOf(Color(0xFFFF2D55), Color(0xFFFF375F))
+                        listOf(valueColor, valueColor)
                     ),
                     startAngle = -90f,
                     sweepAngle = 360 * progress.value,
@@ -108,47 +118,48 @@ fun RingChart(
             }
         }
 
-        Spacer(modifier = Modifier.width(32.dp))
+        Spacer(modifier = Modifier.width(horizontalGap))
 
         // Text Info
         Column {
             Text(
-                text = "Monthly spent",
-                color = MaterialTheme.colorScheme.inverseSurface.copy(0.8f),
-                fontSize = 16.sp
-            )
-            Text(
-                text = "$animatedSpent/${budget.toInt()} BDT",
-                color = Color(0xFFFF375F),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
+                text = label,
+                style = labelStyle,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Daily Avg Spend",
-                color = subTextColor,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                text = "$animatedSpent/${target.toInt()}",
+                color = valueColor,
+                style = labelStyle,
             )
 
-            Text(
-                text = dailyAverage.asCurrency(),
-                color = MaterialTheme.colorScheme.inverseSurface,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            if (trendText.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = trendText,
-                    color = trendColor,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal
-                )
-            }
+//            Spacer(modifier = Modifier.height(8.dp))
+//
+//            Text(
+//                text = "Daily Avg Spend",
+//                color = subTextColor,
+//                fontSize = 14.sp,
+//                fontWeight = FontWeight.Medium
+//            )
+//
+//            Text(
+//                text = dailyAverage.asCurrency(),
+//                color = MaterialTheme.colorScheme.inverseSurface,
+//                fontSize = 16.sp,
+//                fontWeight = FontWeight.Bold
+//            )
+//
+//            if (trendText.isNotEmpty()) {
+//                Spacer(modifier = Modifier.height(4.dp))
+//                Text(
+//                    text = trendText,
+//                    color = trendColor,
+//                    fontSize = 12.sp,
+//                    fontWeight = FontWeight.Normal
+//                )
+//            }
         }
     }
 }

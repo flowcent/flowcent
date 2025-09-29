@@ -48,9 +48,11 @@ import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import com.aiapp.flowcent.home.presentation.components.InsightsHighlightBox
 import com.aiapp.flowcent.home.presentation.components.RingChart
+import com.aiapp.flowcent.home.util.calculateDailyActualSaving
+import com.aiapp.flowcent.home.util.calculateDailySavingTarget
+import com.aiapp.flowcent.home.util.dailyExpenseBudget
 import com.aiapp.flowcent.subscription.presentation.PurchaseUserAction
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
-import com.aiapp.flowcent.subscription.util.SubscriptionUtil
 import com.revenuecat.purchases.kmp.Purchases
 import com.revenuecat.purchases.kmp.models.PurchasesError
 import flowcent.composeapp.generated.resources.Res
@@ -60,7 +62,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -80,15 +85,6 @@ fun HomeScreen(
         else -> "Good Evening"
     }
 
-    fun dailyExpenseBudget(): Double {
-        try {
-            val totalMonthlyBudget =
-                homeState.userInitialBalance.toFloat() - homeState.userSavingTarget.toFloat()
-            return totalMonthlyBudget / 30.0
-        } catch (ex: Exception) {
-            return 0.0
-        }
-    }
 
     LaunchedEffect(key1 = homeState.selectedDate) {
         homeViewModel.onAction(UserAction.FetchUserUId)
@@ -214,9 +210,14 @@ fun HomeScreen(
                     Column(
                         modifier = Modifier.fillMaxWidth().animateEnterExit()
                     ) {
+                        Spacer(Modifier.height(Spacing.medium))
+
                         RingChart(
-                            spent = homeState.userTotalSpent.toFloat(),
-                            budget = dailyExpenseBudget().toFloat(),
+                            actual = homeState.dailyTotalSpend.toFloat(),
+                            target = dailyExpenseBudget(
+                                homeState.userInitialBalance,
+                                homeState.userSavingTarget
+                            ).toFloat(),
                             dailyAverage = 853.0f,
                             previousMonthAverage = 1201.12f,
                             modifier = Modifier.fillMaxWidth()
@@ -230,12 +231,20 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             BalanceHighlightBox(
+                                totalSpend = homeState.userTotalSpent.toString(),
+                                totalIncome = homeState.userTotalIncome.toString(),
                                 modifier = Modifier.weight(1f)
                             )
 
                             Spacer(Modifier.width(Spacing.large))
 
                             InsightsHighlightBox(
+                                actual = calculateDailyActualSaving(
+                                    homeState.dailyTotalSpend,
+                                    homeState.userInitialBalance,
+                                    homeState.userSavingTarget
+                                ),
+                                target = calculateDailySavingTarget(homeState.userSavingTarget),
                                 modifier = Modifier.weight(1f),
                                 onClicked = {
                                     homeViewModel.onAction(UserAction.NavigateToInsights)
@@ -260,7 +269,7 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(vertical = Spacing.verticalPadding)
-                        .padding(top = 12.dp)
+                        .padding(top = 24.dp)
                 )
             }
 
@@ -269,7 +278,7 @@ fun HomeScreen(
                     ShimmerSpendingCard(modifier = Modifier.animateItem())
                 }
             } else {
-                items(allTransactions, key = { it.id }) { transaction ->
+                items(allTransactions, key = { "fct-${Uuid.random()}" }) { transaction ->
                     SpendingCard(
                         expenseItem = transaction,
                         modifier = Modifier.animateItem()

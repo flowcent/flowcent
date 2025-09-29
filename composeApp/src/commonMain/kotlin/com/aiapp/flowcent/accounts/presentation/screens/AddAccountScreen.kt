@@ -1,5 +1,11 @@
 package com.aiapp.flowcent.accounts.presentation.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,11 +27,13 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -74,6 +82,9 @@ fun AddAccountScreen(
 
     var hasContactPermission: Boolean by remember { mutableStateOf(false) }
 
+    // The state for the DateRangePicker, created unconditionally
+    val dateRangePickerState = rememberDateRangePickerState()
+
     LaunchedEffect(key1 = Unit) {
         permissionVm.provideOrRequestContactPermission()
         viewModel.onAction(UserAction.FetchUserUId)
@@ -120,12 +131,13 @@ fun AddAccountScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
             modifier = Modifier.fillMaxWidth().weight(1f)
-                .padding(horizontal = 20.dp, vertical = 20.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = 20.dp, vertical = 20.dp),
+//                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Big Icon Circle
@@ -182,6 +194,25 @@ fun AddAccountScreen(
                     viewModel.onAction(UserAction.UpdateAccountDurationType(type))
                 }, modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             )
+
+            if(state.accountDurationType == AccountDurationType.TEMPORARY){
+                Spacer(Modifier.height(24.dp))
+                AnimatedVisibility(
+                    visible = state.accountDurationType == AccountDurationType.TEMPORARY,
+                    enter = fadeIn(animationSpec = tween(400)) + expandVertically(animationSpec = tween(400)),
+                    exit = fadeOut(animationSpec = tween(400)) + shrinkVertically(animationSpec = tween(400))
+                ) {
+                    // Embed the DateRangePicker directly
+                    DateRangePicker(
+                        state = dateRangePickerState,
+                        modifier = Modifier.padding(top = 8.dp),
+                        // Hide the dialog-specific title and headline
+                        title = null,
+                        headline = null,
+                        showModeToggle = true // Hide the input/calendar toggle
+                    )
+                }
+            }
 
 
             Spacer(Modifier.height(24.dp))

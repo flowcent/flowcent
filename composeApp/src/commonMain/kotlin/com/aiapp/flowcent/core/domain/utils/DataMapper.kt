@@ -9,6 +9,8 @@ fun TransactionDto.toTransaction(): Transaction {
     return Transaction(
         id = id,
         totalAmount = totalAmount,
+        totalExpenseAmount = totalExpenseAmount,
+        totalIncomeAmount = totalIncomeAmount,
         category = category,
         createdAt = createdAt,
         createdBy = createdBy,

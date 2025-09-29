@@ -33,14 +33,16 @@ import com.aiapp.flowcent.core.presentation.animation.fadeInAndScale
 
 @Composable
 fun InsightsHighlightBox(
+    actual: Float = 0f,
+    target: Float = 0f,
     modifier: Modifier = Modifier,
     onClicked: () -> Unit
 ) {
     Card(
         modifier = modifier
-            .height(150.dp)
-            .fadeInAndScale()
-            .clickable { onClicked() },
+            .height(160.dp)
+            .fadeInAndScale(),
+//            .clickable { onClicked() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
@@ -53,7 +55,7 @@ fun InsightsHighlightBox(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Insights",
+                    text = "Saving overview",
                     style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp),
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.inverseSurface
@@ -70,27 +72,46 @@ fun InsightsHighlightBox(
             HorizontalDivider()
 
             // TODO remove placeholder with actual graph
-            Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                val points = listOf(
-                    Offset(0f, size.height * 0.5f),
-                    Offset(size.width * 0.2f, size.height * 0.3f),
-                    Offset(size.width * 0.4f, size.height * 0.6f),
-                    Offset(size.width * 0.6f, size.height * 0.4f),
-                    Offset(size.width * 0.8f, size.height * 0.7f),
-                    Offset(size.width, size.height * 0.6f)
-                )
-                val path = Path().apply {
-                    moveTo(points.first().x, points.first().y)
-                    for (i in 1 until points.size) {
-                        lineTo(points[i].x, points[i].y)
-                    }
-                }
-                drawPath(
-                    path = path,
-                    color = Color(0xFF4CAF50),
-                    style = Stroke(width = 4.dp.toPx())
-                )
-            }
+//            Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+//                val points = listOf(
+//                    Offset(0f, size.height * 0.5f),
+//                    Offset(size.width * 0.2f, size.height * 0.3f),
+//                    Offset(size.width * 0.4f, size.height * 0.6f),
+//                    Offset(size.width * 0.6f, size.height * 0.4f),
+//                    Offset(size.width * 0.8f, size.height * 0.7f),
+//                    Offset(size.width, size.height * 0.6f)
+//                )
+//                val path = Path().apply {
+//                    moveTo(points.first().x, points.first().y)
+//                    for (i in 1 until points.size) {
+//                        lineTo(points[i].x, points[i].y)
+//                    }
+//                }
+//                drawPath(
+//                    path = path,
+//                    color = Color(0xFF4CAF50),
+//                    style = Stroke(width = 4.dp.toPx())
+//                )
+//            }
+
+            RingChart(
+                actual = actual,
+                target = target,
+                dailyAverage = 853.0f,
+                previousMonthAverage = 1201.12f,
+                label = "Save",
+                labelStyle = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                ringSize = 50.dp,
+                valueColor = MaterialTheme.colorScheme.primary,
+                valueColorBackground = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                horizontalGap = 16.dp,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+
         }
     }
 }

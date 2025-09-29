@@ -14,6 +14,8 @@ import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItem
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
+import com.aiapp.flowcent.home.util.calculateDailyTotalIncome
+import com.aiapp.flowcent.home.util.calculateDailyTotalSpend
 import com.aiapp.flowcent.subscription.presentation.PurchaseUserAction
 import com.aiapp.flowcent.subscription.presentation.SubscriptionViewModel
 import dev.gitlive.firebase.Firebase
@@ -76,6 +78,8 @@ class HomeViewModel(
                         fetchUserProfile(state.value.uid)
                         fetchLatestTransactions(_state.value.uid)
                         fetchTotalAmount(_state.value.uid)
+                        fetchTotalExpenseAmount(_state.value.uid)
+                        fetchTotalIncomeAmount(_state.value.uid)
                     } else {
                         prefRepository.uid.collect { uidFromDataStore ->
                             _state.update { currentState ->
@@ -84,6 +88,8 @@ class HomeViewModel(
                             fetchUserProfile(uid = uidFromDataStore)
                             fetchLatestTransactions(uid = uidFromDataStore)
                             fetchTotalAmount(uid = uidFromDataStore)
+                            fetchTotalExpenseAmount(uid = uidFromDataStore)
+                            fetchTotalIncomeAmount(uid = uidFromDataStore)
                         }
                     }
                 }
@@ -151,7 +157,59 @@ class HomeViewModel(
                     Napier.e("Sohan Success in fetching total amount: ${result.data}")
                     _state.update {
                         it.copy(
+                            userTotalTransaction = result.data ?: 0.0
+                        )
+                    }
+                }
+
+                Resource.Loading -> {}
+
+            }
+        }
+    }
+
+    private fun fetchTotalExpenseAmount(uid: String?) {
+        if (uid.isNullOrEmpty()) {
+            Napier.e("Sohan 404 No user found")
+            return
+        }
+        viewModelScope.launch {
+            when (val result = expenseRepository.totalExpenses(uid)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in fetching total expense amount: ${result.message}")
+                }
+
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in fetching total expense amount: ${result.data}")
+                    _state.update {
+                        it.copy(
                             userTotalSpent = result.data ?: 0.0
+                        )
+                    }
+                }
+
+                Resource.Loading -> {}
+
+            }
+        }
+    }
+
+    private fun fetchTotalIncomeAmount(uid: String?) {
+        if (uid.isNullOrEmpty()) {
+            Napier.e("Sohan 404 No user found")
+            return
+        }
+        viewModelScope.launch {
+            when (val result = expenseRepository.totalIncome(uid)) {
+                is Resource.Error -> {
+                    Napier.e("Sohan Error in fetching total income amount: ${result.message}")
+                }
+
+                is Resource.Success -> {
+                    Napier.e("Sohan Success in fetching total income amount: ${result.data}")
+                    _state.update {
+                        it.copy(
+                            userTotalIncome = result.data ?: 0.0
                         )
                     }
                 }
@@ -187,6 +245,8 @@ class HomeViewModel(
                         _state.update {
                             it.copy(
                                 latestTransactions = expenseList,
+                                dailyTotalSpend = calculateDailyTotalSpend(expenseList),
+                                dailyTotalIncome = calculateDailyTotalIncome(expenseList),
                                 isLoading = false
                             )
                         }

@@ -26,10 +26,14 @@ import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.core.presentation.animation.fadeInAndScale
 
 @Composable
-fun BalanceHighlightBox(modifier: Modifier = Modifier) {
+fun BalanceHighlightBox(
+    totalSpend: String,
+    totalIncome: String,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier
-            .height(150.dp)
+            .height(160.dp)
             .fadeInAndScale(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -43,7 +47,7 @@ fun BalanceHighlightBox(modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Today's overview",
+                    text = "Total overview",
                     style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp),
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.inverseSurface
@@ -66,7 +70,7 @@ fun BalanceHighlightBox(modifier: Modifier = Modifier) {
                     color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = "1122.12",
+                    text = totalSpend,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -80,7 +84,7 @@ fun BalanceHighlightBox(modifier: Modifier = Modifier) {
                     color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = "500.00",
+                    text = totalIncome,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground

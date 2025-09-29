@@ -15,6 +15,7 @@ import com.aiapp.flowcent.core.data.model.TransactionDto
 import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
+import com.aiapp.flowcent.core.domain.utils.EnumConstants
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import com.aiapp.flowcent.core.presentation.platform.FlowCentAi
@@ -123,10 +124,10 @@ class ChatViewModel(
                     val hasEnoughCredits = _chatState.value.remainingCredits > 0
                     if (hasEnoughCredits) {
                         if (_chatState.value.selectionType == AccountSelectionType.SHARED) {
-//                            saveIntoSharedAccounts()
                             _chatState.update {
                                 it.copy(
-                                    showAccountSheet = true
+                                    showAccountSheet = true,
+                                    msgIdForAccount = action.msgId
                                 )
                             }
                         } else {
@@ -266,6 +267,23 @@ class ChatViewModel(
                     }
                 }
             }
+
+            UserAction.NavigateToAddAccount -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.NavigateToAddAccount)
+                    _chatState.update { currentState ->
+                        currentState.copy(
+                            showAccountSheet = false
+                        )
+                    }
+                }
+            }
+
+            is UserAction.SaveIntoSharedAccounts -> {
+                viewModelScope.launch {
+                    saveIntoSharedAccounts(action.msgId)
+                }
+            }
         }
     }
 
@@ -353,7 +371,7 @@ class ChatViewModel(
         }
     }
 
-    private suspend fun saveIntoSharedAccounts() {
+    private suspend fun saveIntoSharedAccounts(msgId: String) {
         when (val result = accountRepository.addAccountTransaction(
             chatState.value.selectedAccountId,
             createTransactionPayload(chatState.value.checkedExpenseItems)
@@ -362,9 +380,13 @@ class ChatViewModel(
                 Napier.e("Sohan Error in adding account transaction: ${result.message}")
             }
 
-            Resource.Loading -> {}
+            Resource.Loading -> {
+                updateMessageSaveState(msgId = msgId, isLoading = true)
+            }
+
             is Resource.Success -> {
                 Napier.e("Sohan Success in adding account transaction: ${result.data}")
+                updateMessageSaveState(msgId = msgId, isLoading = false, hasSaved = true)
             }
         }
     }
@@ -435,6 +457,12 @@ class ChatViewModel(
     private fun createTransactionPayload(expenseItems: List<ExpenseItem>): TransactionDto {
         return TransactionDto(
             totalAmount = expenseItems.sumOf { it.amount },
+            totalExpenseAmount = expenseItems
+                .filter { it.type == EnumConstants.TransactionType.EXPENSE }
+                .sumOf { it.amount },
+            totalIncomeAmount = expenseItems
+                .filter { it.type == EnumConstants.TransactionType.INCOME }
+                .sumOf { it.amount },
             category = expenseItems.firstOrNull()?.category ?: "",
             createdAt = getCurrentTimeInMilli(),
             createdBy = _chatState.value.uid,

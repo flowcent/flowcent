@@ -10,8 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GroupAdd
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -33,6 +40,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.aiapp.flowcent.accounts.presentation.navigation.AccountsNavRoutes
 import com.aiapp.flowcent.chat.presentation.ChatState
 import com.aiapp.flowcent.chat.presentation.ChatViewModel
 import com.aiapp.flowcent.chat.presentation.UiEvent
@@ -174,6 +182,7 @@ fun BaseScreen(
 
             UiEvent.NavigateToChat -> navController.navigate(ChatNavRoutes.ChatListScreen.route)
             UiEvent.NavigateToBack -> navController.popBackStack()
+            UiEvent.NavigateToAddAccount -> navController.navigate(AccountsNavRoutes.AddAccountScreen.route)
         }
     }
 
@@ -271,42 +280,78 @@ fun BaseScreen(
                 containerColor = MaterialTheme.colorScheme.surface,
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (state.sharedAccounts.isNotEmpty()) {
-                    AccountSelectorRow(
-                        accounts = state.sharedAccounts,
-                        selectedAccountId = state.selectedAccountId,
-                        onAccountSelected = { account ->
-                            viewModel.onAction(
-                                UserAction.SelectAccount(account.id, account.accountName)
+                Column(
+                    modifier = Modifier.wrapContentSize().padding(24.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (state.sharedAccounts.isNotEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.SpaceBetween,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            AccountSelectorRow(
+                                accounts = state.sharedAccounts,
+                                selectedAccountId = state.selectedAccountId,
+                                onAccountSelected = { account ->
+                                    viewModel.onAction(
+                                        UserAction.SelectAccount(account.id, account.accountName)
+                                    )
+                                }
+                            )
+
+                            AppButton(
+                                text = "Update ${state.selectedAccountName}",
+                                onClick = {
+                                    viewModel.onAction(UserAction.SaveIntoSharedAccounts(state.msgIdForAccount))
+                                }
                             )
                         }
-                    )
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().padding(24.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "No Accounts Found",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
 
-                        Text(
-                            text = "Please add an account to continue",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        AppButton(
-                            text = "Add Account",
-                            onClick = {
+                    } else {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Box(
+                                modifier = Modifier.size(80.dp).background(
+                                    color = MaterialTheme.colorScheme.primary, shape = CircleShape
+                                ), contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.GroupAdd,
+                                    contentDescription = "Group Icon",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(40.dp)
+                                )
 
                             }
-                        )
 
+                            Spacer(Modifier.height(24.dp))
+
+                            Text(
+                                text = "No Accounts Found",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = "Please create a shared account to continue",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            AppButton(
+                                text = "Create Shared Account",
+                                onClick = {
+                                    viewModel.onAction(UserAction.NavigateToAddAccount)
+                                }
+                            )
+
+                        }
                     }
                 }
 

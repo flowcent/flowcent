@@ -15,7 +15,11 @@ data class HomeState(
     val currentBalance: Double = 0.0,
     val userInitialBalance: Double = 0.0,
     val userSavingTarget: Double = 0.0,
+    val userTotalTransaction: Double = 0.0,
     val userTotalSpent: Double = 0.0,
+    val userTotalIncome: Double = 0.0,
     val user: User? = null,
-    val totalTransactions: Int = 0
+    val totalTransactions: Int = 0,
+    val dailyTotalSpend: Double = 0.0,
+    val dailyTotalIncome: Double = 0.0,
 )

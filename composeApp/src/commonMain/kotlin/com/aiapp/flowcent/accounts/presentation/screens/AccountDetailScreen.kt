@@ -50,7 +50,6 @@ import com.aiapp.flowcent.accounts.presentation.AccountViewModel
 import com.aiapp.flowcent.accounts.presentation.UserAction
 import com.aiapp.flowcent.core.presentation.components.SpendingCard
 import com.aiapp.flowcent.core.presentation.utils.DateTimeUtils.getCurrentDate
-import com.aiapp.flowcent.home.presentation.components.BalanceHighlightBox
 import com.aiapp.flowcent.home.presentation.components.CalendarStrip
 import com.aiapp.flowcent.home.presentation.components.RingChart
 
@@ -192,7 +191,7 @@ fun AccountDetailScreen(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
                     ) {
                         RingChart(
-                            spent = 4500f, budget = 8000f, modifier = Modifier.fillMaxWidth(),
+                            actual = 4500f, target = 8000f, modifier = Modifier.fillMaxWidth(),
                             dailyAverage = 853.0f, previousMonthAverage = 1201.12f
                         )
 
@@ -206,9 +205,9 @@ fun AccountDetailScreen(
 
                             Spacer(Modifier.width(12.dp))
 
-                            BalanceHighlightBox(
-                                modifier = Modifier.weight(1f)
-                            )
+//                            BalanceHighlightBox(
+//                                modifier = Modifier.weight(1f)
+//                            )
                         }
                     }
                 }

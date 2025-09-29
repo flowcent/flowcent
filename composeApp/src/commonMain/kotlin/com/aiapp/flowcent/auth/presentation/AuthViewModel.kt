@@ -15,6 +15,7 @@ import com.aiapp.flowcent.core.data.repository.ExpenseRepository
 import com.aiapp.flowcent.core.data.repository.PrefRepository
 import com.aiapp.flowcent.core.domain.model.ExpenseItem
 import com.aiapp.flowcent.core.domain.utils.Constants
+import com.aiapp.flowcent.core.domain.utils.EnumConstants
 import com.aiapp.flowcent.core.domain.utils.Resource
 import com.aiapp.flowcent.core.domain.utils.toExpenseItemDto
 import com.aiapp.flowcent.core.presentation.navigation.AppNavRoutes
@@ -671,6 +672,12 @@ class AuthViewModel(
     private fun createTransactionPayload(expenseItems: List<ExpenseItem>): TransactionDto {
         return TransactionDto(
             totalAmount = expenseItems.sumOf { it.amount },
+            totalExpenseAmount = expenseItems
+                .filter { it.type == EnumConstants.TransactionType.EXPENSE }
+                .sumOf { it.amount },
+            totalIncomeAmount = expenseItems
+                .filter { it.type == EnumConstants.TransactionType.INCOME }
+                .sumOf { it.amount },
             category = expenseItems.firstOrNull()?.category ?: "",
             createdAt = getCurrentTimeInMilli(),
             createdBy = _state.value.uid,

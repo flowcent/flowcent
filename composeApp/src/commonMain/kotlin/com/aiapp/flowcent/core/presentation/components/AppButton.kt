@@ -41,7 +41,7 @@ fun AppButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     text: String,
-    textStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium.copy(
         fontWeight = FontWeight.Bold
     ),
     textColor: Color = MaterialTheme.colorScheme.onPrimary,

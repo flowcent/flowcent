@@ -20,4 +20,5 @@ sealed interface UiEvent {
 
     data object NavigateToChat : UiEvent
     data object NavigateToBack : UiEvent
+    data object NavigateToAddAccount : UiEvent
 }

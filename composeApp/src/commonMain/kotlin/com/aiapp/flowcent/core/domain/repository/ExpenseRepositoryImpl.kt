@@ -94,10 +94,9 @@ class ExpenseRepositoryImpl(
         return try {
             val snapshot = transactionCollection
                 .where { "uid" equalTo uid }
-                .where { "type" equalTo "Expense" }
                 .get()
             val total = snapshot.documents.sumOf {
-                it.data(ExpenseItem.serializer()).amount
+                it.data(TransactionDto.serializer()).totalExpenseAmount
             }
             Resource.Success(total)
         } catch (e: Exception) {
@@ -109,10 +108,9 @@ class ExpenseRepositoryImpl(
         return try {
             val snapshot = transactionCollection
                 .where { "uid" equalTo uid }
-                .where { "type" equalTo "Income" }
                 .get()
             val total = snapshot.documents.sumOf {
-                it.data(ExpenseItem.serializer()).amount
+                it.data(TransactionDto.serializer()).totalIncomeAmount
             }
             Resource.Success(total)
         } catch (e: Exception) {
