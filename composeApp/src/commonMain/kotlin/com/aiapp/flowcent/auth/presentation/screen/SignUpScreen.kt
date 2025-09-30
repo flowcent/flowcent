@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +21,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,6 +43,7 @@ import com.aiapp.flowcent.auth.presentation.AuthViewModel
 import com.aiapp.flowcent.auth.presentation.UserAction
 import com.aiapp.flowcent.auth.presentation.component.TermsAndConditionsText
 import com.aiapp.flowcent.core.Spacing
+import com.aiapp.flowcent.core.domain.utils.Constants
 import com.aiapp.flowcent.core.presentation.components.AppButton
 import com.aiapp.flowcent.core.presentation.components.LabeledInputField
 import com.aiapp.flowcent.core.utils.PRIVACY_POLICY_URL
@@ -212,7 +216,28 @@ fun SignUpScreen(
                         mode = if (isSystemInDarkTheme()) GoogleButtonMode.Dark else GoogleButtonMode.Light,
                         text = "Continue With Google",
                         fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                    ) { this.onClick() }
+                    ) {
+                        this.onClick()
+                        authViewModel.onAction(
+                            UserAction.SetLoaderOn(Constants.SIGN_IN_TYPE_GOOGLE)
+                        )
+                    }
+
+                    if (authState.isGoogleSignInProcessing) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(8.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(22.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                strokeWidth = 3.dp
+                            )
+                        }
+                    }
                 }
 
                 Spacer(Modifier.height(32.dp))
