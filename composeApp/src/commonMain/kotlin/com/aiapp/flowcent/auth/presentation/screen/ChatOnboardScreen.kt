@@ -130,7 +130,11 @@ fun ChatOnboardScreen(
                             contentAlignment = Alignment.Center
                         ) {
 
-                            ChatOnBoardTypingText()
+                            ChatOnBoardTypingText(
+                                onClickText = { text ->
+                                    viewModel.onAction(UserAction.SendMessage(text))
+                                }
+                            )
                         }
                     }
                 }

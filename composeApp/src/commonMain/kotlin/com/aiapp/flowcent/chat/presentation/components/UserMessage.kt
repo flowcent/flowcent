@@ -23,6 +23,11 @@ import com.aiapp.flowcent.core.presentation.components.NameInitial
 
 @Composable
 fun UserMessage(modifier: Modifier = Modifier,avatarName: String = "Flowcent", text: String) {
+
+    fun wrapText(text: String, chunkSize: Int = 30): String {
+        return text.chunked(chunkSize).joinToString("\n")
+    }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
@@ -36,7 +41,7 @@ fun UserMessage(modifier: Modifier = Modifier,avatarName: String = "Flowcent", t
             ).padding(12.dp),
         ) {
             Text(
-                text = text,
+                text = wrapText(text, 30),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 14
