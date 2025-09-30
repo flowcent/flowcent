@@ -288,6 +288,12 @@ class AuthViewModel(
                     _uiEvent.send(UiEvent.NavigateBack)
                 }
             }
+
+            is UserAction.SetLoaderOn -> {
+                viewModelScope.launch {
+                    setLoaderOn(action.signingType)
+                }
+            }
         }
     }
 
@@ -469,6 +475,7 @@ class AuthViewModel(
                         )
                     }
                 } else {
+                    setLoaderOff(Constants.SIGN_IN_TYPE_GOOGLE)
                     if (result.exceptionOrNull() is CancellationException) {
                         Napier.e("Google Sign-In was cancelled by the user.")
                     } else {

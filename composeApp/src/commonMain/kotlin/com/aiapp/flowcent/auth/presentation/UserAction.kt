@@ -41,4 +41,6 @@ sealed interface UserAction {
     data class UpdateInputErrors(val errors: Map<String, String>) : UserAction
     data object NavigateToHome : UserAction
     data object NavigateBack : UserAction
+
+    data class SetLoaderOn(val signingType: String) : UserAction
 }
