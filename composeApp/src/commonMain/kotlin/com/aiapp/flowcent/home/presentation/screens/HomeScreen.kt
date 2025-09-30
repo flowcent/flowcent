@@ -289,7 +289,7 @@ fun HomeScreen(
                         ) {
                             Spacer(modifier = Modifier.height(32.dp))
                             Text(
-                                text = "You don't have recorded any transaction yet",
+                                text = "You don't have recorded any transaction yet.",
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     color = MaterialTheme.colorScheme.onSurface,
                                 ),
