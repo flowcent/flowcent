@@ -106,6 +106,12 @@ class HomeViewModel(
                     _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Insights.route))
                 }
             }
+
+            UserAction.NavigateToChat -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(AppNavRoutes.Chat.route))
+                }
+            }
         }
     }
 

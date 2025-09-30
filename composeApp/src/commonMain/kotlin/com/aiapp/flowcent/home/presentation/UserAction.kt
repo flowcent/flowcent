@@ -9,4 +9,5 @@ sealed interface UserAction {
     data object FetchUserUId: UserAction
     data object NavigateToProfile: UserAction
     data object NavigateToInsights: UserAction
+    data object NavigateToChat: UserAction
 }

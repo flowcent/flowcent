@@ -33,9 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aiapp.flowcent.core.Spacing
+import com.aiapp.flowcent.core.presentation.components.AppOutlineButton
 import com.aiapp.flowcent.core.presentation.components.NameInitial
 import com.aiapp.flowcent.core.presentation.components.ShimmerBox
 import com.aiapp.flowcent.core.presentation.components.ShimmerSpendingCard
@@ -278,6 +280,37 @@ fun HomeScreen(
                     ShimmerSpendingCard(modifier = Modifier.animateItem())
                 }
             } else {
+                item {
+                    if (allTransactions.isEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Spacer(modifier = Modifier.height(32.dp))
+                            Text(
+                                text = "You don't have recorded any transaction yet",
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                ),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Spacer(modifier = Modifier.height(48.dp))
+
+                            AppOutlineButton(
+                                text = "Let's Dive In",
+                                onClick = {
+                                    homeViewModel.onAction(UserAction.NavigateToChat)
+                                },
+                                hasGradient = false,
+                                outlineColor = MaterialTheme.colorScheme.primary,
+                                textColor = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                }
                 items(allTransactions, key = { "fct-${Uuid.random()}" }) { transaction ->
                     SpendingCard(
                         expenseItem = transaction,
