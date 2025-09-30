@@ -29,7 +29,7 @@ import kottieComposition.rememberKottieComposition
 import utils.KottieConstants
 
 @Composable
-fun AnimatedOnboarding() {
+fun AnimatedChatOnboarding() {
     var botOnboardingAnimation by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
